@@ -1,5 +1,7 @@
 html {
   font-size: 14px;
+  min-height: 100%;
+  position: relative;
 }
 
 @media (min-width: 768px) {
@@ -8,24 +10,158 @@ html {
   }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+body {
+  margin-bottom: 60px;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #ffffff;
+  color: #10233d;
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
-html {
-  position: relative;
-  min-height: 100%;
+nav {
+  width: 100%;
+  min-height: 76px;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: #050505;
 }
 
-body {
-  margin-bottom: 60px;
+.nav-group {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex: 1 1 0;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
+.nav-left {
+  justify-content: flex-start;
+}
+
+.nav-right {
+  justify-content: flex-end;
+}
+
+.nav-logo {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.pill-link,
+.icon-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.pill-link {
+  min-height: 30px;
+  padding: 0.35rem 1rem;
+  border-radius: 0.25rem;
+  background: #5f82f7;
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.pill-link:hover,
+.icon-link:hover {
+  color: #ffffff;
+}
+
+.pill-link.wide {
+  padding-inline: 1.1rem;
+}
+
+nav a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.nav-group a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-link img {
+  display: block;
+  object-fit: contain;
+}
+
+.nav-logo img {
+  width: 160px;
+  height: auto;
+  display: block;
+}
+
+.flecha,
+.usuario {
+  width: 2.35rem;
+  height: 2.35rem;
+}
+
+.letras {
+  max-width: 11rem;
+  height: auto;
+}
+
+.container {
+  padding-top: 0.5rem;
+}
+
+footer.footer {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(8px);
+}
+
+.form-floating > .form-control-plaintext::placeholder,
+.form-floating > .form-control::placeholder {
   color: var(--bs-secondary-color);
   text-align: end;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
+.form-floating > .form-control-plaintext:focus::placeholder,
+.form-floating > .form-control:focus::placeholder {
   text-align: start;
+}
+
+@media (max-width: 768px) {
+  nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    min-height: auto;
+    padding: 0.75rem;
+  }
+
+  .nav-group {
+    justify-content: center;
+    flex: 1 1 100%;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 576px) {
+  .pill-link.wide {
+    width: 100%;
+  }
+
+  .nav-logo img {
+    width: 135px;
+  }
 }
