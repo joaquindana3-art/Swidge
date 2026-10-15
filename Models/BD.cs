@@ -11,8 +11,13 @@ public class BD
         List<Usuario> usuarios = new List<Usuario>();
         using (SqlConnection connection = new SqlConnection(_connectionString)) {
 
+<<<<<<< HEAD
             string query = "SELECT * FROM Usuario";
             usuarios = connection.query<Usuario>(query).ToList();
+=======
+            string query = "SELECT * FROM Usuarios";
+            usuarios = connection.Query<Usuario>(query).ToList();
+>>>>>>> 3d84fe95172936da9a1812d70b12ee6a6dde88d4
 
         }
         return usuarios;
@@ -23,6 +28,7 @@ public class BD
         List<Vendedor> vendedores = new List<Vendedor>();
         using (SqlConnection connection = new SqlConnection(_connectionString)) {
 
+<<<<<<< HEAD
             string query = "SELECT * FROM Vendedor";
             vendedores = connection.query<Vendedor>(query).ToList();
 
@@ -106,7 +112,86 @@ public class BD
 
         }
         return ubicaciones;
+=======
+            string query = "SELECT * FROM Usuarios";
+            vendedores = connection.Query<Usuario>(query).ToList();
 
+        }
+        return vendedores;
+>>>>>>> 3d84fe95172936da9a1812d70b12ee6a6dde88d4
+
+    }
+
+    public Usuario? ObtenerUsuarioParaLogin(string usuario)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = @"
+                SELECT TOP 1 *
+                FROM [dbo].[Usuario]
+                WHERE [NombreUsuario] = @Usuario OR [Mail] = @Usuario";
+
+            return connection.QueryFirstOrDefault<Usuario>(query, new { Usuario = usuario });
+        }
+    }
+
+    public bool ExisteDNI(int dni)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = "SELECT COUNT(1) FROM [dbo].[Usuario] WHERE [DNI] = @DNI";
+            return connection.ExecuteScalar<int>(query, new { DNI = dni }) > 0;
+        }
+    }
+
+    public bool ExisteNombreUsuario(string nombreUsuario)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = "SELECT COUNT(1) FROM [dbo].[Usuario] WHERE [NombreUsuario] = @NombreUsuario";
+            return connection.ExecuteScalar<int>(query, new { NombreUsuario = nombreUsuario }) > 0;
+        }
+    }
+
+    public bool ExisteMail(string mail)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = "SELECT COUNT(1) FROM [dbo].[Usuario] WHERE [Mail] = @Mail";
+            return connection.ExecuteScalar<int>(query, new { Mail = mail }) > 0;
+        }
+    }
+
+    public void AgregarUsuario(Usuario usuario)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = @"
+                INSERT INTO [dbo].[Usuario]
+                ([DNI], [Nombre], [Apellido], [NombreUsuario], [FechaNacimiento], [Ciudad], [Contraseña], [Mail], [NumeroTarjeta], [CodigoSeguridad])
+                VALUES
+                (@DNI, @Nombre, @Apellido, @NombreUsuario, @FechaNacimiento, @Ciudad, @Contraseña, @Mail, NULL, NULL)";
+
+            connection.Execute(query, usuario);
+        }
+    }
+
+    public Usuario? ObtenerUsuarioPorDNI(int dni)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = "SELECT TOP 1 * FROM [dbo].[Usuario] WHERE [DNI] = @DNI";
+            return connection.QueryFirstOrDefault<Usuario>(query, new { DNI = dni });
+        }
+    }
+
+    public void CambiarContraseña(int dni, string nuevaContrasena)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = "UPDATE [dbo].[Usuario] SET [Contraseña] = @Contrasena WHERE [DNI] = @DNI";
+            connection.Execute(query, new { DNI = dni, Contrasena = nuevaContrasena });
+        }
     }
 
 }
