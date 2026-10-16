@@ -1,1 +1,42 @@
 <!-- Esta es la pagina de iniciar sesion que si no tenes una sesion te lleva a registrarse. Luego deiniciar sesion te redirige a la home--> 
+@{
+    ViewData["Title"] = "Iniciar sesión";
+}
+
+<h1>Iniciar sesión</h1>
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div id="error-servidor" style="color:red; border:1px solid red; padding:8px;">
+        @ViewBag.ErrorMessage
+    </div>
+}
+
+<form method="post" action="@Url.Action("IniciarSesion", "Session")" onsubmit="return validarLogin();" novalidate>
+    @Html.AntiForgeryToken()
+
+    <div class="campo">
+        <label for="usuario">Usuario o mail</label>
+        <input type="text" id="usuario" name="usuario" maxlength="50" autocomplete="username" />
+    </div>
+
+    <div class="campo">
+        <label for="contrasena">Contraseña</label>
+        <input type="password" id="contrasena" name="contrasena" maxlength="72" autocomplete="current-password" />
+    </div>
+
+    <div id="fb-login"></div>
+
+    <button type="submit">Iniciar sesión</button>
+</form>
+
+<p><a href="@Url.Action("OlvideMiContraseña", "Session")">Olvidé mi contraseña</a></p>
+
+<p>
+    <a href="@Url.Action("IniciarSesionGoogle", "Session")">Continuar con Google</a> |
+    <a href="@Url.Action("IniciarSesionApple", "Session")">Continuar con Apple</a>
+</p>
+
+<p>¿No tenés cuenta? <a href="@Url.Action("Registrarse", "Session")">Registrate</a></p>
+
+<script src="@Url.Content("~/js/login.js")"></script>

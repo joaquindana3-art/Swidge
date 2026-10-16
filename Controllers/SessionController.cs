@@ -148,8 +148,6 @@ public class SessionController : Controller
         return RedirectToAction(nameof(MiPerfil));
     }
 
-    // ===================== PÁGINAS "PRÓXIMAMENTE" =====================
-
     public IActionResult OlvideMiContraseña()
     {
         return View();
@@ -164,8 +162,6 @@ public class SessionController : Controller
     {
         return View();
     }
-
-    // ===================== AUXILIARES =====================
 
     private bool HaySesion()
     {
