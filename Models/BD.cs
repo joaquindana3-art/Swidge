@@ -11,13 +11,8 @@ public class BD
         List<Usuario> usuarios = new List<Usuario>();
         using (SqlConnection connection = new SqlConnection(_connectionString)) {
 
-<<<<<<< HEAD
             string query = "SELECT * FROM Usuario";
             usuarios = connection.query<Usuario>(query).ToList();
-=======
-            string query = "SELECT * FROM Usuarios";
-            usuarios = connection.Query<Usuario>(query).ToList();
->>>>>>> 3d84fe95172936da9a1812d70b12ee6a6dde88d4
 
         }
         return usuarios;
@@ -28,7 +23,6 @@ public class BD
         List<Vendedor> vendedores = new List<Vendedor>();
         using (SqlConnection connection = new SqlConnection(_connectionString)) {
 
-<<<<<<< HEAD
             string query = "SELECT * FROM Vendedor";
             vendedores = connection.query<Vendedor>(query).ToList();
 
@@ -112,27 +106,21 @@ public class BD
 
         }
         return ubicaciones;
-=======
-            string query = "SELECT * FROM Usuarios";
-            vendedores = connection.Query<Usuario>(query).ToList();
-
-        }
-        return vendedores;
->>>>>>> 3d84fe95172936da9a1812d70b12ee6a6dde88d4
 
     }
 
     public Usuario? ObtenerUsuarioParaLogin(string usuario)
     {
+
+        Usuario usuarioParaLogin = new Usuario();
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
-            string query = @"
-                SELECT TOP 1 *
-                FROM [dbo].[Usuario]
-                WHERE [NombreUsuario] = @Usuario OR [Mail] = @Usuario";
 
-            return connection.QueryFirstOrDefault<Usuario>(query, new { Usuario = usuario });
+            string query = @"SELECT TOP 1 * FROM Usuario WHERE NombreUsuario = @NombreUsuario OR Mail = @Usuario";
+            usuarioParaLogin = connection.QueryFirstOrDefault<Usuario>(query, new { NombreUsuario = usuario.Nombre });
+
         }
+        return usuarioParaLogin;
     }
 
     public bool ExisteDNI(int dni)
