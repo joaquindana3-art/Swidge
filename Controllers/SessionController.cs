@@ -20,25 +20,25 @@ public class SessionController : Controller
         return View();
     }
 
-    public IActionResult IniciarSesion(Usuario? usuario, string? contrasena)
+    [HttpPost]
+    public IActionResult IniciarSesion(string nombreUsuario, string contrasena)
     {
-        if (HaySesion()) return RedirectToAction("Index", "Home");
+        if (HaySesion()) {
 
-        string usuarioTexto = (usuario?.NombreUsuario ?? "").Trim();
-        string mailTexto = (usuario?.Mail ?? "").Trim();
-        contrasena ??= "";
+            return RedirectToAction("Index", "Home");
 
-        Usuario? encontrado = bd.ObtenerUsuarioParaLogin(usuarioTexto, mailTexto);
-        bool correcta = VerificarContrasena(contrasena, encontrado?.Contraseña ?? _hashFalso);
-
-        if (encontrado == null || !correcta)
-        {
-            ViewBag.ErrorMessage = "Usuario o contraseña incorrectos.";
-            return View();
         }
-
+        Usuario encontrado = bd.ObtenerUsuarioParaLogin(nombreUsuario, contrasena);
+        if (encontrado == null)
+        {
+            // Se hace un hash falso para que el tiempo de respuesta sea similar al de un login válido.
+            BCrypt.Net.BCrypt.Verify(contrasena, _hashFalso);
+            ViewBag.ErrorMessage = "Usuario o contraseña incorrectos.";
+            return RedirectToAction("IniciarSesion", "Home");
+        }
         GuardarSesion(encontrado);
         return RedirectToAction("Index", "Home");
+
     }
 
     public IActionResult CerrarSesion()
@@ -58,60 +58,42 @@ public class SessionController : Controller
         return View();
     }
 
-    public IActionResult Registrarse(int dni, string? nombre, string? apellido, string? nombreUsuario, DateTime fechaNacimiento, string? ciudad, string? mail, string? contrasena)
+    public IActionResult Registrarse(int dni, string nombre, string apellido, string nombreUsuario, DateTime fechaNacimiento, string ciudad, string mail, string contrasena)
     {
-        if (HaySesion()) return RedirectToAction("Index", "Home");
+        if (HaySesion()) {
+            return RedirectToAction("Index", "Home");
+        }
 
         Usuario datos = new Usuario
         {
             DNI = dni,
-            Nombre = (nombre ?? "").Trim(),
-            Apellido = (apellido ?? "").Trim(),
-            NombreUsuario = (nombreUsuario ?? "").Trim(),
+            Nombre = nombre,
+            Apellido = apellido,
+            NombreUsuario = nombreUsuario,
             FechaNacimiento = fechaNacimiento,
-            Ciudad = (ciudad ?? "").Trim(),
-            Mail = (mail ?? "").Trim().ToLowerInvariant()
+            Ciudad = ciudad,
+            Mail = mail
         };
 
-        // Lo único que se valida acá es lo que depende de la base: que no estén repetidos.
         List<string> errores = new List<string>();
-
         if (bd.ExisteDNI(datos.DNI)) errores.Add("Ya existe una cuenta con ese DNI.");
         if (bd.ExisteNombreUsuario(datos.NombreUsuario)) errores.Add("El nombre de usuario ya está en uso. Elegí otro.");
         if (bd.ExisteMail(datos.Mail)) errores.Add("Ya existe una cuenta con ese mail.");
-
-        if (errores.Count == 0)
-        {
-            datos.Contraseña = BCrypt.Net.BCrypt.HashPassword(contrasena ?? "");
-            try
-            {
-                bd.AgregarUsuario(datos);
-            }
-            catch (SqlException ex) when (ex.Number == 2627 || ex.Number == 2601)
-            {
-                // Dos registros simultáneos con los mismos datos: la base lo frena por los UNIQUE / PK.
-                errores.Add("Ya existe una cuenta con esos datos.");
-            }
-        }
-
         if (errores.Count > 0)
         {
             datos.Contraseña = "";
             ViewBag.Errores = errores;
             return View(datos);
         }
-
+        bd.AgregarUsuario(datos);
         GuardarSesion(datos);
         return RedirectToAction("Index", "Home");
     }
 
-
     public IActionResult MiPerfil()
     {
         int? dni = HttpContext.Session.GetInt32("DNI");
-        if (dni == null) return RedirectToAction(nameof(IniciarSesion));
-
-        Usuario? usuario = bd.ObtenerUsuarioPorDNI(dni.Value);
+        Usuario usuario = bd.ObtenerUsuarioPorDNI(dni.Value);
         if (usuario == null)
         {
             HttpContext.Session.Clear();
@@ -171,15 +153,11 @@ public class SessionController : Controller
 
     private bool HaySesion()
     {
-        
         if (HttpContext.Session.GetInt32("DNI") == null)
         {
             return false;
         }
-        else {
-            return true;
-        }
-
+        return true;
     }
 
     private void GuardarSesion(Usuario usuario)

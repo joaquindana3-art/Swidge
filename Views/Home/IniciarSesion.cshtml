@@ -1,5 +1,5 @@
 @{
-    Layout = null;
+    Layout = "_Layout";
     ViewData["Title"] = "Iniciar sesión";
 }
 
@@ -40,8 +40,8 @@
                     </div>
 
                     <div id="fb-login" class="login-feedback"></div>
-
-                    <button type="submit" class="login-submit">Iniciar sesión</button>
+                    <div>@ViewBag.ErrorMessage</div>
+                    <button type="submit" class="login-submit" href="@Url.Action("IniciarSesion", "Session")">Iniciar sesión</button>
 
                     <img class="login-brand" src="~/img/letrasSwidge.png" alt="Swidge" />
                 </form>
