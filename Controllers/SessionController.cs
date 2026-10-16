@@ -11,12 +11,15 @@ public class SessionController : Controller
 
     public IActionResult IniciarSesion()
     {
-        if (HaySesion()) return RedirectToAction("Index", "Home");
+        if (HaySesion())
+        {
+
+            return RedirectToAction("Index", "Home");
+
+        }
         return View();
     }
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
     public IActionResult IniciarSesion(Usuario? usuario, string? contrasena)
     {
         if (HaySesion()) return RedirectToAction("Index", "Home");
@@ -38,8 +41,6 @@ public class SessionController : Controller
         return RedirectToAction("Index", "Home");
     }
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
     public IActionResult CerrarSesion()
     {
         HttpContext.Session.Clear();
@@ -49,7 +50,11 @@ public class SessionController : Controller
 
     public IActionResult Registrarse()
     {
-        if (HaySesion()) return RedirectToAction("Index", "Home");
+        if (HaySesion()) {
+
+            return RedirectToAction("Index", "Home");
+
+        }
         return View();
     }
 
@@ -166,7 +171,15 @@ public class SessionController : Controller
 
     private bool HaySesion()
     {
-        return HttpContext.Session.GetInt32("DNI") != null;
+        
+        if (HttpContext.Session.GetInt32("DNI") == null)
+        {
+            return false;
+        }
+        else {
+            return true;
+        }
+
     }
 
     private void GuardarSesion(Usuario usuario)
