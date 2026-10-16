@@ -17,14 +17,15 @@ public class SessionController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult IniciarSesion(string? usuario, string? contrasena)
+    public IActionResult IniciarSesion(Usuario? usuario, string? contrasena)
     {
         if (HaySesion()) return RedirectToAction("Index", "Home");
 
-        usuario = (usuario ?? "").Trim();
+        string usuarioTexto = (usuario?.NombreUsuario ?? "").Trim();
+        string mailTexto = (usuario?.Mail ?? "").Trim();
         contrasena ??= "";
 
-        Usuario? encontrado = bd.ObtenerUsuarioParaLogin(usuario);
+        Usuario? encontrado = bd.ObtenerUsuarioParaLogin(usuarioTexto, mailTexto);
         bool correcta = VerificarContrasena(contrasena, encontrado?.Contraseña ?? _hashFalso);
 
         if (encontrado == null || !correcta)

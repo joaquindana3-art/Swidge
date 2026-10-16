@@ -1,6 +1,6 @@
-namespace Swidge.Models;
 using Microsoft.Data.SqlClient;
 using Dapper;
+namespace Swidge.Models;
 public class BD
 {
     
@@ -12,7 +12,7 @@ public class BD
         using (SqlConnection connection = new SqlConnection(_connectionString)) {
 
             string query = "SELECT * FROM Usuario";
-            usuarios = connection.query<Usuario>(query).ToList();
+            usuarios = connection.Query<Usuario>(query).ToList();
 
         }
         return usuarios;
@@ -24,7 +24,7 @@ public class BD
         using (SqlConnection connection = new SqlConnection(_connectionString)) {
 
             string query = "SELECT * FROM Vendedor";
-            vendedores = connection.query<Vendedor>(query).ToList();
+            vendedores = connection.Query<Vendedor>(query).ToList();
 
         }
         return vendedores;
@@ -37,7 +37,7 @@ public class BD
         using (SqlConnection connection = new SqlConnection(_connectionString)) {
 
             string query = "SELECT * FROM Comentario";
-            comentarios = connection.query<Comentario>(query).ToList();
+            comentarios = connection.Query<Comentario>(query).ToList();
 
         }
         return comentarios;
@@ -50,7 +50,7 @@ public class BD
         using (SqlConnection connection = new SqlConnection(_connectionString)) {
 
             string query = "SELECT * FROM Entrada";
-            entradas = connection.query<Entrada>(query).ToList();
+            entradas = connection.Query<Entrada>(query).ToList();
 
         }
         return entradas;
@@ -63,7 +63,7 @@ public class BD
         using (SqlConnection connection = new SqlConnection(_connectionString)) {
 
             string query = "SELECT * FROM Evento";
-            eventos = connection.query<Evento>(query).ToList();
+            eventos = connection.Query<Evento>(query).ToList();
 
         }
         return eventos;
@@ -76,7 +76,7 @@ public class BD
         using (SqlConnection connection = new SqlConnection(_connectionString)) {
 
             string query = "SELECT * FROM Reclamo";
-            reclamos = connection.query<Reclamo>(query).ToList();
+            reclamos = connection.Query<Reclamo>(query).ToList();
 
         }
         return reclamos;
@@ -85,11 +85,11 @@ public class BD
 
     public List<Transaccion> GetTransacciones() {
 
-        List<Transaccion> transacciones = new List<transacciones>();
+        List<Transaccion> transacciones = new List<Transaccion>();
         using (SqlConnection connection = new SqlConnection(_connectionString)) {
 
             string query = "SELECT * FROM Transaccion";
-            transacciones = connection.query<Transaccion>(query).ToList();
+            transacciones = connection.Query<Transaccion>(query).ToList();
 
         }
         return transacciones;
@@ -102,25 +102,20 @@ public class BD
         using (SqlConnection connection = new SqlConnection(_connectionString)) {
 
             string query = "SELECT * FROM Ubicaciones";
-            ubicaciones = connection.query<Ubicacion>(query).ToList();
+            ubicaciones = connection.Query<Ubicacion>(query).ToList();
 
         }
         return ubicaciones;
 
     }
 
-    public Usuario? ObtenerUsuarioParaLogin(string usuario)
+    public Usuario? ObtenerUsuarioParaLogin(string nombreUsuario, string mail)
     {
-
-        Usuario usuarioParaLogin = new Usuario();
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
-
-            string query = @"SELECT TOP 1 * FROM Usuario WHERE NombreUsuario = @NombreUsuario OR Mail = @Usuario";
-            usuarioParaLogin = connection.QueryFirstOrDefault<Usuario>(query, new { NombreUsuario = usuario.Nombre });
-
+            string query = @"SELECT TOP 1 * FROM Usuario WHERE NombreUsuario = @NombreUsuario OR Mail = @Mail";
+            return connection.QueryFirstOrDefault<Usuario>(query, new { NombreUsuario = nombreUsuario, Mail = mail });
         }
-        return usuarioParaLogin;
     }
 
     public bool ExisteDNI(int dni)
