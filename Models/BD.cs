@@ -109,13 +109,18 @@ public class BD
 
     }
 
-    public Usuario? ObtenerUsuarioParaLogin(string nombreUsuario, string mail)
+    public Usuario? ObtenerUsuarioParaLogin(string nombreUsuario, string contrasena)
     {
+
+        Usuario usuarioParaLogin = new Usuario();
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
-            string query = @"SELECT TOP 1 * FROM Usuario WHERE NombreUsuario = @NombreUsuario OR Mail = @Mail";
-            return connection.QueryFirstOrDefault<Usuario>(query, new { NombreUsuario = nombreUsuario, Mail = mail });
+
+            string query = @"SELECT TOP 1 * FROM Usuario WHERE NombreUsuario = @NombreUsuario AND Contraseña = @Contraseña";
+            usuarioParaLogin = connection.QueryFirstOrDefault<Usuario>(query, new { NombreUsuario = nombreUsuario, Contraseña = contrasena });
+
         }
+        return usuarioParaLogin;
     }
 
     public bool ExisteDNI(int dni)
