@@ -26,7 +26,19 @@
             <div class="nav-group nav-right">
                 <a class="pill-link wide" href="#">Mis entradas publicadas</a>
                 <a class="pill-link wide" href="#">Mis entradas compradas</a>
-                <a class="icon-link" href="#"><img class="usuario" src="~/img/usuario.png" alt="Usuario"></a>
+                
+                                <div class="dropdown profile-dropdown">
+                                        <button class="btn profile-dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <img class="usuario" src="~/img/usuario.png" alt="Usuario">
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                                <li><a class="dropdown-item" href="#">Mi perfil</a></li>
+                                                <li><a class="dropdown-item" href="#">Iniciar sesión</a></li>
+                                                <li><a class="dropdown-item" href="#">Registrarse</a></li>
+                                                <li><a class="dropdown-item" href="#">Cerrar sesión</a></li>
+                                        </ul>
+                                </div>
+                
             </div>
         </nav>
     </header>

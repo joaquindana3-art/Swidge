@@ -104,6 +104,25 @@ nav a {
   object-fit: contain;
 }
 
+.profile-dropdown-toggle {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  box-shadow: none;
+}
+
+.profile-dropdown-toggle:hover,
+.profile-dropdown-toggle:focus,
+.profile-dropdown-toggle:active {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.profile-dropdown-toggle::after {
+  display: none;
+}
+
 .nav-logo img {
   width: 160px;
   height: auto;
