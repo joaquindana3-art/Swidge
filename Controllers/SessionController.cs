@@ -7,11 +7,7 @@ namespace Swidge.Controllers;
 public class SessionController : Controller
 {
     BD bd = new BD();
-
-    // Hash falso para que el login tarde lo mismo exista o no el usuario.
-    private static readonly string _hashFalso = BCrypt.Net.BCrypt.HashPassword("contrasena-falsa");
-
-    // ===================== LOGIN =====================
+    private static readonly string _hashFalso = BCrypt.Net.BCrypt.HashPassword("contrasena-falsa"); 
 
     public IActionResult IniciarSesion()
     {
@@ -49,7 +45,6 @@ public class SessionController : Controller
         return RedirectToAction("Index", "Home");
     }
 
-    // ===================== REGISTRO =====================
 
     public IActionResult Registrarse()
     {
@@ -57,14 +52,10 @@ public class SessionController : Controller
         return View();
     }
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult Registrarse(int dni, string? nombre, string? apellido, string? nombreUsuario,
-                                     DateTime fechaNacimiento, string? ciudad, string? mail, string? contrasena)
+    public IActionResult Registrarse(int dni, string? nombre, string? apellido, string? nombreUsuario, DateTime fechaNacimiento, string? ciudad, string? mail, string? contrasena)
     {
         if (HaySesion()) return RedirectToAction("Index", "Home");
 
-        // Se devuelven los datos cargados para no obligar a escribir todo de nuevo (nunca la contraseña).
         Usuario datos = new Usuario
         {
             DNI = dni,
@@ -108,7 +99,6 @@ public class SessionController : Controller
         return RedirectToAction("Index", "Home");
     }
 
-    // ===================== PERFIL =====================
 
     public IActionResult MiPerfil()
     {
