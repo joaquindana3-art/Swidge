@@ -1,42 +1,72 @@
-<!-- Esta es la pagina de iniciar sesion que si no tenes una sesion te lleva a registrarse. Luego deiniciar sesion te redirige a la home--> 
 @{
+    Layout = null;
     ViewData["Title"] = "Iniciar sesión";
 }
 
-<h1>Iniciar sesión</h1>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Swidge</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="login-page-body">
+    <main class="login-page">
+        <section class="login-card" aria-labelledby="login-title">
+            <div class="login-card__header">
+                <h1 id="login-title">INICIA SESIÓN EN SWIDGE</h1>
+            </div>
 
-@if (ViewBag.ErrorMessage != null)
-{
-    <div id="error-servidor" style="color:red; border:1px solid red; padding:8px;">
-        @ViewBag.ErrorMessage
-    </div>
-}
+            <div class="login-card__body">
+                @if (ViewBag.ErrorMessage != null)
+                {
+                    <div class="login-alert" id="error-servidor">@ViewBag.ErrorMessage</div>
+                }
 
-<form method="post" action="@Url.Action("IniciarSesion", "Session")" onsubmit="return validarLogin();" novalidate>
-    @Html.AntiForgeryToken()
+                <form class="login-form" method="post" action="@Url.Action("IniciarSesion", "Session")" onsubmit="return validarLogin();" novalidate>
+                    @Html.AntiForgeryToken()
 
-    <div class="campo">
-        <label for="usuario">Usuario o mail</label>
-        <input type="text" id="usuario" name="usuario" maxlength="50" autocomplete="username" />
-    </div>
+                    <div class="login-field">
+                        <input type="text" id="usuario" name="usuario" maxlength="50" autocomplete="username" placeholder="Nombre de usuario" />
+                    </div>
 
-    <div class="campo">
-        <label for="contrasena">Contraseña</label>
-        <input type="password" id="contrasena" name="contrasena" maxlength="72" autocomplete="current-password" />
-    </div>
+                    <div class="login-field">
+                        <input type="password" id="contrasena" name="contrasena" maxlength="72" autocomplete="current-password" placeholder="Contraseña" />
+                    </div>
 
-    <div id="fb-login"></div>
+                    <div class="login-forgot">
+                        <a href="@Url.Action("OlvideMiContraseña", "Session")">¿Olvidaste tu contraseña?</a>
+                    </div>
 
-    <button type="submit">Iniciar sesión</button>
-</form>
+                    <div id="fb-login" class="login-feedback"></div>
 
-<p><a href="@Url.Action("OlvideMiContraseña", "Session")">Olvidé mi contraseña</a></p>
+                    <button type="submit" class="login-submit">Iniciar sesión</button>
 
-<p>
-    <a href="@Url.Action("IniciarSesionGoogle", "Session")">Continuar con Google</a> |
-    <a href="@Url.Action("IniciarSesionApple", "Session")">Continuar con Apple</a>
-</p>
+                    <img class="login-brand" src="~/img/letrasSwidge.png" alt="Swidge" />
+                </form>
+            </div>
+        </section>
 
-<p>¿No tenés cuenta? <a href="@Url.Action("Registrarse", "Session")">Registrate</a></p>
+        <div class="login-divider" aria-hidden="true">o</div>
 
-<script src="@Url.Content("~/js/login.js")"></script>
+        <div class="login-social">
+            <a class="social-btn social-btn--google" href="@Url.Action("IniciarSesionGoogle", "Session")">
+                <span class="social-btn__icon social-btn__icon--google" aria-hidden="true">G</span>
+                <span>Iniciar sesión con Google</span>
+            </a>
+
+            <a class="social-btn social-btn--apple" href="@Url.Action("IniciarSesionApple", "Session")">
+                <span class="social-btn__icon social-btn__icon--apple" aria-hidden="true"></span>
+                <span>Iniciar sesión con Apple</span>
+            </a>
+
+            <p class="login-register">
+                ¿No tenés cuenta? <a href="@Url.Action("Registrarse", "Session")">Registrate</a>
+            </p>
+        </div>
+    </main>
+
+    <script src="@Url.Content("~/js/login.js")"></script>
+</body>
+</html>

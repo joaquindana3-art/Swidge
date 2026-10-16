@@ -1,19 +1,51 @@
-<!--En esta pagina vamos a mostrar todas las entradas. En la parte de arriba va a tener una barra de busqueda. En la parte de la derecha van a estar los filtros -->
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@6.0.0-alpha.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-B/GM4XqrwHnWXNOWMbloTmrYXZg10cakYGmpfsR/bbzQ6JAJI4ihuyADKLnBgrCe" crossorigin="anonymous">
-    <link rel="stylesheet" href="~/css/Swidge.css" />
-  </head>
-  <body>
-    
-    
-    
-    
-    
-    <script type="module" src="https://cdn.jsdelivr.net/npm/bootstrap@6.0.0-alpha.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-1a/pXj49ZQ1aHEmrJ+gMw1otqoVsYwlEnlD8mIfY2TV03r20Y0CN7uqx1tQogjPL" crossorigin="anonymous"></script>
-  </body>
-</html>
+@{
+    ViewData["Title"] = "Inicio";
+}
+
+
+        <aside class="filters-panel">
+            <div class="filters-panel__header">
+                <span class="filters-panel__icon">⌕</span>
+                <h2>Filtros</h2>
+                <button type="button" class="filters-panel__clear">Limpiar</button>
+            </div>
+
+            <div class="filters-panel__section">
+                <label for="cityFilter">Ciudad</label>
+                <select id="cityFilter" class="filters-panel__select">
+                    <option selected>Buenos Aires</option>
+                    <option>Miami</option>
+                    <option>Brasilia</option>
+                    <option>Lima</option>
+                </select>
+            </div>
+
+            <div class="filters-panel__section">
+                <label>Categoría</label>
+                <div class="filters-panel__categories">
+                    <label class="filters-chip filters-chip--active"><input type="checkbox" checked /> Todo</label>
+                    <label class="filters-chip"><input type="checkbox" /> Conciertos</label>
+                    <label class="filters-chip"><input type="checkbox" /> Deportes</label>
+                    <label class="filters-chip"><input type="checkbox" /> Teatros</label>
+                </div>
+            </div>
+
+            <div class="filters-panel__section">
+                <div class="filters-panel__price-head">
+                    <label for="priceRange">Precio máximo</label>
+                    <span>$150</span>
+                </div>
+                <input id="priceRange" class="filters-panel__range" type="range" min="0" max="150" value="150" />
+                <div class="filters-panel__price-values">
+                    <span>$0</span>
+                    <span>$150</span>
+                </div>
+            </div>
+
+            <label class="filters-panel__verified">
+                <span>Solo vendedores verificados</span>
+                <input type="checkbox" checked />
+            </label>
+        </aside>
+    </section>
+</div>

@@ -13,29 +13,29 @@
     <header>
         <nav class="topbar">
             <div class="nav-group nav-left">
-                <a class="icon-link" href="#"><img class="flecha" src="~/img/flechaAtras.png" alt="volverAtras"></a>
-                <a class="pill-link" href="#">Compra</a>
-                <a class="pill-link" href="#">Venta</a>
-                <a class="pill-link" href="#">Ayuda</a>
+                <a class="icon-link back-link" href="#" aria-label="Volver atrás"><img class="flecha" src="~/img/flechaAtras.png" alt="volverAtras"></a>
+                <a class="pill-link" asp-controller="Home" asp-action="InformacionVenta">Compra</a>
+                <a class="pill-link" asp-controller="Home" asp-action="PublicarEntrada">Venta</a>
+                <a class="pill-link" asp-controller="Home" asp-action="Ayuda">Ayuda</a>
             </div>
 
-            <a class="nav-logo" href="#" aria-label="Swidge inicio">
+            <a class="nav-logo" asp-controller="Home" asp-action="Index" aria-label="Swidge inicio">
                 <img class="letras" src="~/img/letrasSwidge.png" alt="Logo Swidge">
             </a>
 
             <div class="nav-group nav-right">
-                <a class="pill-link wide" href="#">Mis entradas publicadas</a>
-                <a class="pill-link wide" href="#">Mis entradas compradas</a>
+                <a class="pill-link wide" asp-controller="Home" asp-action="EntradasPublicadas">Mis entradas publicadas</a>
+                <a class="pill-link wide" asp-controller="Home" asp-action="EntradasCompradas">Mis entradas compradas</a>
                 
                                 <div class="dropdown profile-dropdown">
                                         <button class="btn profile-dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                 <img class="usuario" src="~/img/usuario.png" alt="Usuario">
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-end">
-                                                <li><a class="dropdown-item" href="#">Mi perfil</a></li>
-                                                <li><a class="dropdown-item" href="#">Iniciar sesión</a></li>
-                                                <li><a class="dropdown-item" href="#">Registrarse</a></li>
-                                                <li><a class="dropdown-item" href="#">Cerrar sesión</a></li>
+                                                <li><a class="dropdown-item" asp-controller="Home" asp-action="MiPerfil">Mi perfil</a></li>
+                                                <li><a class="dropdown-item" asp-controller="Home" asp-action="IniciarSesion">Iniciar sesión</a></li>
+                                                <li><a class="dropdown-item" asp-controller="Home" asp-action="Registrarse">Registrarse</a></li>
+                                                <li><a class="dropdown-item" asp-controller="Home" asp-action="Index">Cerrar sesión</a></li>
                                         </ul>
                                 </div>
                 
