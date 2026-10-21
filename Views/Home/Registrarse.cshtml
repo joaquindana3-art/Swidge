@@ -3,11 +3,11 @@
     ViewData["Title"] = "Registrarse";
 }
 
-<h1>Crear cuenta</h1>
+<h1 class="registro-titulo">Crear cuenta</h1>
 
 @if (ViewBag.Errores != null)
 {
-    <div id="errores-servidor" style="color:red; border:1px solid red; padding:8px;">
+    <div id="errores-servidor" class="registro-errores" style="color:red; border:1px solid red; padding:8px;">
         <strong>No se pudo registrar:</strong>
         @foreach (string error in ViewBag.Errores)
         {
@@ -16,43 +16,46 @@
     </div>
 }
 
-<form method="post" action="@Url.Action("Registrarse", "Session")" onsubmit="return registrarUsuario();" novalidate>
+<form class="registro-form" method="post" action="@Url.Action("Registrarse", "Session")" onsubmit="return registrarUsuario();" novalidate>
     @Html.AntiForgeryToken()
 
-    <div class="campo">
-        <label for="dni">DNI</label>
-        <input type="text" id="dni" name="dni" inputmode="numeric" maxlength="8"
-               value="@(Model != null && Model.DNI != 0 ? Model.DNI.ToString() : "")" />
-        <span id="fb-dni"></span>
-    </div>
+    <div class="registro-fila">
+        <div class="campo">
+            <label for="dni">DNI</label>
+            <input type="text" id="dni" name="dni" inputmode="numeric" maxlength="8"
+                   value="@(Model != null && Model.DNI != 0 ? Model.DNI.ToString() : "")" />
+            <span id="fb-dni"></span>
+        </div>
 
-    <div class="campo">
-        <label for="nombre">Nombre</label>
-        <input type="text" id="nombre" name="nombre" maxlength="50" value="@Model?.Nombre" />
-        <span id="fb-nombre"></span>
-    </div>
+        <div class="campo">
+            <label for="nombre">Nombre</label>
+            <input type="text" id="nombre" name="nombre" maxlength="50" value="@Model?.Nombre" />
+            <span id="fb-nombre"></span>
+        </div>
 
-    <div class="campo">
-        <label for="apellido">Apellido</label>
-        <input type="text" id="apellido" name="apellido" maxlength="50" value="@Model?.Apellido" />
-        <span id="fb-apellido"></span>
-    </div>
+        <div class="campo">
+            <label for="apellido">Apellido</label>
+            <input type="text" id="apellido" name="apellido" maxlength="50" value="@Model?.Apellido" />
+            <span id="fb-apellido"></span>
+        </div>
 
-    <div class="campo">
-        <label for="nombreUsuario">Nombre de usuario</label>
-        <input type="text" id="nombreUsuario" name="nombreUsuario" maxlength="50" value="@Model?.NombreUsuario" />
-        <span id="fb-nombreUsuario"></span>
-    </div>
+        <div class="campo">
+            <label for="nombreUsuario">Nombre de usuario</label>
+            <input type="text" id="nombreUsuario" name="nombreUsuario" maxlength="50" value="@Model?.NombreUsuario" />
+            <span id="fb-nombreUsuario"></span>
+        </div>
 
-    <div class="campo">
-        <label for="fechaNacimiento">Fecha de nacimiento</label>
-        <input type="date" id="fechaNacimiento" name="fechaNacimiento">
-    </div>
+        <div class="campo">
+            <label for="fechaNacimiento">Fecha de nacimiento</label>
+            <input type="date" id="fechaNacimiento" name="fechaNacimiento">
+            <span></span>
+        </div>
 
-    <div class="campo">
-        <label for="ciudad">Ciudad</label>
-        <input type="text" id="ciudad" name="ciudad" maxlength="50" value="@Model?.Ciudad" />
-        <span id="fb-ciudad"></span>
+        <div class="campo">
+            <label for="ciudad">Ciudad</label>
+            <input type="text" id="ciudad" name="ciudad" maxlength="50" value="@Model?.Ciudad" />
+            <span id="fb-ciudad"></span>
+        </div>
     </div>
 
     <div class="campo">
@@ -61,24 +64,26 @@
         <span id="fb-mail"></span>
     </div>
 
-    <div class="campo">
-        <label for="contrasena">Contraseña</label>
-        <input type="password" id="contrasena" name="contrasena" maxlength="72" autocomplete="new-password" />
-        <span id="fb-contrasena"></span>
+    <div class="registro-fila">
+        <div class="campo">
+            <label for="contrasena">Contraseña</label>
+            <input type="password" id="contrasena" name="contrasena" maxlength="72" autocomplete="new-password" />
+            <span id="fb-contrasena"></span>
+        </div>
+
+        <div class="campo">
+            <label for="confirmarContrasena">Confirmar contraseña</label>
+            @* Sin name: la confirmación solo la compara el JS y no se envía al servidor *@
+            <input type="password" id="confirmarContrasena" maxlength="72" autocomplete="new-password" />
+            <span id="fb-confirmarContrasena"></span>
+        </div>
     </div>
 
-    <div class="campo">
-        <label for="confirmarContrasena">Confirmar contraseña</label>
-        @* Sin name: la confirmación solo la compara el JS y no se envía al servidor *@
-        <input type="password" id="confirmarContrasena" maxlength="72" autocomplete="new-password" />
-        <span id="fb-confirmarContrasena"></span>
-    </div>
+    <div id="resultado" class="registro-resultado"></div>
 
-    <div id="resultado"></div>
-
-    <button type="submit">Registrarse</button>
+    <button type="submit" class="registro-boton">Registrarse</button>
 </form>
 
-<p>¿Ya tenés cuenta? <a href="@Url.Action("IniciarSesion", "Session")">Iniciá sesión</a></p>
+<p class="registro-login">¿Ya tenés cuenta? <a class="registro-link" href="@Url.Action("IniciarSesion", "Session")">Iniciá sesión</a></p>
 
 <script src="@Url.Content("~/js/registrarse.js")"></script>

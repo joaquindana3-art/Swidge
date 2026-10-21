@@ -394,3 +394,100 @@ footer.footer {
   background-color: #274b9f;
   border-color: #274b9f;
 }
+
+/* Register page */
+.registro-titulo {
+  margin: 24px 0 20px 0;
+  text-align: center;
+  color: #10233d;
+  font-size: 28px;
+}
+
+.registro-errores {
+  width: 560px;
+  margin: 0 auto 16px auto;
+  background-color: #fff0f0;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.registro-form {
+  width: 560px;
+  margin: 0 auto 20px auto;
+  padding: 24px 19px 20px 19px;
+  background-color: #5f82f7;
+  border-radius: 10px;
+  box-shadow: 0 0 0 2px #274b9f, 0 8px 18px #c5cfe9;
+}
+
+.registro-fila {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.registro-form .campo {
+  padding: 0 7px 6px 7px;
+}
+
+.registro-form .campo label {
+  display: block;
+  margin-bottom: 6px;
+  color: #ffffff;
+  font-size: 15px;
+}
+
+.registro-form .campo input {
+  display: block;
+  width: 100%;
+  height: 46px;
+  padding: 0 14px;
+  background-color: #ffffff;
+  color: #1f2937;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+.registro-form .campo input:focus {
+  box-shadow: 0 0 0 3px #274b9f;
+}
+
+.registro-form .campo span {
+  display: block;
+  height: 20px;
+  margin-top: 4px;
+  color: #ffd7d7;
+  font-size: 13px;
+}
+
+.registro-resultado {
+  margin-bottom: 14px;
+  text-align: center;
+  color: #ffffff;
+  font-size: 15px;
+}
+
+.registro-resultado:empty {
+  display: none;
+}
+
+.registro-boton {
+  display: block;
+  width: 220px;
+  height: 52px;
+  margin: 6px auto 0 auto;
+  background-color: #ff5c5c;
+  color: #ffffff;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+.registro-login {
+  text-align: center;
+  color: #111111;
+  font-size: 16px;
+}
+
+.registro-link {
+  color: #111111;
+  text-decoration: none;
+}
