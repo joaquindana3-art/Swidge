@@ -381,3 +381,16 @@ footer.footer {
     padding-top: 54px;
   }
 }
+.card-title {
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+.form-range::-webkit-slider-thumb {
+  background: #274b9f;
+}
+
+.form-check-input:checked {
+  background-color: #274b9f;
+  border-color: #274b9f;
+}

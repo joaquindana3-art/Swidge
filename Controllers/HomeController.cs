@@ -15,7 +15,9 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        return View();
+        BD bd = new BD();
+        List<Entrada> listaEntradas = bd.GetEntradas();
+        return View(listaEntradas);
     }
 
     public IActionResult Ayuda()
@@ -47,7 +49,7 @@ public class HomeController : Controller
     {
         return View();
     }
-
+    
     public IActionResult InformacionVenta()
     {
         return View();

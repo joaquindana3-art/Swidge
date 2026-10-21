@@ -44,17 +44,28 @@ public class BD
 
     }
 
-    public List<Entrada> GetEntradas() {
+    public List<Entrada> GetEntradas()
+    {
+        List<Entrada> entradas = new();
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            entradas = connection.Query<Entrada>("SELECT * FROM Entrada WHERE Vendida = 0").ToList();
 
-        List<Entrada> entradas = new List<Entrada>();
-        using (SqlConnection connection = new SqlConnection(_connectionString)) {
+            foreach (var entrada in entradas)
+            {
+                entrada.Evento = connection.QueryFirstOrDefault<Evento>(
+                    "SELECT * FROM Evento WHERE ID = @ID",
+                    new { ID = entrada.IDEvento });
 
-            string query = "SELECT * FROM Entrada";
-            entradas = connection.Query<Entrada>(query).ToList();
-
+                if (entrada.Evento != null)
+                {
+                    entrada.Evento.Lugar = connection.QueryFirstOrDefault<string>(
+                        "SELECT TOP 1 NombreLugar FROM Ubicacion WHERE IDevento = @IDevento",
+                        new { IDevento = entrada.IDEvento }) ?? "";
+                }
+            }
         }
         return entradas;
-
     }
 
     public List<Evento> GetEventos() {
