@@ -46,10 +46,7 @@
 
     <div class="campo">
         <label for="fechaNacimiento">Fecha de nacimiento</label>
-        <input type="date" id="fechaNacimiento" name="fechaNacimiento"
-               max="@DateTime.Today.ToString("yyyy-MM-dd")"
-               value="@(Model != null && Model.FechaNacimiento.Year > 1900 ? Model.FechaNacimiento.ToString("yyyy-MM-dd") : "")" />
-
+        <input type="date" id="fechaNacimiento" name="fechaNacimiento">
     </div>
 
     <div class="campo">
