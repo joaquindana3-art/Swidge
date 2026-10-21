@@ -161,19 +161,32 @@ public class BD
         }
     }
 
-    public void AgregarUsuario(Usuario usuario)
+    public int InsertarUsuario(Usuario usuario)
     {
-        using (SqlConnection connection = new SqlConnection(_connectionString))
-        {
-            string query = @"
-                INSERT INTO [dbo].[Usuario]
-                ([DNI], [Nombre], [Apellido], [NombreUsuario], [FechaNacimiento], [Ciudad], [Contraseña], [Mail], [NumeroTarjeta], [CodigoSeguridad])
-                VALUES
-                (@DNI, @Nombre, @Apellido, @NombreUsuario, @FechaNacimiento, @Ciudad, @Contraseña, @Mail, NULL, NULL)";
-
-            connection.Execute(query, usuario);
-        }
+    int resultado;
+    using (SqlConnection connection = new SqlConnection(_connectionString))
+    {
+        string storedProcedure = "InsertarUsuario";
+        resultado = connection.QueryFirstOrDefault<int>(
+            storedProcedure,
+            new
+            {
+                DNI = usuario.DNI,
+                Mail = usuario.Mail,
+                NombreUsuario = usuario.NombreUsuario,
+                Contraseña = usuario.Contraseña,
+                Nombre = usuario.Nombre,
+                Apellido = usuario.Apellido,
+                FechaNacimiento = usuario.FechaNacimiento,
+                Ciudad = usuario.Ciudad,
+                NumeroTarjeta = null,
+                CodigoSeguridad = null
+            },
+            commandType: CommandType.StoredProcedure);
     }
+        return resultado;
+    }
+
 
     public Usuario? ObtenerUsuarioPorDNI(int dni)
     {
