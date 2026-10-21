@@ -162,7 +162,7 @@ public class BD
         }
     }
 
-    public int InsertarUsuario(Usuario usuario)
+    public int AgregarUsuario(Usuario usuario)
     {
     int resultado;
     using (SqlConnection connection = new SqlConnection(_connectionString))
