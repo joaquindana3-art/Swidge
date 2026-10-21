@@ -1,5 +1,6 @@
 using Microsoft.Data.SqlClient;
 using Dapper;
+using System.Data;
 namespace Swidge.Models;
 public class BD
 {
