@@ -48,6 +48,7 @@ public class SessionController : Controller
     }
 
 
+    [HttpPost]
     public IActionResult Registrarse()
     {
         if (HaySesion()) {
