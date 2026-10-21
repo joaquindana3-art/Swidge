@@ -1,51 +1,162 @@
+@model List<Swidge.Models.Entrada>
+
 @{
-    ViewData["Title"] = "Inicio";
+    ViewData["Title"] = "Compra";
 }
 
+<!-- Navegación Superior -->
+<nav>
+    <div class="nav-group nav-left">
+        <a href="#" class="icon-link">
+            <img src="~/images/flecha-izquierda.png" class="flecha" alt="Volver" />
+        </a>
+        <a href="@Url.Action("Index", "Home")" class="pill-link">Comprar</a>
+        <a href="@Url.Action("PublicarEntrada", "Home")" class="pill-link">Publicar</a>
+        <a href="@Url.Action("Ayuda", "Home")" class="pill-link">Ayuda</a>
+    </div>
 
-        <aside class="filters-panel">
-            <div class="filters-panel__header">
-                <span class="filters-panel__icon">⌕</span>
-                <h2>Filtros</h2>
-                <button type="button" class="filters-panel__clear">Limpiar</button>
+    <a href="@Url.Action("Index", "Home")" class="nav-logo">
+        <h1 style="color: #ff5c5c; font-weight: 900; margin: 0; font-size: 2.2rem; letter-spacing: 2px;">SWIDGE</h1>
+    </a>
+
+    <div class="nav-group nav-right">
+        <a href="@Url.Action("EntradasPublicadas", "Home")" class="pill-link wide">Mis entradas publicadas</a>
+        <a href="@Url.Action("EntradasCompradas", "Home")" class="pill-link wide">Mis entradas compradas</a>
+        <a href="@Url.Action("MiPerfil", "Home")" class="icon-link">
+            <img src="~/images/usuario-icon.png" class="usuario" alt="Perfil" />
+        </a>
+    </div>
+</nav>
+
+<!-- Banner Promocional -->
+<div class="w-100 mb-4" style="background: #000; height: 180px; overflow: hidden;">
+    <img src="~/images/banner-swift.jpg" alt="Taylor Swift The Eras Tour" style="width: 100%; height: 100%; object-fit: cover;" />
+</div>
+
+<div class="container-fluid px-4">
+    <!-- Buscador Principal -->
+    <div class="row justify-content: center mb-4">
+        <div class="col-md-8 mx-auto">
+            <div class="p-2 d-flex align-items-center justify-content-between" style="background-color: #5f82f7; border-radius: 6px;">
+                <div class="d-flex align-items-center gap-2 ps-2 text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                    </svg>
+                    <span class="fw-bold fs-5">Consultar</span>
+                </div>
+                <img src="~/images/swidge-logo-small.png" alt="Swidge Logo" class="letras" style="height: 35px;" />
             </div>
+        </div>
+    </div>
 
-            <div class="filters-panel__section">
-                <label for="cityFilter">Ciudad</label>
-                <select id="cityFilter" class="filters-panel__select">
-                    <option selected>Buenos Aires</option>
-                    <option>Miami</option>
-                    <option>Brasilia</option>
-                    <option>Lima</option>
-                </select>
-            </div>
+    <!-- Contenido: Tarjetas y Filtros -->
+    <div class="row">
+        <!-- Listado de Entradas (Dinámico desde BD) -->
+        <div class="col-lg-8 col-md-7">
+            @if (Model != null && Model.Count > 0)
+            {
+                <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+                    @foreach (Entrada item in Model)
+                    {
+                        var evento = item.Evento ?? new Swidge.Models.Evento { Nombre = "Evento", Lugar = "Lugar", Fecha = DateTime.Now };
+                        <div class="col">
+                            <div class="card h-100 border-0 p-3" style="background-color: #a4bafa; border-radius: 8px;">
+                                <img src="@(string.IsNullOrEmpty(item.Imagen) ? "/images/default-event.jpg" : item.Imagen)" 
+                                     class="card-img-top mb-2" 
+                                     alt="@(evento.Nombre)" 
+                                     style="height: 170px; object-fit: cover; border-radius: 4px;" />
+                                
+                                <div class="card-body p-0 d-flex flex-column justify-content-between">
+                                    <div>
+                                        <p class="text-danger fw-bold mb-1" style="font-size: 0.75rem; text-transform: uppercase;">
+                                            @(evento.Fecha != default ? evento.Fecha.ToString("dddd dd/MM").ToUpper() : "PROXIMAMENTE")
+                                        </p>
+                                        <h5 class="card-title fw-extrabold mb-1" style="color: #10233d; font-size: 1.05rem;">
+                                            @evento.Nombre
+                                        </h5>
+                                        <p class="text-muted mb-2" style="font-size: 0.8rem;">
+                                            📍 @(string.IsNullOrEmpty(evento.Lugar) ? "Lugar por confirmar" : evento.Lugar)
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="d-flex align-items-center justify-content-between mt-2 pt-2">
+                                        <span class="fw-bold text-danger fs-5">$@item.Precio.ToString("N0")</span>
+                                        <a href="@Url.Action("DetalleEntrada", "Home", new { id = item.ID })" 
+                                           class="btn btn-sm text-white px-3 fw-bold" 
+                                           style="background-color: #5f82f7; border-radius: 5px;">
+                                            Comprar
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <h4 class="text-muted">No hay entradas disponibles en este momento.</h4>
+                </div>
+            }
+        </div>
 
-            <div class="filters-panel__section">
-                <label>Categoría</label>
-                <div class="filters-panel__categories">
-                    <label class="filters-chip filters-chip--active"><input type="checkbox" checked /> Todo</label>
-                    <label class="filters-chip"><input type="checkbox" /> Conciertos</label>
-                    <label class="filters-chip"><input type="checkbox" /> Deportes</label>
-                    <label class="filters-chip"><input type="checkbox" /> Teatros</label>
+        <!-- Panel Lateral de Filtros -->
+        <div class="col-lg-4 col-md-5 mt-4 mt-md-0">
+            <div class="p-4 text-white" style="background-color: #5f82f7; border-radius: 10px;">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                        </svg>
+                        <h4 class="m-0 fw-bold">Filtros</h4>
+                    </div>
+                    <a href="#" class="text-white text-decoration-underline" style="font-size: 0.85rem;">Limpiar</a>
+                </div>
+
+                <!-- Filtro Ciudad -->
+                <div class="mb-3">
+                    <label class="form-label fw-bold mb-1">Ciudad</label>
+                    <select class="form-select border-0">
+                        <option selected>Buenos Aires</option>
+                        <option value="1">Córdoba</option>
+                        <option value="2">Rosario</option>
+                        <option value="3">Mendoza</option>
+                    </select>
+                </div>
+
+                <!-- Filtro Categoría -->
+                <div class="mb-3">
+                    <label class="form-label fw-bold mb-1">Categoría</label>
+                    <div class="d-flex flex-column gap-2">
+                        <button class="btn btn-light text-start fw-bold py-1" style="color: #274b9f;">✔ Todo</button>
+                        <button class="btn btn-light text-start fw-bold py-1" style="color: #274b9f;">Conciertos</button>
+                        <button class="btn btn-light text-start fw-bold py-1" style="color: #274b9f;">Deportes</button>
+                        <button class="btn btn-light text-start fw-bold py-1" style="color: #274b9f;">Teatros</button>
+                    </div>
+                </div>
+
+                <!-- Filtro Precio -->
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between fw-bold mb-1">
+                        <span>Precio máximo</span>
+                        <span>$150</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="fw-bold">$0</span>
+                        <input type="range" class="form-range" min="0" max="150" value="150" />
+                        <span class="fw-bold">$150</span>
+                    </div>
+                </div>
+
+                <!-- Checkbox Vendedores Verificados -->
+                <div class="form-check d-flex justify-content-between align-items-center ps-0">
+                    <label class="form-check-label fw-bold" for="checkVerificados">
+                        Solo vendedores verificados
+                    </label>
+                    <input class="form-check-input ms-auto" type="checkbox" id="checkVerificados" checked style="width: 1.3em; height: 1.3em;" />
                 </div>
             </div>
-
-            <div class="filters-panel__section">
-                <div class="filters-panel__price-head">
-                    <label for="priceRange">Precio máximo</label>
-                    <span>$150</span>
-                </div>
-                <input id="priceRange" class="filters-panel__range" type="range" min="0" max="150" value="150" />
-                <div class="filters-panel__price-values">
-                    <span>$0</span>
-                    <span>$150</span>
-                </div>
-            </div>
-
-            <label class="filters-panel__verified">
-                <span>Solo vendedores verificados</span>
-                <input type="checkbox" checked />
-            </label>
-        </aside>
-    </section>
+        </div>
+    </div>
 </div>
