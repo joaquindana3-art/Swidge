@@ -167,14 +167,14 @@ public class BD
                 Nombre = usuario.Nombre,
                 Apellido = usuario.Apellido,
                 FechaNacimiento = usuario.FechaNacimiento,
-                Ciudad = usuario.Ciudad,
-                NumeroTarjeta = null,
-                CodigoSeguridad = null
+                Ciudad = usuario.Ciudad
             },
             commandType: CommandType.StoredProcedure);
     }
-        return resultado;
+    return resultado;
     }
+
+
 
 
     public Usuario? ObtenerUsuarioPorDNI(int dni)
