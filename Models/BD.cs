@@ -211,32 +211,31 @@ public class BD
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
-            var entrada = connection.QueryFirstOrDefault<Entrada>(
-                "SELECT * FROM Entrada WHERE ID = @ID AND Vendida = 0",
-                new { ID = id });
+            string storedProcedure = "GetEntradaPorId";
 
-            if (entrada == null)
-                return null;
-
-            entrada.Evento = connection.QueryFirstOrDefault<Evento>(
-                "SELECT * FROM Evento WHERE ID = @ID",
-                new { ID = entrada.IDEvento });
-
-            if (entrada.Evento != null)
-            {
-                entrada.Evento.Lugar = connection.QueryFirstOrDefault<string>(
-                    "SELECT TOP 1 NombreLugar FROM Ubicacion WHERE IDevento = @IDevento",
-                    new { IDevento = entrada.IDEvento }) ?? "";
-            }
-
-            entrada.Vendedor = connection.QueryFirstOrDefault<Usuario>(
-                @"SELECT u.*
-                  FROM Usuario u
-                  INNER JOIN Vendedor v ON v.DNIUsuario = u.DNI
-                  WHERE v.ID = @IDVendedor",
-                new { IDVendedor = entrada.IDVendedor });
+            Entrada? entrada = connection.Query<Entrada>(
+                storedProcedure,
+                new { ID = id },
+                commandType: CommandType.StoredProcedure
+            ).FirstOrDefault();
 
             return entrada;
+        }
+    }
+
+    public Evento? BuscarEventoPorId(int id)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string storedProcedure = "sp_BuscarEventoPorId";
+
+            Evento? evento = connection.Query<Evento>(
+                storedProcedure,
+                new { ID = id },
+                commandType: CommandType.StoredProcedure
+            ).FirstOrDefault();
+
+            return evento;
         }
     }
 

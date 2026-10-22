@@ -719,3 +719,39 @@ main.pb-3 {
   color: #111111;
   text-decoration: none;
 }
+
+.detalle-evento-info {
+  margin-top: 1.25rem;
+  padding: 1rem 0 0;
+  border-top: 1px solid rgba(17, 17, 17, 0.08);
+}
+
+.info-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.45rem 0.8rem;
+  margin-bottom: 0.8rem;
+}
+
+.label {
+  color: #111111;
+  font-weight: 800;
+  font-size: 0.98rem;
+}
+
+.value {
+  color: #1f2937;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.descripcion-row {
+  display: block;
+}
+
+.descripcion {
+  margin: 0.55rem 0 0;
+  line-height: 1.6;
+  color: #2b2b2b;
+}

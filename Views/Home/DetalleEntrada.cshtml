@@ -4,14 +4,22 @@
     ViewData["Title"] = "Detalle de entrada";
     var evento = Model?.Evento ?? new Swidge.Models.Evento();
     var vendedor = Model?.Vendedor ?? new Swidge.Models.Usuario();
+
     var nombreVendedor = !string.IsNullOrWhiteSpace(vendedor.Nombre) || !string.IsNullOrWhiteSpace(vendedor.Apellido)
         ? $"{vendedor.Nombre} {vendedor.Apellido}".Trim()
         : "VENDEDOR";
+
     var fecha = evento.Fecha != default ? evento.Fecha.ToString("ddd, dd MMM, HH:mm") : "Fecha por confirmar";
     var precio = Model?.Precio > 0 ? Model.Precio.ToString("N0") : "0";
+
     var imagen = !string.IsNullOrWhiteSpace(evento.Imagen)
         ? evento.Imagen
         : (!string.IsNullOrWhiteSpace(Model?.Imagen) ? Model.Imagen : "/img/null.jpg");
+
+    var categoria = string.IsNullOrWhiteSpace(evento.Categoria) ? "General" : evento.Categoria;
+    var protagonista = string.IsNullOrWhiteSpace(evento.Protagonista) ? "Artista por confirmar" : evento.Protagonista;
+    var descripcion = string.IsNullOrWhiteSpace(evento.Descripcion) ? "Descripción no disponible." : evento.Descripcion;
+    var cantidadEntradas = evento.CantidadEntradas > 0 ? evento.CantidadEntradas : 0;
 }
 
 <div class="detalle-page">
@@ -39,6 +47,25 @@
                     </span>
                     <span>@(string.IsNullOrWhiteSpace(evento.Lugar) ? "Lugar por confirmar" : evento.Lugar)</span>
                 </div>
+            </div>
+        </div>
+
+        <div class="detalle-evento-info">
+            <div class="info-row">
+                <span class="label">Protagonista:</span>
+                <span class="value">@protagonista</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Categoría:</span>
+                <span class="value">@categoria</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Entradas disponibles:</span>
+                <span class="value">@cantidadEntradas</span>
+            </div>
+            <div class="info-row descripcion-row">
+                <span class="label">Descripción:</span>
+                <p class="value descripcion">@descripcion</p>
             </div>
         </div>
     </section>
