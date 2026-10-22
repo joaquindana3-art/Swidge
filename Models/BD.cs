@@ -47,7 +47,7 @@ public class BD
 
     public List<Entrada> GetEntradas()
     {
-        List<Entrada> entradas = new();
+        List<Entrada> entradas = new List<Entrada>();
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
             entradas = connection.Query<Entrada>("SELECT * FROM Entrada WHERE Vendida = 0").ToList();
@@ -207,6 +207,7 @@ public class BD
         }
     }
 
+<<<<<<< HEAD
     public Entrada? GetEntradaPorId(int id)
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -237,6 +238,15 @@ public class BD
 
             return evento;
         }
+=======
+    public List<Entrada> GetEntradasCompradas(int dni)
+    {
+        return null;
+    }
+    public List<Entrada> GetEntradasPublicadas(int dni)
+    {
+        return null;
+>>>>>>> ee3cfec92fed051a9078d30d458a784c2a08e8f4
     }
 
 }
