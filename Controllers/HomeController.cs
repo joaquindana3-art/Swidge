@@ -17,7 +17,8 @@ public class HomeController : Controller
     {
         BD bd = new BD();
         List<Entrada> listaEntradas = bd.GetEntradas();
-        return View(listaEntradas);
+        ViewBag.listaEntradas = listaEntradas;
+        return View();
     }
 
     public IActionResult Ayuda()

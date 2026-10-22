@@ -47,7 +47,7 @@ public class BD
 
     public List<Entrada> GetEntradas()
     {
-        List<Entrada> entradas = new();
+        List<Entrada> entradas = new List<Entrada>();
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
             entradas = connection.Query<Entrada>("SELECT * FROM Entrada WHERE Vendida = 0").ToList();
