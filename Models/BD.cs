@@ -207,4 +207,13 @@ public class BD
         }
     }
 
+    public List<Entrada> GetEntradasCompradas(int dni)
+    {
+        return null;
+    }
+    public List<Entrada> GetEntradasPublicadas(int dni)
+    {
+        return null;
+    }
+
 }

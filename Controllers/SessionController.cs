@@ -9,17 +9,6 @@ public class SessionController : Controller
     BD bd = new BD();
     private static readonly string _hashFalso = BCrypt.Net.BCrypt.HashPassword("contrasena-falsa"); 
 
-    public IActionResult IniciarSesion()
-    {
-        if (HaySesion())
-        {
-
-            return RedirectToAction("Index", "Home");
-
-        }
-        return View();
-    }
-
     [HttpPost]
     public IActionResult IniciarSesion(string nombreUsuario, string contrasena)
     {
@@ -46,19 +35,7 @@ public class SessionController : Controller
         HttpContext.Session.Clear();
         return RedirectToAction("Index", "Home");
     }
-
-
     [HttpPost]
-    public IActionResult Registrarse()
-    {
-        if (HaySesion()) {
-
-            return RedirectToAction("Index", "Home");
-
-        }
-        return View();
-    }
-
     public IActionResult Registrarse(int dni, string nombre, string apellido, string nombreUsuario, DateTime fechaNacimiento, string ciudad, string mail, string contrasena)
     {
         if (HaySesion()) {
@@ -138,16 +115,6 @@ public class SessionController : Controller
     }
 
     public IActionResult OlvideMiContraseña()
-    {
-        return View();
-    }
-
-    public IActionResult IniciarSesionGoogle()
-    {
-        return View();
-    }
-
-    public IActionResult IniciarSesionApple()
     {
         return View();
     }

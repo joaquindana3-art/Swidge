@@ -43,11 +43,28 @@ public class HomeController : Controller
 
     public IActionResult EntradasCompradas()
     {
+        BD bd = new BD();
+        if (HttpContext.Session.GetInt32("DNI") != null)
+        {
+            ViewBag.EntradasCompradas = bd.GetEntradasCompradas(HttpContext.Session.GetInt32("DNI").Value);
+        }
+        else
+        {
+            ViewBag.EntradasCompradas = new List<Entrada>();
+        }
         return View();
     }
 
     public IActionResult EntradasPublicadas()
     {
+        BD bd = new BD();
+        if (HttpContext.Session.GetInt32("DNI") != null) {
+            ViewBag.EntradasPublicadas = bd.GetEntradasPublicadas(HttpContext.Session.GetInt32("DNI").Value);
+        }
+        else
+        {
+            ViewBag.EntradasPublicadas = new List<Entrada>();
+        }
         return View();
     }
     
@@ -88,6 +105,9 @@ public class HomeController : Controller
 
     public IActionResult PublicarEntrada()
     {
+
+        BD bd = new BD();
+
         return View();
     }
 

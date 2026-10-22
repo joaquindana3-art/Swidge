@@ -1,0 +1,150 @@
+@{
+    ViewData["Title"] = "Centro de Ayuda";
+}
+
+<div class="container my-4">
+    <div class="row g-4">
+        
+        <!-- Columna Izquierda: Centro de Ayuda & FAQs -->
+        <div class="col-12 col-lg-8">
+            
+            <!-- Banner Azul Principal -->
+            <div class="p-4 text-white rounded mb-3 shadow-sm" style="background-color: #5C82F2;">
+                <small class="text-uppercase tracking-wider fw-semibold opacity-75">CENTRO DE AYUDA</small>
+                <h1 class="fw-bold mb-2">¿Cómo podemos ayudarte?</h1>
+                <p class="mb-0 small opacity-90">Encuentra respuestas rápidas sobre compras, ventas y tus entradas.</p>
+            </div>
+
+            <!-- Buscador -->
+            <div class="p-2 rounded mb-3 shadow-sm d-flex align-items-center" style="background-color: #5C82F2;">
+                <div class="input-group">
+                    <span class="input-group-text bg-transparent border-0 text-white pe-1">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input type="text" class="form-control bg-transparent border-0 text-white placeholder-white shadow-none" placeholder="Busca una pregunta, como por ejemplo &quot;reembolso&quot;">
+                    <button class="btn btn-light text-primary fw-bold px-4 rounded-2" type="button">Buscar</button>
+                </div>
+            </div>
+
+            <!-- Botones / Categorías -->
+            <div class="d-flex flex-wrap gap-2 mb-4">
+                <button class="btn text-white fw-medium px-3 py-1" style="background-color: #5C82F2; font-size: 0.9rem;">Compra</button>
+                <button class="btn text-white fw-medium px-3 py-1" style="background-color: #5C82F2; font-size: 0.9rem;">Venta</button>
+                <button class="btn text-white fw-medium px-3 py-1" style="background-color: #5C82F2; font-size: 0.9rem;">Mi cuenta</button>
+                <button class="btn text-white fw-medium px-3 py-1" style="background-color: #5C82F2; font-size: 0.9rem;">Cambios y reembolsos</button>
+            </div>
+
+            <!-- Preguntas Frecuentes -->
+            <h3 class="fw-bold text-dark mb-3">Preguntas frecuentes</h3>
+            
+            <div class="p-4 text-white rounded mb-3 shadow-sm" style="background-color: #5C82F2;">
+                <div class="accordion accordion-flush" id="faqAccordion">
+                    
+                    <div class="accordion-item bg-transparent text-white border-bottom border-white-50">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed bg-transparent text-white shadow-none fw-semibold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                ¿Cómo recibo mi entrada después de comprarla?
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-white-50 pt-0">
+                                Una vez confirmada la compra, podrás ver y descargar tu entrada en la sección "Mis entradas compradas".
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item bg-transparent text-white border-bottom border-white-50">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed bg-transparent text-white shadow-none fw-semibold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                ¿Cómo sé que una entrada es auténtica?
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-white-50 pt-0">
+                                Todas las entradas publicadas en Swidge pasan por un proceso de verificación única de código QR.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item bg-transparent text-white border-bottom border-white-50">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed bg-transparent text-white shadow-none fw-semibold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                ¿Qué ocurre si se cancela el evento?
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-white-50 pt-0">
+                                En caso de cancelación oficial por parte del organizador, se reembolsará el importe total a tu medio de pago original.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item bg-transparent text-white border-0">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed bg-transparent text-white shadow-none fw-semibold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                                ¿Puedo devolver una entrada que ya he comprado?
+                            </button>
+                        </h2>
+                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-white-50 pt-0">
+                                Puedes volver a publicarla a la venta desde tu perfil si no vas a poder asistir.
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Banner Política de Devolución -->
+            <div class="p-3 text-white rounded shadow-sm" style="background-color: #5C82F2;">
+                <h6 class="fw-bold mb-1 text-uppercase">POLÍTICA DE DEVOLUCIÓN:</h6>
+                <a href="#" class="text-white text-decoration-underline fw-bold small">DESCARGAR PDF</a>
+            </div>
+
+        </div>
+
+        <!-- Columna Derecha: Asistente Swidge (Chatbot) -->
+        <div class="col-12 col-lg-4">
+            <div class="p-4 rounded shadow-sm h-100 d-flex flex-column justify-content-between" style="background-color: #5C82F2; min-height: 500px;">
+                <div>
+                    <h2 class="text-white fw-bold mb-4">Asistente Swidge</h2>
+                    
+                    <!-- Contenedor del Chat / Mensajes -->
+                    <div class="p-3 rounded mb-3 text-dark bg-light bg-opacity-75" style="font-size: 0.9rem;">
+                        <p class="mb-0 fw-semibold">¡Hola! Soy el asistente de SWIDGE. Puedo ayudarte con tus compras, ventas o entradas.</p>
+                    </div>
+
+                    <!-- Accesos Rápidos del Chatbot -->
+                    <div class="d-flex flex-column gap-2">
+                        <button class="btn btn-light btn-sm text-start text-primary fw-medium border-0 shadow-sm opacity-90">
+                            Tengo un problema con mi entrada
+                        </button>
+                        <button class="btn btn-light btn-sm text-start text-primary fw-medium border-0 shadow-sm opacity-90">
+                            Consultar un reembolso
+                        </button>
+                        <button class="btn btn-light btn-sm text-start text-primary fw-medium border-0 shadow-sm opacity-90">
+                            Hablar con el personal
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Input del Chat -->
+                <div class="mt-4">
+                    <div class="input-group">
+                        <input type="text" class="form-control border-0 rounded-start-2 text-dark shadow-none" placeholder="Escribe tu pregunta" style="font-size: 0.85rem;">
+                        <button class="btn btn-light border-0 text-dark rounded-end-2 px-3" type="button">
+                            <i class="bi bi-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .placeholder-white::placeholder {
+        color: rgba(255, 255, 255, 0.7) !important;
+    }
+</style>
