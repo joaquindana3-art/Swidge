@@ -491,3 +491,23 @@ footer.footer {
   color: #111111;
   text-decoration: none;
 }
+
+.carrusel {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-bottom: 2%;
+  overflow: hidden;
+}
+
+.carrusel .carousel,
+.carrusel .carousel-inner,
+.carrusel .carousel-item {
+  width: 100%;
+}
+
+.carrusel .carousel-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
