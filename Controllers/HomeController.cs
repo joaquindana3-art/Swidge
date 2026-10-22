@@ -35,9 +35,15 @@ public class HomeController : Controller
         return View();
     }
 
-    public IActionResult DetalleEntrada()
+    public IActionResult DetalleEntrada(int id)
     {
-        return View();
+        BD bd = new BD();
+        var entrada = bd.GetEntradaPorId(id);
+
+        if (entrada == null)
+            return RedirectToAction("Index");
+
+        return View(entrada);
     }
 
     public IActionResult EntradasCompradas()
