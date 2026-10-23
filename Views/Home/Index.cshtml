@@ -41,7 +41,7 @@
                     </svg>
                     <span class="fw-bold fs-5">Consultar</span>
                 </div>
-                <img src="~/images/swidge-logo-small.png" alt="Swidge Logo" class="letras" style="height: 35px;" />
+                <img src="~/img/letrasSwidge.png" alt="Swidge Logo" class="letras" style="height: 35px;" />
             </div>
         </div>
     </div>
@@ -56,11 +56,15 @@
                     @foreach (var item in entradas)
                     {
                         var evento = item.Evento ?? new Swidge.Models.Evento { Nombre = "Evento", Lugar = "Lugar", Fecha = DateTime.Now };
+                        var imagenEvento = string.IsNullOrEmpty(evento.Imagen)
+                            ? Url.Content("~/img/default-event.jpg")
+                            : Url.Content("~/img/" + evento.Imagen);
+
                         <div class="col">
                             <div class="card h-100 border-0 p-3" style="background-color: #a4bafa; border-radius: 8px;">
-                                <img src="@(string.IsNullOrEmpty(item.Imagen) ? "/images/default-event.jpg" : item.Imagen)" 
-                                     class="card-img-top mb-2" 
-                                     alt="@(evento.Nombre)" 
+                                <img src="@imagenEvento"
+                                     class="card-img-top mb-2"
+                                     alt="@(evento.Nombre)"
                                      style="height: 170px; object-fit: cover; border-radius: 4px;" />
                                 
                                 <div class="card-body p-0 d-flex flex-column justify-content-between">
