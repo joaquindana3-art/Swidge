@@ -114,6 +114,8 @@ nav a {
 .usuario {
   width: 2.35rem;
   height: 2.35rem;
+  display: block;
+  object-fit: contain;
 }
 
 .letras {
@@ -805,8 +807,10 @@ img.usuario {
   object-fit: contain;
   background: transparent;
   border-radius: 0;
-  filter: brightness(0) invert(1);
-  opacity: 0.96;
+  padding: 0;
+  box-sizing: border-box;
+  filter: none;
+  opacity: 1;
 }
 
 .profile-username {

@@ -22,7 +22,7 @@ public class SessionController : Controller
         {
             // Se hace un hash falso para que el tiempo de respuesta sea similar al de un login válido.
             BCrypt.Net.BCrypt.Verify(contrasena, _hashFalso);
-            ViewBag.ErrorMessage = "Usuario o contraseña incorrectos.";
+            TempData["ErrorMessage"] = "Usuario o contraseña incorrectos.";
             return RedirectToAction("IniciarSesion", "Home");
         }
         GuardarSesion(encontrado);

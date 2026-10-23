@@ -15,7 +15,7 @@
     @if (listaPublicadas == null || !listaPublicadas.Any())
     {
         <div class="alert alert-secondary text-center py-4" role="alert">
-            No tienes entradas publicadas a la venta.
+            @ViewBag.mensaje
         </div>
     }
     else

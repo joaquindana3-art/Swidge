@@ -59,28 +59,43 @@ public class HomeController : Controller
     public IActionResult EntradasCompradas()
     {
         BD bd = new BD();
-        SessionController SessionController = new SessionController();
-        if (SessionController.HaySesion())
+        int? dniSesion = HttpContext.Session.GetInt32("DNI");
+
+        if (dniSesion == null)
         {
-            ViewBag.EntradasCompradas = bd.GetEntradasCompradas(HttpContext.Session.GetInt32("DNI").Value);
-        }
-        else
-        {
+            ViewBag.mensaje = "Registráte o iniciá sesión para poder comprar o vender entradas.";
             ViewBag.EntradasCompradas = new List<Entrada>();
+            return View();
         }
+
+        List<Entrada> entradasCompradas = bd.GetEntradasCompradas(dniSesion.Value);
+        ViewBag.EntradasCompradas = entradasCompradas;
+
+        ViewBag.mensaje = entradasCompradas.Count == 0
+            ? "No tienes entradas compradas registradas."
+            : "";
+
         return View();
     }
 
     public IActionResult EntradasPublicadas()
     {
         BD bd = new BD();
-        if (HttpContext.Session.GetInt32("DNI") != null) {
-            ViewBag.EntradasPublicadas = bd.GetEntradasPublicadas(HttpContext.Session.GetInt32("DNI").Value);
-        }
-        else
-        {
+        int? dniSesion = HttpContext.Session.GetInt32("DNI");
+
+        if (dniSesion == null) {
+            ViewBag.mensaje = "Registráte o iniciá sesión para poder comprar o vender entradas.";
             ViewBag.EntradasPublicadas = new List<Entrada>();
+            return View();
         }
+
+        List<Entrada> entradasPublicadas = bd.GetEntradasPublicadas(dniSesion.Value);
+        ViewBag.EntradasPublicadas = entradasPublicadas;
+
+        ViewBag.mensaje = entradasPublicadas.Count == 0
+            ? "No tienes entradas publicadas registradas."
+            : "";
+
         return View();
     }
     
@@ -91,6 +106,11 @@ public class HomeController : Controller
 
     public IActionResult IniciarSesion()
     {
+
+        int? dniSesion = HttpContext.Session.GetInt32("DNI");
+        if (dniSesion != null) {
+            return RedirectToAction("Index", "Home");
+        }
         return View();
     }
 
@@ -129,7 +149,13 @@ public class HomeController : Controller
 
     public IActionResult Registrarse()
     {
+
+        int? dniSesion = HttpContext.Session.GetInt32("DNI");
+        if (dniSesion != null) {
+            return RedirectToAction("Index", "Home");
+        }
         return View();
+
     }
 
     public IActionResult Privacy()

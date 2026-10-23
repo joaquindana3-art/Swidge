@@ -1,6 +1,7 @@
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Iniciar sesión";
+    var errorMessage = TempData["ErrorMessage"] as string;
 }
 
 <!DOCTYPE html>
@@ -19,9 +20,9 @@
             </div>
 
             <div class="login-card__body">
-                @if (ViewBag.ErrorMessage != null)
+                @if (!string.IsNullOrWhiteSpace(errorMessage))
                 {
-                    <div class="login-alert" id="error-servidor">@ViewBag.ErrorMessage</div>
+                    <div class="login-alert" id="error-servidor">@errorMessage</div>
                 }
 
                 <form class="login-form" method="post" action="@Url.Action("IniciarSesion", "Session")" onsubmit="return validarLogin();" novalidate>
@@ -40,8 +41,7 @@
                     </div>
 
                     <div id="fb-login" class="login-feedback"></div>
-                    <div>@ViewBag.ErrorMessage</div>
-                    <button type="submit" class="login-submit" href="@Url.Action("IniciarSesion", "Session")">Iniciar sesión</button>
+                    <button type="submit" class="login-submit">Iniciar sesión</button>
 
                     <img class="login-brand" src="~/img/letrasSwidge.png" alt="Swidge" />
                 </form>
@@ -49,10 +49,9 @@
         </section>
 
         <div class="login-divider" aria-hidden="true">o</div>
-            <p class="login-register">
-                ¿No tenés cuenta? <a href="@Url.Action("Registrarse", "Session")">Registrate</a>
-            </p>
-        </div>
+        <p class="login-register">
+            ¿No tenés cuenta? <a href="@Url.Action("Registrarse", "Session")">Registrate</a>
+        </p>
     </main>
 
     <script src="@Url.Content("~/js/login.js")"></script>
