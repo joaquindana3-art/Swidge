@@ -227,7 +227,7 @@ public class BD
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
-            string storedProcedure = "sp_BuscarEventoPorId";
+            string storedProcedure = "BuscarEventoPorId";
 
             Evento? evento = connection.Query<Evento>(
                 storedProcedure,
