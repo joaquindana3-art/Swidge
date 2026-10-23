@@ -50,7 +50,8 @@ public class SessionController : Controller
             NombreUsuario = nombreUsuario,
             FechaNacimiento = fechaNacimiento,
             Ciudad = ciudad,
-            Mail = mail
+            Mail = mail,
+            Contraseña = contrasena
         };
 
         List<string> errores = new List<string>();
