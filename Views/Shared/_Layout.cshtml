@@ -26,19 +26,25 @@
             <div class="nav-group nav-right">
                 <a class="pill-link wide" asp-controller="Home" asp-action="EntradasPublicadas">Mis entradas publicadas</a>
                 <a class="pill-link wide" asp-controller="Home" asp-action="EntradasCompradas">Mis entradas compradas</a>
-                
-                                <div class="dropdown profile-dropdown">
-                                        <button class="btn profile-dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <img class="usuario" src="~/img/usuario.png" alt="Usuario">
-                                        </button>
-                                        <ul class="dropdown-menu dropdown-menu-end">
-                                                <li><a class="dropdown-item" asp-controller="Home" asp-action="MiPerfil">Mi perfil</a></li>
-                                                <li><a class="dropdown-item" asp-controller="Home" asp-action="IniciarSesion">Iniciar sesión</a></li>
-                                                <li><a class="dropdown-item" asp-controller="Home" asp-action="Registrarse">Registrarse</a></li>
-                                                <li><a class="dropdown-item" asp-controller="Home" asp-action="Index">Cerrar sesión</a></li>
-                                        </ul>
-                                </div>
-                
+
+                <div class="profile-user-wrap">
+                    <div class="dropdown profile-dropdown">
+                        <button class="btn profile-dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img class="usuario" src="~/img/usuario.png" alt="Usuario">
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" asp-controller="Home" asp-action="MiPerfil">Mi perfil</a></li>
+                            <li><a class="dropdown-item" asp-controller="Home" asp-action="IniciarSesion">Iniciar sesión</a></li>
+                            <li><a class="dropdown-item" asp-controller="Home" asp-action="Registrarse">Registrarse</a></li>
+                            <li><a class="dropdown-item" asp-controller="Session" asp-action="CerrarSesion">Cerrar sesión</a></li>
+                        </ul>
+                    </div>
+
+                    @if (!string.IsNullOrWhiteSpace(Context.Session.GetString("NombreUsuario")))
+                    {
+                        <span class="profile-username">@Context.Session.GetString("NombreUsuario")</span>
+                    }
+                </div>
             </div>
         </nav>
     </header>

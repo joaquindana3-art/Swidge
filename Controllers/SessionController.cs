@@ -120,7 +120,7 @@ public class SessionController : Controller
         return View();
     }
 
-    private bool HaySesion()
+    public bool HaySesion()
     {
         if (HttpContext.Session.GetInt32("DNI") == null)
         {
