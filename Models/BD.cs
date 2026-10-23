@@ -207,7 +207,6 @@ public class BD
         }
     }
 
-<<<<<<< HEAD
     public Entrada? GetEntradaPorId(int id)
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -238,15 +237,41 @@ public class BD
 
             return evento;
         }
-=======
-    public List<Entrada> GetEntradasCompradas(int dni)
-    {
-        return null;
     }
+
+
+    public List<Entrada> GetEntradasCompradas(int dni)
+{
+    List<Entrada> entradasCompradas = new List<Entrada>();
+    using (SqlConnection connection = new SqlConnection(_connectionString))
+    {
+        string storedProcedure = "GetEntradasCompradas";
+
+        entradasCompradas = connection.Query<Entrada>(
+            storedProcedure,
+            new { DNI = dni },
+            commandType: CommandType.StoredProcedure
+        ).ToList();
+    }
+    return entradasCompradas;
+}
+
     public List<Entrada> GetEntradasPublicadas(int dni)
     {
-        return null;
->>>>>>> ee3cfec92fed051a9078d30d458a784c2a08e8f4
+        List<Entrada> entradasPublicadas = new List<Entrada>();
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string storedProcedure = "GetEntradasPublicadas";
+
+            entradasPublicadas = connection.Query<Entrada>(
+                storedProcedure,
+                new { DNI = dni },
+                commandType: CommandType.StoredProcedure
+            ).ToList();
+        }
+        return entradasPublicadas;
     }
+
+
 
 }
