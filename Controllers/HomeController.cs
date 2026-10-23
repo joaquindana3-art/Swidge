@@ -31,6 +31,15 @@ public class HomeController : Controller
         return View();
     }
 
+    public IActionResult _Layout() {
+
+        SessionController SessionController = new SessionController();
+        if (SessionController.HaySesion()) {
+            ViewBag.nombreUsuario = HttpContext.Session.GetString("NombreUsuario");
+        }
+        return View();
+
+    }
     public IActionResult CompraExitosa()
     {
         return View();
@@ -50,7 +59,8 @@ public class HomeController : Controller
     public IActionResult EntradasCompradas()
     {
         BD bd = new BD();
-        if (HttpContext.Session.GetInt32("DNI") != null)
+        SessionController SessionController = new SessionController();
+        if (SessionController.HaySesion())
         {
             ViewBag.EntradasCompradas = bd.GetEntradasCompradas(HttpContext.Session.GetInt32("DNI").Value);
         }

@@ -272,6 +272,4 @@ public class BD
         return entradasPublicadas;
     }
 
-
-
 }
