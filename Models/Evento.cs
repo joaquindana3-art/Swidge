@@ -10,7 +10,7 @@ public class Evento
     public string Lugar { get; set; } = "";
     public DateTime Fecha { get; set; }
     public string Imagen { get; set; } = "";
-    public int CantidadEntradas { get; set; }
+    public int CantidadEntradas { get; set; } = 0;
  
 }
  

@@ -12,19 +12,27 @@
     var fecha = evento.Fecha != default ? evento.Fecha.ToString("ddd, dd MMM, HH:mm") : "Fecha por confirmar";
     var precio = Model?.Precio > 0 ? Model.Precio.ToString("N0") : "0";
 
-    var imagen = !string.IsNullOrWhiteSpace(evento.Imagen)
-        ? evento.Imagen
-        : (!string.IsNullOrWhiteSpace(Model?.Imagen) ? Model.Imagen : "/img/null.jpg");
+    var imagenEvento = string.IsNullOrWhiteSpace(evento.Imagen)
+        ? Url.Content("~/img/default-event.jpg")
+        : Url.Content("~/img/" + evento.Imagen);
 
     var categoria = string.IsNullOrWhiteSpace(evento.Categoria) ? "General" : evento.Categoria;
     var protagonista = string.IsNullOrWhiteSpace(evento.Protagonista) ? "Artista por confirmar" : evento.Protagonista;
     var descripcion = string.IsNullOrWhiteSpace(evento.Descripcion) ? "Descripción no disponible." : evento.Descripcion;
     var cantidadEntradas = evento.CantidadEntradas > 0 ? evento.CantidadEntradas : 0;
+    if (evento.ID > 0)
+    {
+        var bd = new Swidge.Models.BD();
+        cantidadEntradas = bd.GetCantidadEntradasPorEvento(evento.ID);
+    }
 }
 
 <div class="detalle-page">
     <section class="detalle-evento">
-        <div class="detalle-media" style="background-image: url('@imagen'); background-size: cover; background-position: center;" aria-label="Cartel del evento"></div>
+        <img src="@imagenEvento"
+             alt="@(evento.Nombre)"
+             class="detalle-media"
+             style="display:block; width:100%; height:360px; object-fit:cover; border-radius:12px; box-shadow:0 10px 22px rgba(16,35,61,0.12);" />
 
         <div class="detalle-header">
             <h1 class="detalle-titulo">@evento.Nombre</h1>
