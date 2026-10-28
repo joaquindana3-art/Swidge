@@ -5,13 +5,10 @@
 }
 
 <div class="container my-4">
-    <!-- Banner Rojo Header (Entradas Publicadas) -->
     <div class="p-4 text-white rounded mb-4 shadow-sm" style="background-color: #8b0000;">
         <small class="text-uppercase tracking-wider opacity-75">TU ESPACIO SWIDGE</small>
         <h1 class="fw-bold m-0">MIS ENTRADAS PUBLICADAS</h1>
     </div>
-
-    <!-- Lista de Entradas Publicadas -->
     @if (listaPublicadas == null || !listaPublicadas.Any())
     {
         <div class="alert alert-secondary text-center py-4" role="alert">

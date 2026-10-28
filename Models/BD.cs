@@ -259,6 +259,15 @@ public class BD
         }
     }
 
+    public void PublicarEntrada(int IDevento, int IDvendedor, double Precio, string QR) {
+
+        using (SqlConnection connection = new SqlConnection(_connectionString)) {
+            string storedProcedure = "PublicarEntrada";
+            
+        }
+
+    }
+
 
     public List<Entrada> GetEntradasCompradas(int dni)
 {

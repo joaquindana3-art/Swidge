@@ -5,13 +5,10 @@
 }
 
 <div class="container my-4">
-    <!-- Banner Azul Header (Entradas Compradas) -->
     <div class="p-4 text-white rounded mb-4 shadow-sm" style="background-color: #0d1b6a;">
         <small class="text-uppercase tracking-wider opacity-75">TU ESPACIO SWIDGE</small>
         <h1 class="fw-bold m-0">MIS ENTRADAS COMPRADAS</h1>
     </div>
-
-    <!-- Lista de Entradas Compradas -->
     @if (listaCompradas == null || !listaCompradas.Any())
     {
         <div class="alert alert-secondary text-center py-4" role="alert">

@@ -31,7 +31,6 @@
 </section>
 
 <div class="container-fluid px-4">
-    <!-- Buscador Principal -->
     <div class="row justify-content: center mb-4">
         <div class="col-md-8 mx-auto">
             <div class="p-2 d-flex align-items-center justify-content-between" style="background-color: #5f82f7; border-radius: 6px;">
@@ -45,10 +44,7 @@
             </div>
         </div>
     </div>
-
-    <!-- Contenido: Tarjetas y Filtros -->
     <div class="row">
-        <!-- Listado de Entradas (Dinámico desde BD) -->
         <div class="col-lg-8 col-md-7">
             @if (entradas != null && entradas.Count > 0)
             {
@@ -101,8 +97,6 @@
                 </div>
             }
         </div>
-
-        <!-- Panel Lateral de Filtros -->
         <div class="col-lg-4 col-md-5 mt-4 mt-md-0">
             <div class="p-4 text-white" style="background-color: #5f82f7; border-radius: 10px;">
                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -114,8 +108,6 @@
                     </div>
                     <a href="#" class="text-white text-decoration-underline" style="font-size: 0.85rem;">Limpiar</a>
                 </div>
-
-                <!-- Filtro Ciudad -->
                 <div class="mb-3">
                     <label class="form-label fw-bold mb-1">Ciudad</label>
                     <select class="form-select border-0">
@@ -125,8 +117,6 @@
                         <option value="3">Mendoza</option>
                     </select>
                 </div>
-
-                <!-- Filtro Categoría -->
                 <div class="mb-3">
                     <label class="form-label fw-bold mb-1">Categoría</label>
                     <div class="d-flex flex-column gap-2">
@@ -136,8 +126,6 @@
                         <button class="btn btn-light text-start fw-bold py-1" style="color: #274b9f;">Teatros</button>
                     </div>
                 </div>
-
-                <!-- Filtro Precio -->
                 <div class="mb-4">
                     <div class="d-flex justify-content-between fw-bold mb-1">
                         <span>Precio máximo</span>
@@ -149,8 +137,6 @@
                         <span class="fw-bold">$150</span>
                     </div>
                 </div>
-
-                <!-- Checkbox Vendedores Verificados -->
                 <div class="form-check d-flex justify-content-between align-items-center ps-0">
                     <label class="form-check-label fw-bold" for="checkVerificados">
                         Solo vendedores verificados
