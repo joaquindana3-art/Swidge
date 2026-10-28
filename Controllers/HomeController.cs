@@ -139,11 +139,11 @@ public class HomeController : Controller
         return View();
     }
 
-    public IActionResult PublicarEntrada()
+    public IActionResult PublicarEntrada(Evento evento, string Precio, string QR)
     {
 
         BD bd = new BD();
-        bd.
+        bd.PublicarEntrada(Evento.id, Precio, QR)
         return View();
 
     }
