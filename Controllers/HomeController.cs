@@ -143,8 +143,9 @@ public class HomeController : Controller
     {
 
         BD bd = new BD();
-
+        bd.
         return View();
+
     }
 
     public IActionResult Registrarse()
