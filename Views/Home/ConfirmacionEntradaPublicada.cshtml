@@ -5,7 +5,7 @@
     var ubicacionId = ViewBag.Ubicacion is int ubic ? ubic : 0;
 
     var qrTexto = entradaId > 0 ? $"QR-{entradaId}" : "QR";
-    var qrUrl = $"https://api.qrserver.com/v1/create-qr-code/?size=480x480&data={System.Net.WebUtility.UrlEncode(qrTexto)}";
+    var qrUrl = $"https://api.qrserver.com/v1/create-qr-code/?size=480x480&data={qrTexto}";
 
     var eventoNombre = evento?.Nombre ?? "Evento";
     var eventoLugar = evento?.Lugar ?? evento?.Categoria ?? "Lugar no informado";
