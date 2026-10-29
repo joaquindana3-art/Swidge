@@ -109,14 +109,34 @@
                         <span>$0</span>
                         <span id="precioSeleccionado">$@precioMaximo.ToString("N0")</span>
                     </div>
-                    <input type="range"
-                           name="precioMaximo"
-                           class="form-range"
+
+                    <input id="precioMaximoSlider"
+                           type="range"
                            min="0"
-                           max="@precioMaximoBD"
-                           value="@precioMaximo"
-                           oninput="document.getElementById('precioSeleccionado').innerText = '$' + this.value" />
+                           max="100"
+                           value="@((precioMaximoBD > 0 ? (precioMaximo / precioMaximoBD) * 100 : 0m).ToString("0.##", System.Globalization.CultureInfo.InvariantCulture))"
+                           style="width: 100%;"
+                           oninput="const maxDb = Number(@precioMaximoBD); const porcentaje = Number(this.value); const valor = (porcentaje / 100) * maxDb; document.getElementById('precioSeleccionado').innerText = '$' + valor.toLocaleString('es-AR'); document.getElementById('precioMaximoReal').value = valor.toFixed(0);" />
+
+                    <input type="hidden" id="precioMaximoReal" name="precioMaximo" value="@precioMaximo" />
                 </div>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const slider = document.getElementById('precioMaximoSlider');
+                        const hidden = document.getElementById('precioMaximoReal');
+                        const label = document.getElementById('precioSeleccionado');
+
+                        if (!slider || !hidden || !label) return;
+
+                        const maxDb = Number(@precioMaximoBD);
+                        const porcentaje = Number(slider.value || 0);
+                        const valor = (porcentaje / 100) * maxDb;
+
+                        hidden.value = valor.toFixed(0);
+                        label.innerText = '$' + valor.toLocaleString('es-AR');
+                    });
+                </script>
 
                 <div class="form-check mb-3">
                     @if (soloVerificados)
