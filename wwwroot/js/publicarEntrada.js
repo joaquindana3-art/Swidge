@@ -1,7 +1,55 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const form = document.querySelector('form[action*="PublicarEntrada"]');
-
+  const form = document.getElementById('formPublicarEntrada');
   if (!form) return;
+
+  const sectorSelect = document.getElementById('sectorEntrada');
+  const filaGroup = document.getElementById('filaGroup');
+  const asientoGroup = document.getElementById('asientoGroup');
+  const eventoBusqueda = document.getElementById('eventoBusqueda');
+  const eventoSeleccionadoId = document.getElementById('eventoSeleccionadoId');
+  const eventosLista = document.getElementById('eventosLista');
+
+  const toggleSectorFields = () => {
+    if (!sectorSelect || !filaGroup || !asientoGroup) return;
+
+    const esCampo = sectorSelect.value === 'Campo';
+    filaGroup.style.display = esCampo ? 'none' : 'block';
+    asientoGroup.style.display = esCampo ? 'none' : 'block';
+
+    const filaInput = filaGroup.querySelector('input');
+    const asientoInput = asientoGroup.querySelector('input');
+
+    if (filaInput) {
+      filaInput.disabled = esCampo;
+      if (esCampo) filaInput.value = '';
+    }
+
+    if (asientoInput) {
+      asientoInput.disabled = esCampo;
+      if (esCampo) asientoInput.value = '';
+    }
+  };
+
+  if (sectorSelect) {
+    sectorSelect.addEventListener('change', toggleSectorFields);
+    toggleSectorFields();
+  }
+
+  if (eventoBusqueda && eventosLista && eventoSeleccionadoId) {
+    eventoBusqueda.addEventListener('input', () => {
+      const valor = eventoBusqueda.value.trim();
+      let idSeleccionado = '';
+
+      for (const option of eventosLista.options) {
+        if (option.value === valor) {
+          idSeleccionado = option.dataset.id || '';
+          break;
+        }
+      }
+
+      eventoSeleccionadoId.value = idSeleccionado;
+    });
+  }
 
   form.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -82,18 +130,70 @@ document.addEventListener('DOMContentLoaded', () => {
       errores.push('Debes aceptar los términos y condiciones.');
     }
 
-    const feedback = document.getElementById("fb-publicacion");
+    const sector = sectorSelect?.value ?? '';
+    const fila = document.getElementById('fila')?.value.trim() ?? '';
+    const asiento = document.getElementById('asiento')?.value.trim() ?? '';
+    const feedback = document.getElementById('fb-publicacion');
+
+    if (!eventoSeleccionadoId || !eventoSeleccionadoId.value) {
+      errores.push('Debes seleccionar un evento existente.');
+    }
+
+    if (!sector) {
+      errores.push('Debes seleccionar un sector.');
+    }
+
+    if (sector !== 'Campo') {
+      if (!fila || !asiento) {
+        errores.push('Si el sector no es Campo, fila y asiento son obligatorios.');
+      }
+    }
+
     if (errores.length > 0) {
-      feedback.innerHTML = '<strong>Errores:</strong><br>' + errores.join('<br>');
-      feedback.style.color = "red";
-      feedback.style.display = "block";
+      if (feedback) {
+        feedback.innerHTML = '<strong>Errores:</strong><br>' + errores.join('<br>');
+        feedback.style.color = 'red';
+        feedback.style.display = 'block';
+      }
       return;
     }
 
-    feedback.textContent = "";
-    feedback.style.display = "none";
+    if (feedback) {
+      feedback.textContent = '';
+      feedback.style.display = 'none';
+    }
+
     form.submit();
   });
+
+  const fileInput = document.getElementById('comprobante');
+  const preview = document.getElementById('imgPreview');
+  const previewContainer = document.getElementById('previewComprobante');
+  const placeholder = document.getElementById('placeholderComprobante');
+  const botonCambiar = document.getElementById('btnCambiarArchivo');
+
+  if (!fileInput || !preview || !previewContainer || !placeholder || !botonCambiar) return;
+
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files && fileInput.files[0];
+
+    if (!file) {
+      preview.style.display = 'none';
+      previewContainer.classList.add('d-none');
+      placeholder.classList.remove('d-none');
+      botonCambiar.classList.add('d-none');
+      return;
+    }
+
+    const url = URL.createObjectURL(file);
+    preview.src = url;
+    preview.style.display = 'block';
+    previewContainer.classList.remove('d-none');
+    placeholder.classList.add('d-none');
+    botonCambiar.classList.remove('d-none');
+  });
+
+  botonCambiar.addEventListener('click', () => fileInput.click());
 });
 
 function getInputByIdOrName(idOrNameList) {
@@ -156,113 +256,3 @@ function validarPublicacion() {
 
   return true;
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-  const sectorSelect = document.getElementById('sectorEntrada');
-  const filaGroup = document.getElementById('filaGroup');
-  const asientoGroup = document.getElementById('asientoGroup');
-  const form = document.querySelector('form[action*="PublicarEntrada"]');
-  const eventoBusqueda = document.getElementById('eventoBusqueda');
-  const eventoSeleccionadoId = document.getElementById('eventoSeleccionadoId');
-  const eventosLista = document.getElementById('eventosLista');
-
-  if (eventoBusqueda && eventosLista && eventoSeleccionadoId) {
-    eventoBusqueda.addEventListener('input', () => {
-      const valor = eventoBusqueda.value.trim();
-      let idSeleccionado = '';
-
-      for (const option of eventosLista.options) {
-        if (option.value === valor) {
-          idSeleccionado = option.dataset.id || '';
-          break;
-        }
-      }
-
-      eventoSeleccionadoId.value = idSeleccionado;
-    });
-  }
-
-  if (!sectorSelect || !filaGroup || !asientoGroup || !form) return;
-
-  const toggleSectorFields = () => {
-    const esCampo = sectorSelect.value === 'Campo';
-
-    filaGroup.style.display = esCampo ? 'none' : 'block';
-    asientoGroup.style.display = esCampo ? 'none' : 'block';
-
-    if (esCampo) {
-      const filaInput = filaGroup.querySelector('input');
-      const asientoInput = asientoGroup.querySelector('input');
-      if (filaInput) filaInput.value = '';
-      if (asientoInput) asientoInput.value = '';
-    }
-  };
-
-  sectorSelect.addEventListener('change', toggleSectorFields);
-  toggleSectorFields();
-
-  form.addEventListener('submit', (event) => {
-    const sector = sectorSelect.value;
-    const fila = document.getElementById('fila')?.value.trim() ?? '';
-    const asiento = document.getElementById('asiento')?.value.trim() ?? '';
-    const feedback = document.getElementById('fb-publicacion');
-
-    if (!eventoSeleccionadoId.value) {
-      event.preventDefault();
-      feedback.textContent = 'Debes seleccionar un evento existente.';
-      feedback.style.display = 'block';
-      feedback.style.color = 'red';
-      return;
-    }
-
-    if (!sector) {
-      event.preventDefault();
-      feedback.textContent = 'Debes seleccionar un sector.';
-      feedback.style.display = 'block';
-      feedback.style.color = 'red';
-      return;
-    }
-
-    if (sector !== 'Campo') {
-      if (!fila || !asiento) {
-        event.preventDefault();
-        feedback.textContent = 'Si el sector no es Campo, fila y asiento son obligatorios.';
-        feedback.style.display = 'block';
-        feedback.style.color = 'red';
-        return;
-      }
-    }
-
-    feedback.textContent = '';
-    feedback.style.display = 'none';
-  });
-
-  const fileInput = document.getElementById('comprobante');
-  const preview = document.getElementById('imgPreview');
-  const previewContainer = document.getElementById('previewComprobante');
-  const placeholder = document.getElementById('placeholderComprobante');
-  const botonCambiar = document.getElementById('btnCambiarArchivo');
-
-  if (!fileInput || !preview || !previewContainer || !placeholder || !botonCambiar) return;
-
-  fileInput.addEventListener('change', () => {
-    const file = fileInput.files && fileInput.files[0];
-
-    if (!file) {
-      preview.style.display = 'none';
-      previewContainer.classList.add('d-none');
-      placeholder.classList.remove('d-none');
-      botonCambiar.classList.add('d-none');
-      return;
-    }
-
-    const url = URL.createObjectURL(file);
-    preview.src = url;
-    preview.style.display = 'block';
-    previewContainer.classList.remove('d-none');
-    placeholder.classList.add('d-none');
-    botonCambiar.classList.remove('d-none');
-  });
-
-  botonCambiar.addEventListener('click', () => fileInput.click());
-});
