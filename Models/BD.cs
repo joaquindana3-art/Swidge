@@ -125,7 +125,14 @@ public class BD
         return ubicaciones;
 
     }
-
+    public Evento GetEventoPorId(int id)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = "SELECT * FROM dbo.Evento WHERE ID = @ID";
+            return connection.QueryFirstOrDefault<Evento>(query, new { ID = id });
+        }
+    }
     public Usuario? ObtenerUsuarioParaLogin(string nombreUsuario, string contrasena)
     {
 
@@ -272,55 +279,123 @@ public class BD
             return evento;
         }
     }
-
-    public Vendedor? BuscarVendedorPorDNI(int dni)
+    public Entrada BuscarEntradaPorId(int id)
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
-            string storedProcedure = "BuscarVendedorPorDNI";
+            string storedProcedure = "BuscarEntradaPorId";
+
+            Entrada entrada = connection.QueryFirstOrDefault<Entrada>(
+                storedProcedure,
+                new { ID = id },
+                commandType: CommandType.StoredProcedure
+            );
+
+            return entrada;
+        }
+    }
+
+    public Vendedor? BuscarVendedorPorID(int id)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string storedProcedure = "BuscarVendedorPorID";
 
             Vendedor? vendedor = connection.Query<Vendedor>(
                 storedProcedure,
-                new { DNI = dni },
+                new { ID = id },
                 commandType: CommandType.StoredProcedure
             ).FirstOrDefault();
 
             return vendedor;
         }
     }
-
-    public void InsertarVendedor(int dni)
+    public Vendedor? BuscarVendedorPorDNIusuario(int dni)
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
-            string storedProcedure = "InsertarVendedor";
-            connection.Execute(storedProcedure, new { DNI = dni }, commandType: CommandType.StoredProcedure);
+            string storedProcedure = "BuscarVendedorPorDNIusuario";
+
+            Vendedor? vendedor = connection.Query<Vendedor>(
+                storedProcedure,
+                new { DNIusuario = dni },
+                commandType: CommandType.StoredProcedure
+            ).FirstOrDefault();
+
+            return vendedor;
+        }
+    }
+    public Ubicacion BuscarUbicacionPorIDevento(int id)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string storedProcedure = "BuscarUbicacionPorIDevento";
+
+            Ubicacion ubicacion = connection.QueryFirstOrDefault<Ubicacion>(
+                storedProcedure,
+                new { IDevento = id },
+                commandType: CommandType.StoredProcedure
+            );
+
+            return ubicacion;
+        }
+    }
+    public Ubicacion BuscarUbicacionPorId(int id)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string storedProcedure = "BuscarUbicacionPorId";
+
+            Ubicacion ubicacion = connection.QueryFirstOrDefault<Ubicacion>(
+                storedProcedure,
+                new { ID = id },
+                commandType: CommandType.StoredProcedure
+            );
+
+            return ubicacion;
+        }
+    }
+    public int InsertarVendedor(int dni)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = @"INSERT INTO dbo.Vendedor (DNIusuario)
+                             VALUES (@DNI);
+                             SELECT CAST(SCOPE_IDENTITY() AS int);";
+
+            return connection.ExecuteScalar<int>(query, new { DNI = dni });
         }
     }
 
-    public void PublicarEntrada(int idEvento, int idVendedor, decimal precio, string qr)
+    public int PublicarEntrada(int idEvento, int idVendedor, decimal precio, string qr, int idUbicacion)
     {
+        string qrFinal = string.IsNullOrWhiteSpace(qr)
+            ? $"QR_{DateTime.Now:yyyyMMddHHmmss}_{idEvento}_{idVendedor}"
+            : qr;
+
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
             string storedProcedure = "PublicarEntrada";
-            connection.Execute(storedProcedure, new
+            return connection.ExecuteScalar<int>(storedProcedure, new
             {
                 IDEvento = idEvento,
                 IDvendedor = idVendedor,
                 Precio = precio,
-                QR = qr
+                QR = qrFinal,
+                IDubicacion = idUbicacion
             }, commandType: CommandType.StoredProcedure);
         }
     }
 
-    public void InsertarUbicacion(int idEvento, string nombreSector, int? fila, int? asiento)
+    public int InsertarUbicacion(int idEvento, string nombreSector, int? fila, int? asiento)
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
             string query = @"INSERT INTO dbo.Ubicacion (IDevento, NombreSector, Fila, Asiento)
-                             VALUES (@IDevento, @NombreSector, @Fila, @Asiento)";
+                             VALUES (@IDevento, @NombreSector, @Fila, @Asiento);
+                             SELECT CAST(SCOPE_IDENTITY() AS int);";
 
-            connection.Execute(query, new
+            return connection.ExecuteScalar<int>(query, new
             {
                 IDEvento = idEvento,
                 NombreSector = nombreSector,
