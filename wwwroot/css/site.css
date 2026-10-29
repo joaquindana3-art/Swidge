@@ -1024,6 +1024,24 @@ img.usuario {
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
 }
 
+.section-carrusel {
+  width: 100%;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+.section-carrusel .carousel-inner,
+.section-carrusel .carousel-item {
+  width: 100%;
+}
+
+.section-carrusel img {
+  display: block;
+  width: 100%;
+  height: clamp(220px, 24vw, 320px);
+  object-fit: cover;
+  object-position: center;
+}
 
 /* Vista mi perfil */
 .boton-miPerfil {
@@ -1889,4 +1907,47 @@ img.usuario {
   .checkout-shell {
     grid-template-columns: 1fr;
   }
+}
+
+.carousel {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: 0;
+}
+
+.carousel-inner,
+.carousel-item {
+  width: 100%;
+}
+
+.carousel-item img {
+  display: block;
+  width: 100%;
+  height: clamp(220px, 26vw, 360px);
+  object-fit: cover;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  width: 6%;
+}
+
+.carusel-section {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  overflow: hidden;
+}
+
+.carusel-section .carousel,
+.carusel-section .carousel-inner,
+.carusel-section .carousel-item {
+  width: 100%;
+}
+
+.carusel-section .carousel-item img {
+  display: block;
+  width: 100%;
+  height: clamp(220px, 24vw, 320px);
+  object-fit: cover;
+  object-position: center;
 }
