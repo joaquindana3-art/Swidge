@@ -126,6 +126,24 @@ public class HomeController : Controller
 
     public IActionResult MiPerfil()
     {
+        int? dniSesion = HttpContext.Session.GetInt32("DNI");
+
+        if (dniSesion == null)
+        {
+            return RedirectToAction("IniciarSesion", "Home");
+        }
+
+        BD bd = new BD();
+        Usuario usuario = bd.ObtenerUsuarioPorDNI(dniSesion.Value);
+
+        if (usuario == null)
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("IniciarSesion", "Home");
+        }
+
+        usuario.Contraseña = "";
+        ViewBag.Usuario = usuario;
         return View();
     }
 
