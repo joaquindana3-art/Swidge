@@ -298,11 +298,11 @@ public class BD
         }
     }
 
-    public void PublicarEntrada(int IDevento2, int? IDvendedor2, double Precio2, string QR2) {
+    public void PublicarEntrada(int IDevento2, int? IDvendedor2, double Precio2, string QR2, int IDubicacion2, string nombreTitular) {
 
         using (SqlConnection connection = new SqlConnection(_connectionString)) {
             string storedProcedure = "PublicarEntrada";
-            connection.Execute(storedProcedure, new {IDevento = IDevento2, IDvendedor = IDvendedor2, Precio = Precio2, QR = QR2}, commandType: CommandType.StoredProcedure);
+            connection.Execute(storedProcedure, new {IDevento = IDevento2, IDvendedor = IDvendedor2, Precio = Precio2, QR = QR2, IDubicacion = IDubicacion2, nombreTitular = nombreTitular}, commandType: CommandType.StoredProcedure);
         }
 
     }

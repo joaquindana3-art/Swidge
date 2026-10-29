@@ -54,23 +54,14 @@ public class HomeController : Controller
             if (bd.BuscarVendedorPorDNI(usuarioPublicador.DNI) == null)
             {
                 bd.InsertarVendedor(usuarioPublicador.DNI);
-                bd.InsertarUbicacion(evento.id, sector, fila, asiento);
-                bd.PublicarEntrada(usuarioPublicador.DNI, nombreTitular, sector, fila, asiento, precio, imagen);
-                return View();
             }
-            else
-            {
-                ViewBag.nombreTitular = nombreTitular;
-                ViewBag.sector = sector;
-                ViewBag.fila = fila;
-                ViewBag.asiento = asiento;
-                ViewBag.precio = precio;
-                ViewBag.imagen = imagen;
-            }
-
+            bd.InsertarUbicacion(evento.id, sector, fila, asiento);
+            bd.PublicarEntrada(Evento.id, usuarioPublicador.DNI, (double)precio, imagen, bd.ObtenerIDubicacion(evento.id, sector, fila, asiento), nombreTitular);
 
         }
+        /* FALTA PASAR LOS VIEWBAGS A LA CONFIRMACION Y OBTENER LA IDUBICACION BIEN, CREANDO UN SP Y PONIENDOLO EN BD*/
         return View();
+
     }
     public IActionResult CompraExitosa()
     {
