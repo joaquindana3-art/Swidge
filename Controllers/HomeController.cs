@@ -19,6 +19,11 @@ public class HomeController : Controller
         List<Entrada> listaEntradas = bd.GetEntradas();
         decimal precioMaximoBD = bd.GetPrecioMaximoEntrada();
 
+        if (precioMaximo.HasValue && precioMaximo.Value > precioMaximoBD)
+        {
+            precioMaximo = precioMaximoBD;
+        }
+
         foreach (var entrada in listaEntradas)
         {
             var vendedor = bd.GetVendedores().FirstOrDefault(v => v.ID == entrada.IDVendedor);
@@ -59,16 +64,7 @@ public class HomeController : Controller
         ViewBag.listaEntradas = listaEntradas;
         ViewBag.ciudadSeleccionada = ciudad;
         ViewBag.categoriaSeleccionada = categoria;
-
-        if (precioMaximo == null)
-        {
-            ViewBag.precioMaximo = precioMaximoBD;
-        }
-        else
-        {
-            ViewBag.precioMaximo = precioMaximo;
-        }
-
+        ViewBag.precioMaximo = precioMaximo ?? precioMaximoBD;
         ViewBag.precioMaximoBD = precioMaximoBD;
         ViewBag.soloVerificados = soloVerificados;
 

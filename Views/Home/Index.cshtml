@@ -1,53 +1,14 @@
 @{
     ViewData["Title"] = "Compra";
 
-    List<Swidge.Models.Entrada> entradas = ViewBag.listaEntradas as List<Swidge.Models.Entrada>;
-    if (entradas == null)
-    {
-        entradas = new List<Swidge.Models.Entrada>();
-    }
-
-    List<string> ciudades = ViewBag.Ciudades as List<string>;
-    if (ciudades == null)
-    {
-        ciudades = new List<string>();
-    }
-
-    List<string> categorias = ViewBag.Categorias as List<string>;
-    if (categorias == null)
-    {
-        categorias = new List<string>();
-    }
-
-    string ciudadSeleccionada = "Todos";
-    if (ViewBag.ciudadSeleccionada != null)
-    {
-        ciudadSeleccionada = ViewBag.ciudadSeleccionada.ToString();
-    }
-
-    string categoriaSeleccionada = "Todos";
-    if (ViewBag.categoriaSeleccionada != null)
-    {
-        categoriaSeleccionada = ViewBag.categoriaSeleccionada.ToString();
-    }
-
-    decimal precioMaximo = 0m;
-    if (ViewBag.precioMaximo != null)
-    {
-        precioMaximo = Convert.ToDecimal(ViewBag.precioMaximo);
-    }
-
-    decimal precioMaximoBD = 0m;
-    if (ViewBag.precioMaximoBD != null)
-    {
-        precioMaximoBD = Convert.ToDecimal(ViewBag.precioMaximoBD);
-    }
-
-    bool soloVerificados = false;
-    if (ViewBag.soloVerificados != null)
-    {
-        soloVerificados = (bool)ViewBag.soloVerificados;
-    }
+    List<Swidge.Models.Entrada> entradas = ViewBag.listaEntradas as List<Swidge.Models.Entrada> ?? new List<Swidge.Models.Entrada>();
+    List<string> ciudades = ViewBag.Ciudades as List<string> ?? new List<string>();
+    List<string> categorias = ViewBag.Categorias as List<string> ?? new List<string>();
+    string ciudadSeleccionada = ViewBag.ciudadSeleccionada?.ToString() ?? "Todos";
+    string categoriaSeleccionada = ViewBag.categoriaSeleccionada?.ToString() ?? "Todos";
+    decimal precioMaximo = ViewBag.precioMaximo != null ? Convert.ToDecimal(ViewBag.precioMaximo) : 0m;
+    decimal precioMaximoBD = ViewBag.precioMaximoBD != null ? Convert.ToDecimal(ViewBag.precioMaximoBD) : 0m;
+    bool soloVerificados = ViewBag.soloVerificados is bool b && b;
 }
 
 <div class="container-fluid px-4">
