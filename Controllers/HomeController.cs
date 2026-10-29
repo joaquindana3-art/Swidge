@@ -143,7 +143,7 @@ public class HomeController : Controller
     {
 
         BD bd = new BD();
-        Ubicacion Ubicacion = new Ubicacion
+        Ubicacion Ubicacion = new Ubicacion ;
         bd.PublicarEntrada(evento.ID, HttpContext.Session.GetInt32("DNI"), Precio, QR)
         return View();
 

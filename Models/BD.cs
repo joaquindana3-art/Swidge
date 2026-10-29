@@ -263,7 +263,7 @@ public class BD
 
         using (SqlConnection connection = new SqlConnection(_connectionString)) {
             string storedProcedure = "PublicarEntrada";
-            connection.Execute(storedProcedure, new {IDevento = IDEvento2, IDvendedor = IDvendedor2, Precio = Precio2, QR = QR2}, commandType: CommandType.StoredProcedure)
+            connection.Execute(storedProcedure, new {IDevento = IDEvento2, IDvendedor = IDvendedor2, Precio = Precio2, QR = QR2}, commandType: CommandType.StoredProcedure);
         }
 
     }
