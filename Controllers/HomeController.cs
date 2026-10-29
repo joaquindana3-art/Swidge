@@ -139,12 +139,11 @@ public class HomeController : Controller
         return View();
     }
 
-    public IActionResult PublicarEntrada(string ZonaOAsiento, Evento evento, string Precio, string QR)
+    public IActionResult PublicarEntrada(string ZonaOAsiento, Evento evento, double Precio, string QR)
     {
 
         BD bd = new BD();
-        Ubicacion Ubicacion = new Ubicacion ;
-        bd.PublicarEntrada(evento.ID, HttpContext.Session.GetInt32("DNI"), Precio, QR)
+        bd.PublicarEntrada(evento.ID, HttpContext.Session.GetInt32("DNI"), Precio, QR);
         return View();
 
     }
