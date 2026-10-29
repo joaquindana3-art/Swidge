@@ -13,11 +13,84 @@ public class HomeController : Controller
         _logger = logger;
     }
 
-    public IActionResult Index()
+    public IActionResult Index(string ciudad = "Todos", string categoria = "Todos", decimal? precioMaximo = null, bool soloVerificados = false)
     {
         BD bd = new BD();
         List<Entrada> listaEntradas = bd.GetEntradas();
+        decimal precioMaximoBD = bd.GetPrecioMaximoEntrada();
+
+        foreach (var entrada in listaEntradas)
+        {
+            var vendedor = bd.GetVendedores().FirstOrDefault(v => v.ID == entrada.IDVendedor);
+            if (vendedor != null)
+            {
+                entrada.Vendedor = bd.GetUsuarios().FirstOrDefault(u => u.DNI == vendedor.DNIusuario);
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(ciudad) && ciudad != "Todos")
+        {
+            listaEntradas = listaEntradas
+                .Where(e => e.Vendedor != null && !string.IsNullOrWhiteSpace(e.Vendedor.Ciudad) && e.Vendedor.Ciudad.Equals(ciudad, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+
+        if (!string.IsNullOrWhiteSpace(categoria) && categoria != "Todos")
+        {
+            listaEntradas = listaEntradas
+                .Where(e => e.Evento != null && !string.IsNullOrWhiteSpace(e.Evento.Categoria) && e.Evento.Categoria.Equals(categoria, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+
+        if (precioMaximo.HasValue)
+        {
+            listaEntradas = listaEntradas
+                .Where(e => e.Precio <= precioMaximo.Value)
+                .ToList();
+        }
+
+        if (soloVerificados)
+        {
+            listaEntradas = listaEntradas
+                .Where(e => e.Vendedor != null && !string.IsNullOrWhiteSpace(e.Vendedor.NumeroTarjeta))
+                .ToList();
+        }
+
         ViewBag.listaEntradas = listaEntradas;
+        ViewBag.ciudadSeleccionada = ciudad;
+        ViewBag.categoriaSeleccionada = categoria;
+
+        if (precioMaximo == null)
+        {
+            ViewBag.precioMaximo = precioMaximoBD;
+        }
+        else
+        {
+            ViewBag.precioMaximo = precioMaximo;
+        }
+
+        ViewBag.precioMaximoBD = precioMaximoBD;
+        ViewBag.soloVerificados = soloVerificados;
+
+        ViewBag.Ciudades = new List<string>
+        {
+            "Todos",
+            "Buenos Aires",
+            "Córdoba",
+            "Rosario",
+            "Mendoza",
+            "CABA"
+        };
+
+        ViewBag.Categorias = new List<string>
+        {
+            "Todos",
+            "Musica",
+            "Teatro",
+            "Deportes",
+            "Festivales"
+        };
+
         return View();
     }
 
