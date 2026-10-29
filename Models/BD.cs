@@ -386,4 +386,13 @@ public class BD
         }
     }
 
+    public decimal GetPrecioMaximoEntrada()
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = "SELECT MAX(Precio) FROM dbo.Entrada WHERE Vendida = 0";
+            return connection.ExecuteScalar<decimal?>(query) ?? 0m;
+        }
+    }
+
 }
