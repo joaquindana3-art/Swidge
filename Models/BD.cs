@@ -273,6 +273,31 @@ public class BD
         }
     }
 
+    public Vendedor? BuscarVendedorPorDNI(int dni)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string storedProcedure = "BuscarVendedorPorDNI";
+
+            Vendedor? vendedor = connection.Query<Vendedor>(
+                storedProcedure,
+                new { DNI = dni },
+                commandType: CommandType.StoredProcedure
+            ).FirstOrDefault();
+
+            return vendedor;
+        }
+    }
+
+    public void InsertarVendedor(int dni)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string storedProcedure = "InsertarVendedor";
+            connection.Execute(storedProcedure, new { DNI = dni }, commandType: CommandType.StoredProcedure);
+        }
+    }
+
     public void PublicarEntrada(int IDevento2, int? IDvendedor2, double Precio2, string QR2) {
 
         using (SqlConnection connection = new SqlConnection(_connectionString)) {
