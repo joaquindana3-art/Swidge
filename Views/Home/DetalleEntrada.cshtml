@@ -96,7 +96,7 @@
             <p class="precio-etiqueta">PRECIO DE LA ENTRADA</p>
             <div class="precio-valor">@precio<span>$</span></div>
             <div class="precio-ahorro">Ahorras 2.000$ frente al precio original</div>
-            <button class="boton-comprar" type="button">comprar</button>
+            <button class="boton-comprar" type="button" onclick="window.location.href='@Url.Action("PagarEntrada", "Home", new { id = Model?.ID ?? 0 })'">comprar</button>
         </div>
 
         <div class="vendedor-panel">

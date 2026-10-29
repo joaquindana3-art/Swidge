@@ -170,6 +170,17 @@ public class HomeController : Controller
 
         return View();
     }
+    public IActionResult PagarEntrada(int id)
+    {
+        BD bd = new BD();
+        var entrada = bd.GetEntradaPorId(id);
+
+        if (entrada == null)
+            return RedirectToAction("Index", "Home");
+
+        return View(entrada);
+    }
+
     public IActionResult CompraExitosa()
     {
         return View();

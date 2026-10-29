@@ -1,0 +1,170 @@
+@model Swidge.Models.Entrada
+
+@{
+    ViewData["Title"] = "Pagar entrada";
+    var evento = Model?.Evento ?? new Swidge.Models.Evento();
+    var vendedor = Model?.Vendedor ?? new Swidge.Models.Usuario();
+    var ubicacion = Model?.Ubicacion ?? new Swidge.Models.Ubicacion();
+
+    var imagenEvento = string.IsNullOrWhiteSpace(evento.Imagen)
+        ? Url.Content("~/img/default-event.jpg")
+        : Url.Content("~/img/" + evento.Imagen);
+
+    var precio = Model?.Precio > 0 ? Model.Precio.ToString("N0") : "0";
+    var fecha = evento.Fecha != default ? evento.Fecha.ToString("ddd, dd MMM, HH:mm") : "Fecha por confirmar";
+    var lugar = string.IsNullOrWhiteSpace(evento.Lugar) ? "Lugar por confirmar" : evento.Lugar;
+    var ubicacionTexto = !string.IsNullOrWhiteSpace(ubicacion.NombreSector)
+        ? $"{ubicacion.NombreSector}{(ubicacion.Fila.HasValue ? $", fila {ubicacion.Fila.Value}" : "")}{(ubicacion.Asiento.HasValue ? $", asiento {ubicacion.Asiento.Value}" : "")}"
+        : "Ubicación por confirmar";
+}
+
+<div class="checkout-shell">
+    <div class="checkout-panel">
+        <form id="checkoutForm" method="post" action="#" novalidate>
+            <div class="checkout-form-wrap">
+                <div class="checkout-payments" role="radiogroup" aria-label="Método de pago">
+                    <label class="checkout-payment-option">
+                        <input type="radio" name="metodoPago" value="Tarjeta" checked />
+                        <span class="checkout-payment-box">
+                            <span class="checkout-payment-logo checkout-card">T</span>
+                            <span>Tarjeta de crédito o débito</span>
+                        </span>
+                    </label>
+
+                    <label class="checkout-payment-option">
+                        <input type="radio" name="metodoPago" value="Mercado pago" />
+                        <span class="checkout-payment-box">
+                            <span class="checkout-payment-logo checkout-mercado">M</span>
+                            <span>Mercado pago</span>
+                        </span>
+                    </label>
+
+                    <label class="checkout-payment-option">
+                        <input type="radio" name="metodoPago" value="Paypal" />
+                        <span class="checkout-payment-box">
+                            <span class="checkout-payment-logo checkout-paypal">P</span>
+                            <span>Paypal</span>
+                        </span>
+                    </label>
+
+                    <label class="checkout-payment-option">
+                        <input type="radio" name="metodoPago" value="Google Pay" />
+                        <span class="checkout-payment-box">
+                            <span class="checkout-payment-logo checkout-google">G</span>
+                            <span>Google Pay</span>
+                        </span>
+                    </label>
+
+                    <label class="checkout-payment-option">
+                        <input type="radio" name="metodoPago" value="Apple Pay" />
+                        <span class="checkout-payment-box">
+                            <span class="checkout-payment-logo checkout-apple"></span>
+                            <span>Apple Pay</span>
+                        </span>
+                    </label>
+
+                    <label class="checkout-payment-option">
+                        <input type="radio" name="metodoPago" value="Ualá" />
+                        <span class="checkout-payment-box">
+                            <span class="checkout-payment-logo checkout-uala">U</span>
+                            <span>Ualá</span>
+                        </span>
+                    </label>
+                </div>
+
+                <div class="checkout-card-fields" data-payment-type="Tarjeta">
+                    <div class="checkout-field-grid">
+                        <div class="checkout-field">
+                            <input type="text" placeholder="Número de tarjeta" />
+                        </div>
+
+                        <div class="checkout-input-row">
+                            <div class="checkout-field">
+                                <input type="text" placeholder="Código de seguridad (CVV)" />
+                            </div>
+                            <div class="checkout-field">
+                                <input type="text" placeholder="Fecha de vencimiento (MM/AA)" />
+                            </div>
+                        </div>
+
+                        <div class="checkout-field">
+                            <input type="text" placeholder="Nombre del titular" />
+                        </div>
+
+                        <div class="checkout-field">
+                            <input type="text" placeholder="Dirección de facturación" />
+                        </div>
+                    </div>
+                </div>
+
+                <label class="checkout-terms" for="aceptaDevolucion">
+                    <input id="aceptaDevolucion" type="checkbox" name="aceptaDevolucion" required />
+                    <span>¿Acepta los términos de devolución?</span>
+                </label>
+
+                <button id="confirmarCompra" type="submit" class="checkout-confirm-btn" disabled>Confirmar</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="checkout-right-panel">
+        <div class="checkout-event-card">
+            <div class="checkout-event-poster" style="background: url('@imagenEvento') center/cover no-repeat;">
+                <div class="checkout-poster-glow"></div>
+            </div>
+        </div>
+
+        <div class="checkout-event-copy">
+            <strong>@evento.Nombre</strong><br />
+            Fecha: @fecha<br />
+            Lugar: @lugar<br />
+            Ubicación: @ubicacionTexto<br />
+            <span class="checkout-price">Precio: $@precio</span>
+        </div>
+
+        <div class="checkout-policy-box">
+            Lea la política de devolución
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('checkoutForm');
+        const aceptar = document.getElementById('aceptaDevolucion');
+        const boton = document.getElementById('confirmarCompra');
+        const cardFields = document.querySelector('.checkout-card-fields');
+        const paymentRadios = document.querySelectorAll('input[name="metodoPago"]');
+
+        function actualizarBoton() {
+            const enabled = aceptar.checked;
+            boton.disabled = !enabled;
+            boton.classList.toggle('is-disabled', !enabled);
+        }
+
+        function actualizarCamposPago() {
+            const seleccionado = document.querySelector('input[name="metodoPago"]:checked');
+            const tipoPago = seleccionado ? seleccionado.value : 'Tarjeta';
+            const mostrarTarjeta = tipoPago === 'Tarjeta';
+            cardFields.classList.toggle('visible', mostrarTarjeta);
+        }
+
+        paymentRadios.forEach(function (radio) {
+            radio.addEventListener('change', function () {
+                actualizarCamposPago();
+            });
+        });
+
+        aceptar.addEventListener('change', actualizarBoton);
+        actualizarBoton();
+        actualizarCamposPago();
+
+        form.addEventListener('submit', function (event) {
+            if (!aceptar.checked) {
+                event.preventDefault();
+                aceptar.focus();
+                alert('Debes aceptar los términos de devolución para confirmar la compra.');
+            }
+        });
+    });
+</script>
