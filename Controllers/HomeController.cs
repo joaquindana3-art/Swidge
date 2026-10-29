@@ -24,6 +24,11 @@ public class HomeController : Controller
             precioMaximo = precioMaximoBD;
         }
 
+        if (!precioMaximo.HasValue)
+        {
+            precioMaximo = precioMaximoBD;
+        }
+
         foreach (var entrada in listaEntradas)
         {
             var vendedor = bd.GetVendedores().FirstOrDefault(v => v.ID == entrada.IDVendedor);
