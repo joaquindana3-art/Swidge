@@ -252,6 +252,10 @@ public class HomeController : Controller
 
         usuario.Contraseña = "";
         ViewBag.Usuario = usuario;
+
+        var proximosEventos = bd.GetProximosEventosComprados(dniSesion.Value);
+        ViewBag.ProximosEventos = proximosEventos;
+
         return View();
     }
 

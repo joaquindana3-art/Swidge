@@ -417,4 +417,40 @@ public class BD
         }
     }
 
+    public List<Entrada> GetProximosEventosComprados(int dni)
+    {
+        List<Entrada> entradas = new List<Entrada>();
+
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = @"
+                SELECT e.*
+                FROM dbo.Entrada e
+                INNER JOIN dbo.Evento ev ON ev.ID = e.IDEvento
+                WHERE e.DNIusuario = @DNI
+                  AND e.Vendida = 1
+                  AND ev.Fecha >= @Hoy
+                ORDER BY ev.Fecha ASC";
+
+            entradas = connection.Query<Entrada>(query, new { DNI = dni, Hoy = DateTime.Now }).ToList();
+
+            foreach (var entrada in entradas)
+            {
+                entrada.Evento = connection.QueryFirstOrDefault<Evento>(
+                    "SELECT * FROM dbo.Evento WHERE ID = @ID",
+                    new { ID = entrada.IDEvento });
+
+                if (entrada.Evento != null)
+                {
+                    var estadio = connection.QueryFirstOrDefault<Estadio>(
+                        "SELECT * FROM dbo.Estadio WHERE ID = @ID",
+                        new { ID = entrada.Evento.IDEstadio });
+
+                    entrada.Evento.Lugar = estadio?.NombreLugar ?? estadio?.Nombre ?? "";
+                }
+            }
+        }
+
+        return entradas;
+    }
 }
