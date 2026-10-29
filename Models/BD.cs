@@ -298,6 +298,7 @@ public class BD
         }
     }
 
+<<<<<<< HEAD
     public void PublicarEntrada(int idEvento, int idVendedor, decimal precio, string qr)
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
@@ -310,6 +311,13 @@ public class BD
                 Precio = precio,
                 QR = qr
             }, commandType: CommandType.StoredProcedure);
+=======
+    public void PublicarEntrada(int IDevento2, int? IDvendedor2, double Precio2, string QR2, int IDubicacion2, string nombreTitular) {
+
+        using (SqlConnection connection = new SqlConnection(_connectionString)) {
+            string storedProcedure = "PublicarEntrada";
+            connection.Execute(storedProcedure, new {IDevento = IDevento2, IDvendedor = IDvendedor2, Precio = Precio2, QR = QR2, IDubicacion = IDubicacion2, nombreTitular = nombreTitular}, commandType: CommandType.StoredProcedure);
+>>>>>>> 6faabeda9aa0ffc052bff158dfbc86eccb17b220
         }
     }
 
