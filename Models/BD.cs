@@ -50,20 +50,23 @@ public class BD
         List<Entrada> entradas = new List<Entrada>();
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
-            entradas = connection.Query<Entrada>("SELECT * FROM Entrada WHERE Vendida = 0").ToList();
+            entradas = connection.Query<Entrada>(
+                "SELECT * FROM dbo.Entrada WHERE Vendida = 0"
+            ).ToList();
 
             foreach (var entrada in entradas)
             {
                 entrada.Evento = connection.QueryFirstOrDefault<Evento>(
-                    "SELECT * FROM Evento WHERE ID = @ID",
+                    "SELECT * FROM dbo.Evento WHERE ID = @ID",
                     new { ID = entrada.IDEvento });
 
                 if (entrada.Evento != null)
                 {
-                    entrada.Evento.Lugar = connection.QueryFirstOrDefault<string>(
-                        "SELECT TOP 1 NombreLugar FROM Ubicacion WHERE IDevento = @IDevento",
-                        new { IDevento = entrada.IDEvento }) ?? "";
+                    var estadio = connection.QueryFirstOrDefault<Estadio>(
+                        "SELECT * FROM dbo.Estadio WHERE ID = @ID",
+                        new { ID = entrada.Evento.IDEstadio });
 
+                    entrada.Evento.Lugar = estadio?.NombreLugar ?? estadio?.Nombre ?? "";
                     entrada.Evento.CantidadEntradas = GetCantidadEntradasPorEvento(entrada.IDEvento);
                 }
             }
@@ -115,7 +118,7 @@ public class BD
         List<Ubicacion> ubicaciones = new List<Ubicacion>();
         using (SqlConnection connection = new SqlConnection(_connectionString)) {
 
-            string query = "SELECT * FROM Ubicaciones";
+            string query = "SELECT * FROM dbo.Ubicacion";
             ubicaciones = connection.Query<Ubicacion>(query).ToList();
 
         }
@@ -213,31 +216,42 @@ public class BD
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
-            string storedProcedure = "GetEntradaPorId";
+            string query = @"SELECT * FROM dbo.Entrada WHERE ID = @ID AND Vendida = 0";
 
-            Entrada? entrada = connection.Query<Entrada>(
-                storedProcedure,
-                new { ID = id },
-                commandType: CommandType.StoredProcedure
-            ).FirstOrDefault();
+            Entrada? entrada = connection.QueryFirstOrDefault<Entrada>(
+                query,
+                new { ID = id }
+            );
 
             if (entrada == null)
                 return null;
 
             entrada.Evento = connection.QueryFirstOrDefault<Evento>(
-                "SELECT * FROM Evento WHERE ID = @ID",
+                "SELECT * FROM dbo.Evento WHERE ID = @ID",
                 new { ID = entrada.IDEvento });
 
             if (entrada.Evento != null)
             {
-                entrada.Evento.Lugar = connection.QueryFirstOrDefault<string>(
-                    "SELECT TOP 1 NombreLugar FROM Ubicacion WHERE IDevento = @IDevento",
-                    new { IDevento = entrada.IDEvento }) ?? "";
+                var estadio = connection.QueryFirstOrDefault<Estadio>(
+                    "SELECT * FROM dbo.Estadio WHERE ID = @ID",
+                    new { ID = entrada.Evento.IDEstadio });
+
+                entrada.Evento.Lugar = estadio?.NombreLugar ?? estadio?.Nombre ?? "";
             }
 
             entrada.Vendedor = connection.QueryFirstOrDefault<Usuario>(
-                "SELECT u.* FROM Usuario u INNER JOIN Vendedor v ON v.DNIusuario = u.DNI WHERE v.ID = @IDVendedor",
+                @"SELECT u.*
+                  FROM dbo.Usuario u
+                  INNER JOIN dbo.Vendedor v ON v.DNIusuario = u.DNI
+                  WHERE v.ID = @IDVendedor",
                 new { IDVendedor = entrada.IDVendedor });
+
+            if (entrada.DNIusuario.HasValue)
+            {
+                entrada.Comprador = connection.QueryFirstOrDefault<Usuario>(
+                    "SELECT * FROM dbo.Usuario WHERE DNI = @DNI",
+                    new { DNI = entrada.DNIusuario.Value });
+            }
 
             return entrada;
         }

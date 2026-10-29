@@ -40,6 +40,10 @@ public class HomeController : Controller
         return View();
 
     }
+    public IActionResult ConfirmacionEntradaPublicada()
+    {
+        return View();
+    }
     public IActionResult CompraExitosa()
     {
         return View();
@@ -157,13 +161,9 @@ public class HomeController : Controller
         return View();
     }
 
-    public IActionResult PublicarEntrada(string ZonaOAsiento, Evento evento, double Precio, string QR)
+    public IActionResult PublicarEntrada()
     {
-
-        BD bd = new BD();
-        bd.PublicarEntrada(evento.ID, HttpContext.Session.GetInt32("DNI"), Precio, QR);
         return View();
-
     }
 
     public IActionResult Registrarse()
