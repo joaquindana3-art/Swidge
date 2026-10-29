@@ -320,6 +320,22 @@ public class BD
             new { DNI = dni },
             commandType: CommandType.StoredProcedure
         ).ToList();
+
+        foreach (var entrada in entradasCompradas)
+        {
+            entrada.Evento = connection.QueryFirstOrDefault<Evento>(
+                "SELECT * FROM dbo.Evento WHERE ID = @ID",
+                new { ID = entrada.IDEvento });
+
+            if (entrada.Evento != null)
+            {
+                var estadio = connection.QueryFirstOrDefault<Estadio>(
+                    "SELECT * FROM dbo.Estadio WHERE ID = @ID",
+                    new { ID = entrada.Evento.IDEstadio });
+
+                entrada.Evento.Lugar = estadio?.NombreLugar ?? estadio?.Nombre ?? "";
+            }
+        }
     }
     return entradasCompradas;
 }
@@ -336,6 +352,22 @@ public class BD
                 new { DNI = dni },
                 commandType: CommandType.StoredProcedure
             ).ToList();
+
+            foreach (var entrada in entradasPublicadas)
+            {
+                entrada.Evento = connection.QueryFirstOrDefault<Evento>(
+                    "SELECT * FROM dbo.Evento WHERE ID = @ID",
+                    new { ID = entrada.IDEvento });
+
+                if (entrada.Evento != null)
+                {
+                    var estadio = connection.QueryFirstOrDefault<Estadio>(
+                        "SELECT * FROM dbo.Estadio WHERE ID = @ID",
+                        new { ID = entrada.Evento.IDEstadio });
+
+                    entrada.Evento.Lugar = estadio?.NombreLugar ?? estadio?.Nombre ?? "";
+                }
+            }
         }
         return entradasPublicadas;
     }

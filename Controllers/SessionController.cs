@@ -72,14 +72,19 @@ public class SessionController : Controller
     public IActionResult MiPerfil()
     {
         int? dni = HttpContext.Session.GetInt32("DNI");
-        Usuario usuario = bd.ObtenerUsuarioPorDNI(dni.Value);
+        if (dni == null)
+        {
+            return RedirectToAction("IniciarSesion", "Home");
+        }
+
+        Usuario? usuario = bd.ObtenerUsuarioPorDNI(dni.Value);
         if (usuario == null)
         {
             HttpContext.Session.Clear();
-            return RedirectToAction(nameof(IniciarSesion));
+            return RedirectToAction("IniciarSesion", "Home");
         }
 
-        usuario.Contraseña = ""; // el hash nunca llega a la vista
+        usuario.Contraseña = "";
         return View(usuario);
     }
 

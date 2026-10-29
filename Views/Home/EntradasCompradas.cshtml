@@ -4,10 +4,10 @@
     List<Entrada> listaCompradas = ViewBag.EntradasCompradas as List<Entrada>;
 }
 
-<div class="container my-4">
-    <div class="p-4 text-white rounded mb-4 shadow-sm" style="background-color: #0d1b6a;">
-        <small class="text-uppercase tracking-wider opacity-75">TU ESPACIO SWIDGE</small>
-        <h1 class="fw-bold m-0">MIS ENTRADAS COMPRADAS</h1>
+<div class="container my-4 entradas-page">
+    <div class="entradas-header entradas-header-compradas">
+        <small>TU ESPACIO SWIDGE</small>
+        <h1>MIS ENTRADAS COMPRADAS</h1>
     </div>
     @if (listaCompradas == null || !listaCompradas.Any())
     {
@@ -17,44 +17,46 @@
     }
     else
     {
-        <div class="d-flex flex-column gap-3">
+        <div class="entradas-list">
             @foreach (var entrada in listaCompradas)
             {
-                <div class="card border-0 shadow-sm overflow-hidden" style="background-color: #b0c4de;">
+                var evento = entrada.Evento ?? new Swidge.Models.Evento { Nombre = "Evento", Lugar = "Lugar", Fecha = DateTime.Now };
+                var imagenEvento = string.IsNullOrWhiteSpace(evento.Imagen)
+                    ? Url.Content("~/img/null.jpg")
+                    : Url.Content("~/img/" + evento.Imagen);
+
+                <div class="entrada-card entrada-card-comprada">
                     <div class="row g-0 align-items-center">
-                        <!-- Imagen del Evento o de la Entrada -->
                         <div class="col-12 col-md-3">
-                            <img src="@(string.IsNullOrEmpty(entrada.Evento?.Imagen) ? entrada.Imagen : entrada.Evento.Imagen)" 
-                                 class="img-fluid w-100 h-100 object-fit-cover" 
-                                 style="max-height: 160px; min-height: 140px;" 
-                                 alt="@entrada.Evento?.Nombre">
+                            <img src="@imagenEvento"
+                                 class="entrada-image"
+                                 alt="@(evento.Nombre)">
                         </div>
-                        <!-- Información del Evento y Entrada -->
-                        <div class="col-12 col-md-9 p-3 d-flex flex-column justify-content-center">
+                        <div class="col-12 col-md-9 entrada-body">
                             @if (entrada.Evento != null)
                             {
-                                <span class="text-danger fw-bold text-uppercase small">
+                                <span class="entrada-date">
                                     @entrada.Evento.Fecha.ToString("dddd dd/MM").ToUpper()
                                 </span>
-                                <h4 class="fw-bold mb-1">@entrada.Evento.Nombre</h4>
+                                <h4 class="entrada-title">@entrada.Evento.Nombre</h4>
                                 @if (!string.IsNullOrEmpty(entrada.Evento.Protagonista))
                                 {
-                                    <small class="text-muted fw-semibold mb-1">@entrada.Evento.Protagonista</small>
+                                    <small class="entrada-protagonista">@entrada.Evento.Protagonista</small>
                                 }
-                                <p class="mb-1 text-secondary small">
+                                <p class="entrada-location">
                                     <i class="bi bi-geo-alt-fill me-1"></i>@entrada.Evento.Lugar
                                 </p>
                             }
                             else
                             {
-                                <h4 class="fw-bold mb-1">Entrada #@entrada.ID</h4>
+                                <h4 class="entrada-title">Entrada #@entrada.ID</h4>
                             }
 
-                            <div class="mt-2 d-flex align-items-center justify-content-between">
-                                <span class="badge bg-primary px-3 py-2 fs-6">
+                            <div class="entrada-actions">
+                                <span class="badge entrada-badge entrada-badge-primary">
                                     Ver QR / Entrada
                                 </span>
-                                <span class="fw-bold fs-5 text-dark">
+                                <span class="entrada-price">
                                     $@entrada.Precio
                                 </span>
                             </div>

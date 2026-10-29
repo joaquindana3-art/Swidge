@@ -4,10 +4,10 @@
     List<Entrada> listaPublicadas = ViewBag.EntradasPublicadas as List<Entrada>;
 }
 
-<div class="container my-4">
-    <div class="p-4 text-white rounded mb-4 shadow-sm" style="background-color: #8b0000;">
-        <small class="text-uppercase tracking-wider opacity-75">TU ESPACIO SWIDGE</small>
-        <h1 class="fw-bold m-0">MIS ENTRADAS PUBLICADAS</h1>
+<div class="container my-4 entradas-page">
+    <div class="entradas-header entradas-header-publicadas">
+        <small>TU ESPACIO SWIDGE</small>
+        <h1>MIS ENTRADAS PUBLICADAS</h1>
     </div>
     @if (listaPublicadas == null || !listaPublicadas.Any())
     {
@@ -17,54 +17,57 @@
     }
     else
     {
-        <div class="d-flex flex-column gap-3">
+        <div class="entradas-list">
             @foreach (var entrada in listaPublicadas)
             {
-                <div class="card border-0 shadow-sm overflow-hidden" style="background-color: #b0c4de;">
+                var evento = entrada.Evento ?? new Swidge.Models.Evento { Nombre = "Evento", Lugar = "Lugar", Fecha = DateTime.Now };
+                var imagenEvento = string.IsNullOrWhiteSpace(evento.Imagen)
+                    ? Url.Content("~/img/null.jpg")
+                    : Url.Content("~/img/" + evento.Imagen);
+
+                <div class="entrada-card entrada-card-publicada">
                     <div class="row g-0 align-items-center">
-                        <!-- Imagen del Evento o de la Entrada -->
                         <div class="col-12 col-md-3">
-                            <img src="@(string.IsNullOrEmpty(entrada.Evento?.Imagen) ? entrada.Imagen : entrada.Evento.Imagen)" 
-                                 class="img-fluid w-100 h-100 object-fit-cover" 
-                                 style="max-height: 160px; min-height: 140px;" 
-                                 alt="@entrada.Evento?.Nombre">
+                            <img src="@imagenEvento"
+                                 class="entrada-image"
+                                 alt="@(evento.Nombre)">
                         </div>
                         <!-- Información de la Publicación y Acciones -->
-                        <div class="col-12 col-md-9 p-3 d-flex flex-column justify-content-center">
+                        <div class="col-12 col-md-9 entrada-body">
                             @if (entrada.Evento != null)
                             {
-                                <span class="text-danger fw-bold text-uppercase small">
+                                <span class="entrada-date">
                                     @entrada.Evento.Fecha.ToString("dddd dd/MM").ToUpper()
                                 </span>
-                                <h4 class="fw-bold mb-1">@entrada.Evento.Nombre</h4>
+                                <h4 class="entrada-title">@entrada.Evento.Nombre</h4>
                                 @if (!string.IsNullOrEmpty(entrada.Evento.Protagonista))
                                 {
-                                    <small class="text-muted fw-semibold mb-1">@entrada.Evento.Protagonista</small>
+                                    <small class="entrada-protagonista">@entrada.Evento.Protagonista</small>
                                 }
-                                <p class="mb-1 text-secondary small">
+                                <p class="entrada-location">
                                     <i class="bi bi-geo-alt-fill me-1"></i>@entrada.Evento.Lugar
                                 </p>
                             }
                             else
                             {
-                                <h4 class="fw-bold mb-1">Entrada #@entrada.ID</h4>
+                                <h4 class="entrada-title">Entrada #@entrada.ID</h4>
                             }
 
-                            <div class="mt-2 d-flex align-items-center justify-content-between">
+                            <div class="entrada-actions">
                                 <div>
-                                    <a href="@Url.Action("EditarEntrada", "Home", new { id = entrada.ID })" class="btn btn-primary btn-sm px-4 fw-bold">
+                                    <a href="@Url.Action("EditarEntrada", "Home", new { id = entrada.ID })" class="btn btn-primary btn-sm px-4 fw-bold entrada-btn entrada-btn-editar">
                                         Editar
                                     </a>
                                     @if (entrada.Vendida)
                                     {
-                                        <span class="badge bg-success ms-2">Vendida</span>
+                                        <span class="badge entrada-badge entrada-badge-success">Vendida</span>
                                     }
                                     else
                                     {
-                                        <span class="badge bg-warning text-dark ms-2">En Venta</span>
+                                        <span class="badge entrada-badge entrada-badge-warning">En Venta</span>
                                     }
                                 </div>
-                                <span class="fw-bold fs-5 text-dark">
+                                <span class="entrada-price">
                                     $@entrada.Precio
                                 </span>
                             </div>
