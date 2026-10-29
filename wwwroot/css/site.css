@@ -118,11 +118,6 @@ nav a {
   object-fit: contain;
 }
 
-.letras {
-  max-width: 11rem;
-  height: auto;
-}
-
 .container {
   padding-top: 0.5rem;
   padding: 0;
