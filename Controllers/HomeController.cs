@@ -114,34 +114,39 @@ public class HomeController : Controller
         if (HttpContext.Session.GetInt32("DNI") == null)
         {
             return RedirectToAction("IniciarSesion", "Home");
-
         }
-        else {
 
-            BD bd = new BD();
-            Usuario usuarioPublicador = bd.ObtenerUsuarioPorDNI(HttpContext.Session.GetInt32("DNI").Value);
-            if (bd.BuscarVendedorPorDNI(usuarioPublicador.DNI) == null)
-            {
-                bd.InsertarVendedor(usuarioPublicador.DNI);
-<<<<<<< HEAD
-            }
+        BD bd = new BD();
+        Usuario usuarioPublicador = bd.ObtenerUsuarioPorDNI(HttpContext.Session.GetInt32("DNI").Value);
 
-            var vendedor = bd.BuscarVendedorPorDNI(usuarioPublicador.DNI);
-            if (vendedor != null)
-            {
-                bd.InsertarUbicacion(evento.ID, sector, fila, asiento);
-                bd.PublicarEntrada(evento.ID, vendedor.ID, precio, $"QR_{DateTime.Now:yyyyMMddHHmmss}_{usuarioPublicador.DNI}");
-                return View();
-=======
->>>>>>> 6faabeda9aa0ffc052bff158dfbc86eccb17b220
-            }
-            bd.InsertarUbicacion(evento.id, sector, fila, asiento);
-            bd.PublicarEntrada(Evento.id, usuarioPublicador.DNI, (double)precio, imagen, bd.ObtenerIDubicacion(evento.id, sector, fila, asiento), nombreTitular);
-
+        if (usuarioPublicador == null)
+        {
+            return RedirectToAction("IniciarSesion", "Home");
         }
-        /* FALTA PASAR LOS VIEWBAGS A LA CONFIRMACION Y OBTENER LA IDUBICACION BIEN, CREANDO UN SP Y PONIENDOLO EN BD*/
+
+        var vendedor = bd.BuscarVendedorPorDNI(usuarioPublicador.DNI);
+
+        if (vendedor == null)
+        {
+            bd.InsertarVendedor(usuarioPublicador.DNI);
+            vendedor = bd.BuscarVendedorPorDNI(usuarioPublicador.DNI);
+        }
+
+        if (vendedor != null)
+        {
+            bd.InsertarUbicacion(evento.ID, sector, fila, asiento);
+            bd.PublicarEntrada(evento.ID, vendedor.ID, precio, $"QR_{DateTime.Now:yyyyMMddHHmmss}_{usuarioPublicador.DNI}");
+            return View();
+        }
+
+        ViewBag.nombreTitular = nombreTitular;
+        ViewBag.sector = sector;
+        ViewBag.fila = fila;
+        ViewBag.asiento = asiento;
+        ViewBag.precio = precio;
+        ViewBag.imagen = imagen;
+
         return View();
-
     }
     public IActionResult CompraExitosa()
     {
