@@ -109,8 +109,36 @@ public class HomeController : Controller
         return View();
 
     }
-    public IActionResult ConfirmacionEntradaPublicada()
+    public IActionResult ConfirmacionEntradaPublicada(Evento evento, string nombreTitular, string sector, int? fila, int? asiento, decimal precio, string imagen)
     {
+        if (HttpContext.Session.GetInt32("DNI") == null)
+        {
+            return RedirectToAction("IniciarSesion", "Home");
+
+        }
+        else {
+
+            BD bd = new BD();
+            Usuario usuarioPublicador = bd.ObtenerUsuarioPorDNI(HttpContext.Session.GetInt32("DNI").Value);
+            if (bd.BuscarVendedorPorDNI(usuarioPublicador.DNI) == null)
+            {
+                bd.InsertarVendedor(usuarioPublicador.DNI);
+                bd.InsertarUbicacion(evento.id, sector, fila, asiento);
+                bd.PublicarEntrada(usuarioPublicador.DNI, nombreTitular, sector, fila, asiento, precio, imagen);
+                return View();
+            }
+            else
+            {
+                ViewBag.nombreTitular = nombreTitular;
+                ViewBag.sector = sector;
+                ViewBag.fila = fila;
+                ViewBag.asiento = asiento;
+                ViewBag.precio = precio;
+                ViewBag.imagen = imagen;
+            }
+
+
+        }
         return View();
     }
     public IActionResult CompraExitosa()
@@ -232,6 +260,8 @@ public class HomeController : Controller
 
     public IActionResult PublicarEntrada()
     {
+        BD bd = new BD();
+        ViewBag.Eventos = bd.GetEventos();
         return View();
     }
 

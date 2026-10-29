@@ -162,6 +162,25 @@ document.addEventListener('DOMContentLoaded', () => {
   const filaGroup = document.getElementById('filaGroup');
   const asientoGroup = document.getElementById('asientoGroup');
   const form = document.querySelector('form[action*="PublicarEntrada"]');
+  const eventoBusqueda = document.getElementById('eventoBusqueda');
+  const eventoSeleccionadoId = document.getElementById('eventoSeleccionadoId');
+  const eventosLista = document.getElementById('eventosLista');
+
+  if (eventoBusqueda && eventosLista && eventoSeleccionadoId) {
+    eventoBusqueda.addEventListener('input', () => {
+      const valor = eventoBusqueda.value.trim();
+      let idSeleccionado = '';
+
+      for (const option of eventosLista.options) {
+        if (option.value === valor) {
+          idSeleccionado = option.dataset.id || '';
+          break;
+        }
+      }
+
+      eventoSeleccionadoId.value = idSeleccionado;
+    });
+  }
 
   if (!sectorSelect || !filaGroup || !asientoGroup || !form) return;
 
@@ -187,6 +206,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const fila = document.getElementById('fila')?.value.trim() ?? '';
     const asiento = document.getElementById('asiento')?.value.trim() ?? '';
     const feedback = document.getElementById('fb-publicacion');
+
+    if (!eventoSeleccionadoId.value) {
+      event.preventDefault();
+      feedback.textContent = 'Debes seleccionar un evento existente.';
+      feedback.style.display = 'block';
+      feedback.style.color = 'red';
+      return;
+    }
 
     if (!sector) {
       event.preventDefault();
