@@ -12,7 +12,7 @@ public class Entrada
     public Evento? Evento { get; set; }
     public Usuario? Vendedor { get; set; }
     public Usuario? Comprador { get; set; }
+    public Ubicacion? Ubicacion { get; set; }
     public string? Imagen { get; set; }
     public int IDubicacion { get; set; }
-    
 }

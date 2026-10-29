@@ -8,7 +8,6 @@
     string categoriaSeleccionada = ViewBag.categoriaSeleccionada?.ToString() ?? "Todos";
     decimal precioMaximo = ViewBag.precioMaximo != null ? Convert.ToDecimal(ViewBag.precioMaximo) : 0m;
     decimal precioMaximoBD = ViewBag.precioMaximoBD != null ? Convert.ToDecimal(ViewBag.precioMaximoBD) : 0m;
-    bool soloVerificados = ViewBag.soloVerificados is bool b && b;
 }
 
 <div class="container-fluid px-4">
@@ -137,18 +136,6 @@
                         label.innerText = '$' + valor.toLocaleString('es-AR');
                     });
                 </script>
-
-                <div class="form-check mb-3">
-                    @if (soloVerificados)
-                    {
-                        <input class="form-check-input" type="checkbox" id="soloVerificados" name="soloVerificados" value="true" checked />
-                    }
-                    else
-                    {
-                        <input class="form-check-input" type="checkbox" id="soloVerificados" name="soloVerificados" value="true" />
-                    }
-                    <label class="form-check-label" for="soloVerificados">Solo vendedores verificados</label>
-                </div>
 
                 <button type="submit" class="btn btn-primary w-100">Aplicar filtros</button>
                 <a href="@Url.Action("Index", "Home")" class="btn btn-link w-100 mt-2">Limpiar</a>

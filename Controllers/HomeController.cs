@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using System.Globalization;
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Swidge.Models;
 
@@ -13,7 +15,28 @@ public class HomeController : Controller
         _logger = logger;
     }
 
-    public IActionResult Index(string ciudad = "Todos", string categoria = "Todos", decimal? precioMaximo = null, bool soloVerificados = false)
+    private static string NormalizarCiudad(string? valor)
+    {
+        if (string.IsNullOrWhiteSpace(valor))
+            return string.Empty;
+
+        var texto = valor.Trim();
+        var normalizado = texto.Normalize(System.Text.NormalizationForm.FormD);
+        var builder = new StringBuilder();
+
+        foreach (var ch in normalizado)
+        {
+            var categoria = CharUnicodeInfo.GetUnicodeCategory(ch);
+            if (categoria != UnicodeCategory.NonSpacingMark)
+            {
+                builder.Append(ch);
+            }
+        }
+
+        return builder.ToString().Normalize(System.Text.NormalizationForm.FormC).Trim();
+    }
+
+    public IActionResult Index(string ciudad = "Todos", string categoria = "Todos", decimal? precioMaximo = null)
     {
         BD bd = new BD();
         List<Entrada> listaEntradas = bd.GetEntradas();
@@ -38,10 +61,21 @@ public class HomeController : Controller
             }
         }
 
+        var ciudadesDisponibles = listaEntradas
+            .Where(e => e.Vendedor != null && !string.IsNullOrWhiteSpace(e.Vendedor.Ciudad))
+            .Select(e => e.Vendedor.Ciudad.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(c => c, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        ciudadesDisponibles.Insert(0, "Todos");
+
         if (!string.IsNullOrWhiteSpace(ciudad) && ciudad != "Todos")
         {
             listaEntradas = listaEntradas
-                .Where(e => e.Vendedor != null && !string.IsNullOrWhiteSpace(e.Vendedor.Ciudad) && e.Vendedor.Ciudad.Equals(ciudad, StringComparison.OrdinalIgnoreCase))
+                .Where(e => e.Vendedor != null &&
+                    !string.IsNullOrWhiteSpace(e.Vendedor.Ciudad) &&
+                    NormalizarCiudad(e.Vendedor.Ciudad).Equals(NormalizarCiudad(ciudad), StringComparison.OrdinalIgnoreCase))
                 .ToList();
         }
 
@@ -59,29 +93,12 @@ public class HomeController : Controller
                 .ToList();
         }
 
-        if (soloVerificados)
-        {
-            listaEntradas = listaEntradas
-                .Where(e => e.Vendedor != null && !string.IsNullOrWhiteSpace(e.Vendedor.NumeroTarjeta))
-                .ToList();
-        }
-
         ViewBag.listaEntradas = listaEntradas;
         ViewBag.ciudadSeleccionada = ciudad;
         ViewBag.categoriaSeleccionada = categoria;
         ViewBag.precioMaximo = precioMaximo ?? precioMaximoBD;
         ViewBag.precioMaximoBD = precioMaximoBD;
-        ViewBag.soloVerificados = soloVerificados;
-
-        ViewBag.Ciudades = new List<string>
-        {
-            "Todos",
-            "Buenos Aires",
-            "Córdoba",
-            "Rosario",
-            "Mendoza",
-            "CABA"
-        };
+        ViewBag.Ciudades = ciudadesDisponibles;
 
         ViewBag.Categorias = new List<string>
         {

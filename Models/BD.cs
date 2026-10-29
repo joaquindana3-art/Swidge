@@ -62,11 +62,11 @@ public class BD
 
                 if (entrada.Evento != null)
                 {
-                    var estadio = connection.QueryFirstOrDefault<Estadio>(
-                        "SELECT * FROM dbo.Estadio WHERE ID = @ID",
-                        new { ID = entrada.Evento.IDEstadio });
+                    var recinto = connection.QueryFirstOrDefault<Recinto>(
+                        "SELECT * FROM dbo.Recinto WHERE ID = @ID",
+                        new { ID = entrada.Evento.IDRecinto });
 
-                    entrada.Evento.Lugar = estadio?.NombreLugar ?? estadio?.Nombre ?? "";
+                    entrada.Evento.Lugar = recinto?.NombreLugar ?? recinto?.Nombre ?? "";
                     entrada.Evento.CantidadEntradas = GetCantidadEntradasPorEvento(entrada.IDEvento);
                 }
             }
@@ -239,11 +239,11 @@ public class BD
 
             if (entrada.Evento != null)
             {
-                var estadio = connection.QueryFirstOrDefault<Estadio>(
-                    "SELECT * FROM dbo.Estadio WHERE ID = @ID",
-                    new { ID = entrada.Evento.IDEstadio });
+                var recinto = connection.QueryFirstOrDefault<Recinto>(
+                    "SELECT * FROM dbo.Recinto WHERE ID = @ID",
+                    new { ID = entrada.Evento.IDRecinto });
 
-                entrada.Evento.Lugar = estadio?.NombreLugar ?? estadio?.Nombre ?? "";
+                entrada.Evento.Lugar = recinto?.NombreLugar ?? recinto?.Nombre ?? "";
             }
 
             entrada.Vendedor = connection.QueryFirstOrDefault<Usuario>(
@@ -252,6 +252,13 @@ public class BD
                   INNER JOIN dbo.Vendedor v ON v.DNIusuario = u.DNI
                   WHERE v.ID = @IDVendedor",
                 new { IDVendedor = entrada.IDVendedor });
+
+            if (entrada.IDubicacion > 0)
+            {
+                entrada.Ubicacion = connection.QueryFirstOrDefault<Ubicacion>(
+                    "SELECT * FROM dbo.Ubicacion WHERE ID = @ID",
+                    new { ID = entrada.IDubicacion });
+            }
 
             if (entrada.DNIusuario.HasValue)
             {
@@ -426,11 +433,11 @@ public class BD
 
             if (entrada.Evento != null)
             {
-                var estadio = connection.QueryFirstOrDefault<Estadio>(
-                    "SELECT * FROM dbo.Estadio WHERE ID = @ID",
-                    new { ID = entrada.Evento.IDEstadio });
+                var recinto = connection.QueryFirstOrDefault<Recinto>(
+                    "SELECT * FROM dbo.Recinto WHERE ID = @ID",
+                    new { ID = entrada.Evento.IDRecinto });
 
-                entrada.Evento.Lugar = estadio?.NombreLugar ?? estadio?.Nombre ?? "";
+                entrada.Evento.Lugar = recinto?.NombreLugar ?? recinto?.Nombre ?? "";
             }
         }
     }
@@ -458,11 +465,11 @@ public class BD
 
                 if (entrada.Evento != null)
                 {
-                    var estadio = connection.QueryFirstOrDefault<Estadio>(
-                        "SELECT * FROM dbo.Estadio WHERE ID = @ID",
-                        new { ID = entrada.Evento.IDEstadio });
+                    var recinto = connection.QueryFirstOrDefault<Recinto>(
+                        "SELECT * FROM dbo.Recinto WHERE ID = @ID",
+                        new { ID = entrada.Evento.IDRecinto });
 
-                    entrada.Evento.Lugar = estadio?.NombreLugar ?? estadio?.Nombre ?? "";
+                    entrada.Evento.Lugar = recinto?.NombreLugar ?? recinto?.Nombre ?? "";
                 }
             }
         }
@@ -517,11 +524,11 @@ public class BD
 
                 if (entrada.Evento != null)
                 {
-                    var estadio = connection.QueryFirstOrDefault<Estadio>(
-                        "SELECT * FROM dbo.Estadio WHERE ID = @ID",
-                        new { ID = entrada.Evento.IDEstadio });
+                    var recinto = connection.QueryFirstOrDefault<Recinto>(
+                        "SELECT * FROM dbo.Recinto WHERE ID = @ID",
+                        new { ID = entrada.Evento.IDRecinto });
 
-                    entrada.Evento.Lugar = estadio?.NombreLugar ?? estadio?.Nombre ?? "";
+                    entrada.Evento.Lugar = recinto?.NombreLugar ?? recinto?.Nombre ?? "";
                 }
             }
         }
