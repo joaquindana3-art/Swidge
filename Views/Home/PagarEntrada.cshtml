@@ -20,7 +20,8 @@
 
 <div class="checkout-shell">
     <div class="checkout-panel">
-        <form id="checkoutForm" method="post" action="#" novalidate>
+        <form id="checkoutForm" method="post" action="@Url.Action("CompraExitosa", "Home")">
+            <input type="hidden" name="id" value="@Model?.ID" />
             <div class="checkout-form-wrap">
                 <div class="checkout-payments" role="radiogroup" aria-label="Método de pago">
                     <label class="checkout-payment-option">
@@ -164,7 +165,11 @@
                 event.preventDefault();
                 aceptar.focus();
                 alert('Debes aceptar los términos de devolución para confirmar la compra.');
+                return;
             }
+
+            event.preventDefault();
+            window.location.href = '@Url.Action("CompraExitosa", "Home", new { id = Model?.ID ?? 0 })';
         });
     });
 </script>

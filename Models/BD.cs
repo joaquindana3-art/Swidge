@@ -394,21 +394,14 @@ public class BD
         }
     }
 
-    public int InsertarUbicacion(int idEvento, string nombreSector, int? fila, int? asiento)
+    public void MarcarEntradaVendida(int idEntrada, int dniUsuario)
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
-            string query = @"INSERT INTO dbo.Ubicacion (IDevento, NombreSector, Fila, Asiento)
-                             VALUES (@IDevento, @NombreSector, @Fila, @Asiento);
-                             SELECT CAST(SCOPE_IDENTITY() AS int);";
-
-            return connection.ExecuteScalar<int>(query, new
-            {
-                IDEvento = idEvento,
-                NombreSector = nombreSector,
-                Fila = fila,
-                Asiento = asiento
-            });
+            connection.Execute(
+                "dbo.MarcarEntradaVendida",
+                new { IDEntrada = idEntrada, DNIusuario = dniUsuario },
+                commandType: CommandType.StoredProcedure);
         }
     }
 
@@ -534,5 +527,21 @@ public class BD
         }
 
         return entradas;
+    }
+
+    public int InsertarUbicacion(int idEvento, string nombreSector, int? fila, int? asiento)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string storedProcedure = "InsertarUbicacion";
+
+            return connection.ExecuteScalar<int>(storedProcedure, new
+            {
+                IDEvento = idEvento,
+                NombreSector = nombreSector,
+                Fila = fila,
+                Asiento = asiento
+            }, commandType: CommandType.StoredProcedure);
+        }
     }
 }

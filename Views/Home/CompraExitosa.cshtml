@@ -1,0 +1,48 @@
+@{
+    var entrada = ViewBag.Entrada as Swidge.Models.Entrada ?? new Swidge.Models.Entrada();
+    var evento = ViewBag.Evento as Swidge.Models.Evento ?? entrada.Evento ?? new Swidge.Models.Evento();
+    var vendedor = ViewBag.Vendedor as Swidge.Models.Usuario ?? entrada.Vendedor ?? new Swidge.Models.Usuario();
+    var ubicacion = ViewBag.Ubicacion as Swidge.Models.Ubicacion ?? entrada.Ubicacion ?? new Swidge.Models.Ubicacion();
+
+    var imagenEvento = string.IsNullOrWhiteSpace(evento.Imagen)
+        ? Url.Content("~/img/default-event.jpg")
+        : Url.Content("~/img/" + evento.Imagen);
+
+    var nombreVendedor = !string.IsNullOrWhiteSpace(vendedor.NombreUsuario) ? vendedor.NombreUsuario : "-";
+    var fechaEvento = evento.Fecha != default ? evento.Fecha.ToString("dd/MM/yyyy") : "-";
+    var nombreEvento = !string.IsNullOrWhiteSpace(evento.Nombre) ? evento.Nombre : "-";
+    var lugarEvento = !string.IsNullOrWhiteSpace(evento.Lugar) ? evento.Lugar : "-";
+    var ubicacionTexto = !string.IsNullOrWhiteSpace(ubicacion.NombreSector)
+        ? $"{ubicacion.NombreSector}{(ubicacion.Fila.HasValue ? $", fila {ubicacion.Fila.Value}" : "")}{(ubicacion.Asiento.HasValue ? $", asiento {ubicacion.Asiento.Value}" : "")}"
+        : "-";
+    var precio = entrada.Precio > 0 ? entrada.Precio.ToString("N0") : "0";
+}
+
+<div class="compra-exitosa-shell">
+    <div class="compra-exitosa-check">
+        <div class="compra-exitosa-circle">
+            <span>✓</span>
+        </div>
+    </div>
+
+    <div class="compra-exitosa-card">
+        <div class="compra-exitosa-info">
+            <div><strong>Nombre del vendedor:</strong> @nombreVendedor</div>
+            <div><strong>Fecha del evento confirmada:</strong> @fechaEvento</div>
+            <div><strong>Nombre del evento:</strong> @nombreEvento</div>
+            <div><strong>Lugar:</strong> @lugarEvento</div>
+            <div><strong>Ubicación:</strong> @ubicacionTexto</div>
+            <div><strong>Precio:</strong> $@precio</div>
+        </div>
+
+        <div class="compra-exitosa-preview" aria-label="Imagen del evento">
+            <div class="compra-exitosa-preview-box">
+                <img src="@imagenEvento" alt="@nombreEvento" style="width:100%; height:100%; object-fit:cover; border-radius:18px;" />
+            </div>
+        </div>
+    </div>
+
+    <div class="compra-exitosa-actions">
+        <button type="button" class="compra-exitosa-btn" onclick="window.location.href='@Url.Action("Index", "Home")'">Ver entradas</button>
+    </div>
+</div>

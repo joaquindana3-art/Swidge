@@ -178,9 +178,39 @@ public class HomeController : Controller
         return View(entrada);
     }
 
-    public IActionResult CompraExitosa()
+    public IActionResult CompraExitosa(int id)
     {
-        return View();
+        BD bd = new BD();
+        int? dniSesion = HttpContext.Session.GetInt32("DNI");
+
+        if (dniSesion == null)
+        {
+            return RedirectToAction("IniciarSesion", "Home");
+        }
+
+        Entrada? entrada = bd.GetEntradaPorId(id);
+        if (entrada == null)
+        {
+            entrada = bd.BuscarEntradaPorId(id);
+        }
+
+        if (entrada == null)
+            return RedirectToAction("Index", "Home");
+
+        if (entrada.DNIusuario != dniSesion.Value)
+        {
+            bd.MarcarEntradaVendida(id, dniSesion.Value);
+            entrada = bd.BuscarEntradaPorId(id);
+        }
+
+        if (entrada == null)
+            return RedirectToAction("Index", "Home");
+
+        ViewBag.Entrada = entrada;
+        ViewBag.Evento = entrada.Evento;
+        ViewBag.Ubicacion = entrada.Ubicacion;
+        ViewBag.Vendedor = entrada.Vendedor;
+        return View(entrada);
     }
 
     public IActionResult DetalleEntrada(int id)
