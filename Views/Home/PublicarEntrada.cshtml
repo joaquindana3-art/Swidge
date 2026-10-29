@@ -1,99 +1,95 @@
-<main class="container my-4">
+<main class="container my-4 publicar-page">
     <form id="formPublicarEntrada" action='@Url.Action("ConfirmacionEntradaPublicada", "Home")' method="post" enctype="multipart/form-data" novalidate>
-        <div class="pill-link w-100 d-flex justify-content-between align-items-center px-3 py-2 mb-4" style="background-color: #5f82f7; border-radius: 6px;">
-            <div class="d-flex align-items-center gap-2">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
+        <div class="publicar-busqueda">
+            <div class="publicar-busqueda-label">
+                <span class="icon-search" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="7"></circle>
+                        <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
+                    </svg>
+                </span>
                 <span>Evento, artista o equipo</span>
             </div>
-            <img src="~/img/logoswidgeNegroTransparente.png" alt="Logo Swidge">
+            <div class="publicar-busqueda-input-wrap">
+                <input list="eventosLista" id="eventoBusqueda" class="publicar-busqueda-input" placeholder="Buscar evento" autocomplete="off" />
+                <datalist id="eventosLista">
+                    @if (ViewBag.Eventos != null)
+                    {
+                        foreach (var evento in (List<Evento>)ViewBag.Eventos)
+                        {
+                            <option value="@evento.Nombre" data-id="@evento.ID"></option>
+                        }
+                    }
+                </datalist>
+                <input type="hidden" id="eventoSeleccionadoId" name="IDevento" value="" />
+            </div>
+            <img class="publicar-busqueda-logo" src="~/img/logoswidgeNegroTransparente.png" alt="Logo Swidge" />
         </div>
 
-        <div class="row g-4 align-items-stretch">
-            <div class="col-md-5 d-flex flex-column justify-content-between">
-                <div>
-                    <div class="mb-3">
-                        <label for="eventoBusqueda" class="form-label fw-bold text-dark mb-1">Buscar evento</label>
-                        <input list="eventosLista" id="eventoBusqueda" class="form-control" placeholder="Escribí el nombre del evento" autocomplete="off">
-                        <datalist id="eventosLista">
-                            @if (ViewBag.Eventos != null)
-                            {
-                                foreach (var evento in (List<Evento>)ViewBag.Eventos)
-                                {
-                                    <option value="@evento.Nombre" data-id="@evento.ID"></option>
-                                }
-                            }
-                        </datalist>
-                        <input type="hidden" id="eventoSeleccionadoId" name="IDevento" value="" />
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="nombreTitular" class="form-label fw-bold text-dark mb-1">Nombre del titular</label>
-                        <input type="text" class="form-control" id="nombreTitular" placeholder="Juan Pérez" name="nombreTitular">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="sectorEntrada" class="form-label fw-bold text-dark mb-1">Sector</label>
-                        <select class="form-select" id="sectorEntrada" name="zonaAsiento" required>
-                            <option value="">Seleccione un sector</option>
-                            <option value="Campo">Campo</option>
-                            <option value="Platea">Platea</option>
-                        </select>
-                    </div>
-
-                    <div id="filaGroup" class="mb-3">
-                        <label for="fila" class="form-label fw-bold text-dark mb-1">Fila</label>
-                        <input type="text" class="form-control" id="fila" placeholder="8" name="Fila" aria-label="Fila">
-                    </div>
-
-                    <div id="asientoGroup" class="mb-3">
-                        <label for="asiento" class="form-label fw-bold text-dark mb-1">Asiento</label>
-                        <input type="text" class="form-control" id="asiento" placeholder="15" name="Asiento" aria-label="Asiento">
-                    </div>
-
-                    <div class="mb-4">
-                        <label for="precioVenta" class="form-label fw-bold text-dark mb-1">Precio de venta</label>
-                        <input type="text" class="form-control" id="precioVenta" placeholder="$ 60.000" name="precioVenta">
-                    </div>
-
-                    <div class="form-check mb-4">
-                        <input type="checkbox" id="aceptaTerminos" class="form-check-input" name="aceptaTerminos" required>
-                        <label for="aceptaTerminos" class="form-check-label fw-bold text-dark">
-                            Aceptar términos y condiciones
-                        </label>
-                        <div class="invalid-feedback">Debes aceptar antes de enviar.</div>
-                    </div>
-
-                    <div id="fb-publicacion" class="mb-3" style="color: red; display: none;"></div>
+        <div class="publicar-form-grid">
+            <div class="publicar-aside">
+                <div class="mb-3">
+                    <label for="nombreTitular" class="form-label fw-bold text-dark mb-1">Nombre del titular</label>
+                    <input type="text" class="form-control" id="nombreTitular" placeholder="Juan Pérez" name="nombreTitular">
                 </div>
 
-                <div>
-                    <button type="submit" class="pill-link border-0 px-4 py-2 fw-bold" style="background-color: #5f82f7; cursor: pointer; border-radius: 6px;">
-                        Publicar
-                    </button>
+                <div class="mb-3">
+                    <label for="sectorEntrada" class="form-label fw-bold text-dark mb-1">Sector</label>
+                    <select class="form-select" id="sectorEntrada" name="NombreSector" required>
+                        <option value="">Seleccione un sector</option>
+                        <option value="Campo">Campo</option>
+                        <option value="Platea">Platea</option>
+                    </select>
                 </div>
+
+                <div id="filaGroup" class="mb-3">
+                    <label for="fila" class="form-label fw-bold text-dark mb-1">Fila</label>
+                    <input type="text" class="form-control" id="fila" placeholder="8" name="Fila" aria-label="Fila">
+                </div>
+
+                <div id="asientoGroup" class="mb-3">
+                    <label for="asiento" class="form-label fw-bold text-dark mb-1">Asiento</label>
+                    <input type="text" class="form-control" id="asiento" placeholder="15" name="Asiento" aria-label="Asiento">
+                </div>
+
+                <div class="mb-4">
+                    <label for="precioVenta" class="form-label fw-bold text-dark mb-1">Precio de venta</label>
+                    <input type="text" class="form-control" id="precioVenta" placeholder="$ 60.000" name="precioVenta">
+                </div>
+
+                <div class="form-check mb-4">
+                    <input type="checkbox" id="aceptaTerminos" class="form-check-input" name="aceptaTerminos" required>
+                    <label for="aceptaTerminos" class="form-check-label fw-bold text-dark">
+                        Aceptar términos y condiciones
+                    </label>
+                    <div class="invalid-feedback">Debes aceptar antes de enviar.</div>
+                </div>
+
+                <div id="fb-publicacion" class="publicar-feedback" aria-live="polite"></div>
+
+                <button type="submit" class="pill-link border-0 px-4 py-2 fw-bold" style="background-color: #5f82f7; cursor: pointer; border-radius: 6px;">
+                    Publicar
+                </button>
             </div>
 
-            <div class="col-md-7">
-                <div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center text-white p-3 text-center position-relative" style="background-color: #5f82f7; border-radius: 8px; min-height: 400px;">
-                    <label for="comprobante" class="w-100 d-flex flex-column align-items-center justify-content-center text-white p-4 text-center position-relative" style="background-color: #5f82f7; border-radius: 8px; min-height: 320px; cursor: pointer; width: 100%;">
-                        <input type="file" id="comprobante" name="comprobante" accept="image/*,application/pdf" class="position-absolute top-0 start-0 w-100 h-100 opacity-0" style="cursor: pointer;">
+            <div class="publicar-panel">
+                <div class="publicar-panel-box">
+                    <label for="comprobante" class="publicar-archivo-label">
+                        <input type="file" id="comprobante" name="comprobante" accept="image/*,application/pdf" class="publicar-archivo-input" />
 
-                        <div id="previewComprobante" class="d-none w-100 h-100 d-flex align-items-center justify-content-center" style="border-radius: 8px; overflow: hidden; background: rgba(255,255,255,0.12); position: absolute; inset: 0;">
-                            <img id="imgPreview" src="" alt="Vista previa" style="width: 100%; height: 100%; object-fit: cover; display: none;" />
+                        <div id="previewComprobante" class="publicar-preview">
+                            <img id="imgPreview" src="" alt="Vista previa" />
                         </div>
 
-                        <div id="placeholderComprobante" class="d-flex flex-column align-items-center justify-content-center position-relative" style="z-index: 1;">
-                            <svg width="130" height="130" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="mb-3">
+                        <div id="placeholderComprobante" class="publicar-placeholder">
+                            <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                 <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
                             </svg>
-                            <h2 class="fw-bold m-0" style="font-size: 2.2rem;">Adjuntar entrada</h2>
+                            <h2>Adjuntar entrada</h2>
                         </div>
                     </label>
 
-                    <button type="button" id="btnCambiarArchivo" class="btn btn-light mt-3 d-none" style="font-weight: 700; color: #5f82f7; position: relative; z-index: 2;">
+                    <button type="button" id="btnCambiarArchivo" class="btn btn-light publicar-cambiar">
                         Cambiar archivo
                     </button>
                 </div>

@@ -1,0 +1,65 @@
+@{
+    var evento = ViewBag.Evento as Swidge.Models.Evento;
+    var vendedor = ViewBag.Vendedor as Swidge.Models.Vendedor;
+    var entradaId = ViewBag.Entrada is int entrada ? entrada : 0;
+    var ubicacionId = ViewBag.Ubicacion is int ubic ? ubic : 0;
+
+    var qrTexto = entradaId > 0 ? $"QR-{entradaId}" : "QR";
+    var qrUrl = $"https://api.qrserver.com/v1/create-qr-code/?size=480x480&data={System.Net.WebUtility.UrlEncode(qrTexto)}";
+
+    var eventoNombre = evento?.Nombre ?? "Evento";
+    var eventoLugar = evento?.Lugar ?? evento?.Categoria ?? "Lugar no informado";
+    var eventoFecha = evento != null ? evento.Fecha.ToString("dd/MM/yyyy") : "Fecha no disponible";
+    var eventoHora = evento != null ? evento.Fecha.ToString("HH:mm") + "hs" : "Hora no disponible";
+
+    var vendedorDni = vendedor?.DNIusuario ?? 0;
+    var vendedorId = vendedor?.ID ?? 0;
+}
+
+    <main class="content-grid">
+        <div class="left-stack">
+            <section class="info-card event-info">
+                <h3>@eventoNombre</h3>
+
+                <div class="meta-line">
+                    <span class="dot"></span>
+                    <span><strong>Estadio:</strong> @eventoLugar</span>
+                </div>
+
+                <div class="meta-line">
+                    <span class="dot"></span>
+                    <span>@eventoFecha</span>
+                </div>
+
+                <div class="meta-line">
+                    <span class="dot"></span>
+                    <span>@eventoHora</span>
+                </div>
+            </section>
+
+            <section class="info-card seller-info">
+                <h3>Información del vendedor</h3>
+
+                <ul class="seller-list">
+                    <li><strong>Nombre:</strong> @((vendedor != null && vendedorDni > 0) ? vendedorDni.ToString() : "No disponible")</li>
+                    <li><strong>DNI:</strong> @(vendedorDni > 0 ? vendedorDni.ToString() : "No disponible")</li>
+                    <li><strong>ID vendedor:</strong> @(vendedorId > 0 ? vendedorId.ToString() : "No disponible")</li>
+                    <li><strong>Ubicación:</strong> @(ubicacionId > 0 ? ubicacionId.ToString() : "No disponible")</li>
+                    <li><strong>ID entrada:</strong> @(entradaId > 0 ? entradaId.ToString() : "No disponible")</li>
+                </ul>
+            </section>
+        </div>
+
+        <div class="right-panel">
+            <section class="qr-card">
+                <div class="qr-box" aria-label="Código QR de la entrada">
+                    <img class="qr-image" src="@qrUrl" alt="QR de la entrada" />
+                </div>
+            </section>
+
+            <div class="action-row">
+                <button class="publish-btn" type="button" onclick="location.href='@Url.Action("EntradasPublicadas", "Home")'">Publicar entrada</button>
+            </div>
+        </div>
+    </main>
+</div>

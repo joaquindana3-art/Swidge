@@ -131,12 +131,8 @@ public class HomeController : Controller
         return View();
 
     }
-    public IActionResult ConfirmacionEntradaPublicada(Evento evento, string nombreTitular, string sector, int? fila, int? asiento, decimal precio, string imagen)
+    public IActionResult ConfirmacionEntradaPublicada(int IDevento, string nombreTitular, string NombreSector, int? Fila, int? Asiento, decimal precioVenta, string comprobante)
     {
-        if (HttpContext.Session.GetInt32("DNI") == null)
-        {
-            return RedirectToAction("IniciarSesion", "Home");
-        }
 
         BD bd = new BD();
         Usuario usuarioPublicador = bd.ObtenerUsuarioPorDNI(HttpContext.Session.GetInt32("DNI").Value);
@@ -146,29 +142,30 @@ public class HomeController : Controller
             return RedirectToAction("IniciarSesion", "Home");
         }
 
-        var vendedor = bd.BuscarVendedorPorDNI(usuarioPublicador.DNI);
-
+        int idVendedor = 0;
+        Vendedor vendedor = bd.BuscarVendedorPorDNIusuario(usuarioPublicador.DNI);
         if (vendedor == null)
         {
-            bd.InsertarVendedor(usuarioPublicador.DNI);
-            vendedor = bd.BuscarVendedorPorDNI(usuarioPublicador.DNI);
+            idVendedor = bd.InsertarVendedor(usuarioPublicador.DNI);
         }
-
-        if (vendedor != null)
+        else
         {
-            bd.InsertarUbicacion(evento.ID, sector, fila, asiento);
-            bd.PublicarEntrada(evento.ID, vendedor.ID, precio, $"QR_{DateTime.Now:yyyyMMddHHmmss}_{usuarioPublicador.DNI}");
-            return View();
+            idVendedor = vendedor.ID;
         }
 
-        ViewBag.nombreTitular = nombreTitular;
-        ViewBag.sector = sector;
-        ViewBag.fila = fila;
-        ViewBag.asiento = asiento;
-        ViewBag.precio = precio;
-        ViewBag.imagen = imagen;
+        int idUbicacion = bd.InsertarUbicacion(IDevento, NombreSector, Fila, Asiento);
 
+        string qr = !string.IsNullOrWhiteSpace(comprobante)
+            ? comprobante
+            : $"QR_{DateTime.Now:yyyyMMddHHmmss}_{IDevento}_{idVendedor}";
+
+        int idEntrada = bd.PublicarEntrada(IDevento, idVendedor, precioVenta, qr, idUbicacion);
+        ViewBag.Entrada = bd.BuscarEntradaPorId(idEntrada);
+        ViewBag.Evento = bd.GetEventoPorId(IDevento);
+        ViewBag.Ubicacion = bd.BuscarUbicacionPorId(idUbicacion);
+        ViewBag.Vendedor = bd.BuscarVendedorPorID(idVendedor);
         return View();
+
     }
     public IActionResult PagarEntrada(int id)
     {
@@ -304,6 +301,10 @@ public class HomeController : Controller
 
     public IActionResult PublicarEntrada()
     {
+        if (HttpContext.Session.GetInt32("DNI") == null)
+        {
+            return RedirectToAction("IniciarSesion", "Home");
+        }
         BD bd = new BD();
         ViewBag.Eventos = bd.GetEventos();
         return View();
