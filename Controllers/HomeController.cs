@@ -123,8 +123,13 @@ public class HomeController : Controller
             if (bd.BuscarVendedorPorDNI(usuarioPublicador.DNI) == null)
             {
                 bd.InsertarVendedor(usuarioPublicador.DNI);
-                bd.InsertarUbicacion(evento.id, sector, fila, asiento);
-                bd.PublicarEntrada(usuarioPublicador.DNI, nombreTitular, sector, fila, asiento, precio, imagen);
+            }
+
+            var vendedor = bd.BuscarVendedorPorDNI(usuarioPublicador.DNI);
+            if (vendedor != null)
+            {
+                bd.InsertarUbicacion(evento.ID, sector, fila, asiento);
+                bd.PublicarEntrada(evento.ID, vendedor.ID, precio, $"QR_{DateTime.Now:yyyyMMddHHmmss}_{usuarioPublicador.DNI}");
                 return View();
             }
             else

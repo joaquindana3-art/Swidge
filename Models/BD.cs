@@ -298,15 +298,37 @@ public class BD
         }
     }
 
-    public void PublicarEntrada(int IDevento2, int? IDvendedor2, double Precio2, string QR2) {
-
-        using (SqlConnection connection = new SqlConnection(_connectionString)) {
+    public void PublicarEntrada(int idEvento, int idVendedor, decimal precio, string qr)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
             string storedProcedure = "PublicarEntrada";
-            connection.Execute(storedProcedure, new {IDevento = IDevento2, IDvendedor = IDvendedor2, Precio = Precio2, QR = QR2}, commandType: CommandType.StoredProcedure);
+            connection.Execute(storedProcedure, new
+            {
+                IDEvento = idEvento,
+                IDvendedor = idVendedor,
+                Precio = precio,
+                QR = qr
+            }, commandType: CommandType.StoredProcedure);
         }
-
     }
 
+    public void InsertarUbicacion(int idEvento, string nombreSector, int? fila, int? asiento)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = @"INSERT INTO dbo.Ubicacion (IDevento, NombreSector, Fila, Asiento)
+                             VALUES (@IDevento, @NombreSector, @Fila, @Asiento)";
+
+            connection.Execute(query, new
+            {
+                IDEvento = idEvento,
+                NombreSector = nombreSector,
+                Fila = fila,
+                Asiento = asiento
+            });
+        }
+    }
 
     public List<Entrada> GetEntradasCompradas(int dni)
 {
