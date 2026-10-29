@@ -246,6 +246,13 @@ public class BD
                   WHERE v.ID = @IDVendedor",
                 new { IDVendedor = entrada.IDVendedor });
 
+            if (entrada.IDubicacion > 0)
+            {
+                entrada.Ubicacion = connection.QueryFirstOrDefault<Ubicacion>(
+                    "SELECT * FROM dbo.Ubicacion WHERE ID = @ID",
+                    new { ID = entrada.IDubicacion });
+            }
+
             if (entrada.DNIusuario.HasValue)
             {
                 entrada.Comprador = connection.QueryFirstOrDefault<Usuario>(

@@ -4,6 +4,7 @@
     ViewData["Title"] = "Detalle de entrada";
     var evento = Model?.Evento ?? new Swidge.Models.Evento();
     var vendedor = Model?.Vendedor ?? new Swidge.Models.Usuario();
+    var ubicacion = Model?.Ubicacion ?? new Swidge.Models.Ubicacion();
 
     var nombreVendedor = !string.IsNullOrWhiteSpace(vendedor.Nombre) || !string.IsNullOrWhiteSpace(vendedor.Apellido)
         ? $"{vendedor.Nombre} {vendedor.Apellido}".Trim()
@@ -20,6 +21,11 @@
     var protagonista = string.IsNullOrWhiteSpace(evento.Protagonista) ? "Artista por confirmar" : evento.Protagonista;
     var descripcion = string.IsNullOrWhiteSpace(evento.Descripcion) ? "Descripción no disponible." : evento.Descripcion;
     var cantidadEntradas = evento.CantidadEntradas > 0 ? evento.CantidadEntradas : 0;
+    var ciudadVendedor = string.IsNullOrWhiteSpace(vendedor.Ciudad) ? "Ciudad no disponible" : vendedor.Ciudad;
+    var ubicacionTexto = !string.IsNullOrWhiteSpace(ubicacion.NombreSector)
+        ? $"{ubicacion.NombreSector}{(ubicacion.Fila.HasValue ? $", fila {ubicacion.Fila.Value}" : "")}{(ubicacion.Asiento.HasValue ? $", asiento {ubicacion.Asiento.Value}" : "")}"
+        : "Ubicación por confirmar";
+
     if (evento.ID > 0)
     {
         var bd = new Swidge.Models.BD();
@@ -58,6 +64,14 @@
         </div>
 
         <div class="detalle-evento-info">
+            <div class="info-row">
+                <span class="label">Ciudad del vendedor:</span>
+                <span class="value">@ciudadVendedor</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Ubicación:</span>
+                <span class="value">@ubicacionTexto</span>
+            </div>
             <div class="info-row">
                 <span class="label">Protagonista:</span>
                 <span class="value">@protagonista</span>

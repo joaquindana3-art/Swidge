@@ -8,6 +8,11 @@ public class Evento
     public string Categoria { get; set; } = "";
     public string Descripcion { get; set; } = "";
     public int IDRecinto { get; set; }
+    public int IDEstadio
+    {
+        get => IDRecinto;
+        set => IDRecinto = value;
+    }
     public DateTime Fecha { get; set; }
     public string? Imagen { get; set; }
 
