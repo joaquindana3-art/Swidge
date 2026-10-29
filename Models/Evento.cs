@@ -7,7 +7,7 @@ public class Evento
     public string Protagonista { get; set; } = "";
     public string Categoria { get; set; } = "";
     public string Descripcion { get; set; } = "";
-    public int IDEstadio { get; set; }
+    public int IDRecinto { get; set; }
     public DateTime Fecha { get; set; }
     public string? Imagen { get; set; }
 

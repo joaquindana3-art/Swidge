@@ -1,6 +1,6 @@
 namespace Swidge.Models;
 
-public class Estadio
+public class Recinto
 {
     public int ID { get; set; }
     public string NombreLugar { get; set; } = "";
