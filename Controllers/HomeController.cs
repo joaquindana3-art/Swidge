@@ -129,6 +129,10 @@ public class HomeController : Controller
 
     public IActionResult CambiarContraseña()
     {
+        int? dniSesion = HttpContext.Session.GetInt32("DNI");
+        if (dniSesion == null) {
+            return RedirectToAction("Index", "Home");
+        }
         return View();
     }
 
@@ -144,6 +148,10 @@ public class HomeController : Controller
     public IActionResult ConfirmacionEntradaPublicada(int IDevento, string nombreTitular, string NombreSector, int? Fila, int? Asiento, decimal precioVenta, string comprobante)
     {
 
+        int? dniSesion = HttpContext.Session.GetInt32("DNI");
+        if (dniSesion == null) {
+            return RedirectToAction("Index", "Home");
+        }
         BD bd = new BD();
         Usuario usuarioPublicador = bd.ObtenerUsuarioPorDNI(HttpContext.Session.GetInt32("DNI").Value);
 
@@ -179,6 +187,10 @@ public class HomeController : Controller
     }
     public IActionResult PagarEntrada(int id)
     {
+        int? dniSesion = HttpContext.Session.GetInt32("DNI");
+        if (dniSesion == null) {
+            return RedirectToAction("Index", "Home");
+        }
         BD bd = new BD();
         var entrada = bd.GetEntradaPorId(id);
 
@@ -225,6 +237,10 @@ public class HomeController : Controller
 
     public IActionResult DetalleEntrada(int id)
     {
+        int? dniSesion = HttpContext.Session.GetInt32("DNI");
+        if (dniSesion == null) {
+            return RedirectToAction("Index", "Home");
+        }
         BD bd = new BD();
         var entrada = bd.GetEntradaPorId(id);
 
@@ -279,6 +295,10 @@ public class HomeController : Controller
     
     public IActionResult InformacionVenta()
     {
+        int? dniSesion = HttpContext.Session.GetInt32("DNI");
+        if (dniSesion == null) {
+            return RedirectToAction("Index", "Home");
+        }
         return View();
     }
 
@@ -305,7 +325,6 @@ public class HomeController : Controller
     public IActionResult MiPerfil()
     {
         int? dniSesion = HttpContext.Session.GetInt32("DNI");
-
         if (dniSesion == null)
         {
             return RedirectToAction("IniciarSesion", "Home");
@@ -331,19 +350,27 @@ public class HomeController : Controller
 
     public IActionResult OlvideMiContraseña()
     {
+        int? dniSesion = HttpContext.Session.GetInt32("DNI");
+        if (dniSesion != null) {
+            return RedirectToAction("Index", "Home");
+        }
         return View();
     }
 
     public IActionResult PagoEntrada()
     {
+        int? dniSesion = HttpContext.Session.GetInt32("DNI");
+        if (dniSesion != null) {
+            return RedirectToAction("Index", "Home");
+        }
         return View();
     }
 
     public IActionResult PublicarEntrada()
     {
-        if (HttpContext.Session.GetInt32("DNI") == null)
-        {
-            return RedirectToAction("IniciarSesion", "Home");
+        int? dniSesion = HttpContext.Session.GetInt32("DNI");
+        if (dniSesion != null) {
+            return RedirectToAction("Index", "Home");
         }
         BD bd = new BD();
         ViewBag.Eventos = bd.GetEventos();
