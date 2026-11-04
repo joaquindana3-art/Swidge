@@ -2,9 +2,9 @@
     ViewData["Title"] = "Compra";
 
     List<Swidge.Models.Entrada> entradas = ViewBag.listaEntradas as List<Swidge.Models.Entrada> ?? new List<Swidge.Models.Entrada>();
-    List<string> ciudades = ViewBag.Ciudades as List<string> ?? new List<string>();
+    List<string> provincias = ViewBag.Ciudades as List<string> ?? new List<string>();
     List<string> categorias = ViewBag.Categorias as List<string> ?? new List<string>();
-    string ciudadSeleccionada = ViewBag.ciudadSeleccionada?.ToString() ?? "Todos";
+    string provinciaSeleccionada = ViewBag.provinciaSeleccionada?.ToString() ?? ViewBag.ciudadSeleccionada?.ToString() ?? "Todos";
     string categoriaSeleccionada = ViewBag.categoriaSeleccionada?.ToString() ?? "Todos";
     decimal precioMaximo = ViewBag.precioMaximo != null ? Convert.ToDecimal(ViewBag.precioMaximo) : 0m;
     decimal precioMaximoBD = ViewBag.precioMaximoBD != null ? Convert.ToDecimal(ViewBag.precioMaximoBD) : 0m;
@@ -93,17 +93,17 @@
                 <h4 class="mb-3">Filtros</h4>
 
                 <div class="mb-3">
-                    <label class="form-label">Ciudad</label>
-                    <select name="ciudad" class="form-select">
-                        @foreach (var ciudad in ciudades)
+                    <label class="form-label">Provincia</label>
+                    <select name="provincia" class="form-select">
+                        @foreach (var provincia in provincias)
                         {
-                            if (ciudad == ciudadSeleccionada)
+                            if (provincia == provinciaSeleccionada)
                             {
-                                <option value="@ciudad" selected>@ciudad</option>
+                                <option value="@provincia" selected>@provincia</option>
                             }
                             else
                             {
-                                <option value="@ciudad">@ciudad</option>
+                                <option value="@provincia">@provincia</option>
                             }
                         }
                     </select>

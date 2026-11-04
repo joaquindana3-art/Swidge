@@ -36,7 +36,7 @@ public class HomeController : Controller
         return builder.ToString().Normalize(System.Text.NormalizationForm.FormC).Trim();
     }
 
-    public IActionResult Index(string ciudad = "Todos", string categoria = "Todos", decimal? precioMaximo = null)
+    public IActionResult Index(string provincia = "Todos", string categoria = "Todos", decimal? precioMaximo = null)
     {
         BD bd = new BD();
         List<Entrada> listaEntradas = bd.GetEntradas();
@@ -80,12 +80,12 @@ public class HomeController : Controller
 
         provinciasDisponibles.Insert(0, "Todos");
 
-        if (!string.IsNullOrWhiteSpace(ciudad) && ciudad != "Todos")
+        if (!string.IsNullOrWhiteSpace(provincia) && provincia != "Todos")
         {
             listaEntradas = listaEntradas
                 .Where(e => e.Evento != null &&
                     !string.IsNullOrWhiteSpace(e.Evento.Provincia) &&
-                    NormalizarCiudad(e.Evento.Provincia).Equals(NormalizarCiudad(ciudad), StringComparison.OrdinalIgnoreCase))
+                    NormalizarCiudad(e.Evento.Provincia).Equals(NormalizarCiudad(provincia), StringComparison.OrdinalIgnoreCase))
                 .ToList();
         }
 
@@ -104,7 +104,8 @@ public class HomeController : Controller
         }
 
         ViewBag.listaEntradas = listaEntradas;
-        ViewBag.ciudadSeleccionada = ciudad;
+        ViewBag.provinciaSeleccionada = provincia;
+        ViewBag.ciudadSeleccionada = provincia;
         ViewBag.categoriaSeleccionada = categoria;
         ViewBag.precioMaximo = precioMaximo ?? precioMaximoBD;
         ViewBag.precioMaximoBD = precioMaximoBD;
