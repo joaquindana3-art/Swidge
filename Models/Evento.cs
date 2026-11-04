@@ -17,5 +17,6 @@ public class Evento
     public string? Imagen { get; set; }
 
     public string Lugar { get; set; } = "";
+    public string Provincia { get; set; } = "";
     public int CantidadEntradas { get; set; } = 0;
 }
