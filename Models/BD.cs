@@ -529,19 +529,30 @@ public class BD
         return entradas;
     }
 
-    public int InsertarUbicacion(int idEvento, string nombreSector, int? fila, int? asiento)
+    public void ActualizarUbicacionEntrada(int idUbicacion, int idEntrada)
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
-            string storedProcedure = "InsertarUbicacion";
+            string query = "UPDATE dbo.Ubicacion SET IDEntrada = @IDEntrada WHERE ID = @IDUbicacion";
+            connection.Execute(query, new { IDEntrada = idEntrada, IDUbicacion = idUbicacion });
+        }
+    }
 
-            return connection.ExecuteScalar<int>(storedProcedure, new
+    public int InsertarUbicacion(int idEstadio, string nombreSector, int? fila, int? asiento)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = @"INSERT INTO dbo.Ubicacion (IDentrada, NombreSector, Fila, Asiento)
+                             VALUES (@IDentrada, @NombreSector, @Fila, @Asiento);
+                             SELECT CAST(SCOPE_IDENTITY() AS int);";
+
+            return connection.ExecuteScalar<int>(query, new
             {
-                IDEvento = idEvento,
+                IDentrada = idEstadio,
                 NombreSector = nombreSector,
                 Fila = fila,
                 Asiento = asiento
-            }, commandType: CommandType.StoredProcedure);
+            });
         }
     }
 

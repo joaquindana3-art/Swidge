@@ -105,7 +105,7 @@ nav a {
 }
 
 .nav-logo img {
-  width: 160px;
+  width: 220px;
   height: auto;
   display: block;
 }
@@ -119,8 +119,7 @@ nav a {
 }
 
 .letras {
-  max-width: 8.5rem;
-  width: auto;
+  width: 100%;
   height: auto;
   display: block;
   object-fit: contain;
@@ -1025,22 +1024,49 @@ img.usuario {
 }
 
 .section-carrusel {
-  width: 100%;
+  width: calc(100vw - 18px);
+  margin-left: calc(50% - (100vw - 18px) / 2);
+  margin-top: 0.75rem;
+  margin-bottom: 1.5rem;
   overflow: hidden;
-  margin: 0 auto;
+  background: #e9edf8;
+  border-radius: 0;
 }
 
+.section-carrusel .carousel,
 .section-carrusel .carousel-inner,
 .section-carrusel .carousel-item {
   width: 100%;
 }
 
+.section-carrusel .carousel {
+  overflow: hidden;
+}
+
+.section-carrusel .carousel-inner {
+  width: 100%;
+}
+
+.section-carrusel .carousel-item {
+  height: clamp(180px, 22vw, 300px);
+}
+
 .section-carrusel img {
   display: block;
   width: 100%;
-  height: clamp(220px, 24vw, 320px);
+  height: 100%;
   object-fit: cover;
   object-position: center;
+}
+
+.section-carrusel .carousel-control-prev,
+.section-carrusel .carousel-control-next {
+  width: 8%;
+}
+
+.section-carrusel .carousel-control-prev-icon,
+.section-carrusel .carousel-control-next-icon {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
 }
 
 /* Vista mi perfil */

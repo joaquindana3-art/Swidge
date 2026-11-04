@@ -153,12 +153,19 @@ public class HomeController : Controller
         if (dniSesion == null) {
             return RedirectToAction("Index", "Home");
         }
+
         BD bd = new BD();
-        Usuario usuarioPublicador = bd.ObtenerUsuarioPorDNI(HttpContext.Session.GetInt32("DNI").Value);
+        Usuario usuarioPublicador = bd.ObtenerUsuarioPorDNI(dniSesion.Value);
 
         if (usuarioPublicador == null)
         {
             return RedirectToAction("IniciarSesion", "Home");
+        }
+
+        var eventoSeleccionado = bd.GetEventoPorId(IDevento);
+        if (eventoSeleccionado == null)
+        {
+            return RedirectToAction("PublicarEntrada", "Home");
         }
 
         int idVendedor = 0;
@@ -172,15 +179,17 @@ public class HomeController : Controller
             idVendedor = vendedor.ID;
         }
 
-        int idUbicacion = bd.InsertarUbicacion(IDevento, NombreSector, Fila, Asiento);
+        int idUbicacion = bd.InsertarUbicacion(0, NombreSector, Fila, Asiento);
 
         string qr = !string.IsNullOrWhiteSpace(comprobante)
             ? comprobante
             : $"QR_{DateTime.Now:yyyyMMddHHmmss}_{IDevento}_{idVendedor}";
 
         int idEntrada = bd.PublicarEntrada(IDevento, idVendedor, precioVenta, qr, idUbicacion);
+        bd.ActualizarUbicacionEntrada(idUbicacion, idEntrada);
+
         ViewBag.Entrada = bd.BuscarEntradaPorId(idEntrada);
-        ViewBag.Evento = bd.GetEventoPorId(IDevento);
+        ViewBag.Evento = eventoSeleccionado;
         ViewBag.Ubicacion = bd.BuscarUbicacionPorId(idUbicacion);
         ViewBag.Vendedor = bd.BuscarVendedorPorID(idVendedor);
         return View();
@@ -370,7 +379,7 @@ public class HomeController : Controller
     public IActionResult PublicarEntrada()
     {
         int? dniSesion = HttpContext.Session.GetInt32("DNI");
-        if (dniSesion != null) {
+        if (dniSesion == null) {
             return RedirectToAction("Index", "Home");
         }
         BD bd = new BD();
