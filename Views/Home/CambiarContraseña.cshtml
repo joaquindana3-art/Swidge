@@ -1,0 +1,28 @@
+@{
+    ViewData["Title"] = "Cambiar contraseña";
+}
+
+<div class="container mt-5">
+    <div class="card mx-auto" style="max-width: 500px;">
+        <div class="card-body">
+            <h3 class="mb-4 text-center">Cambiar contraseña</h3>
+
+            <form method="post" asp-controller="Session" asp-action="CambiarContraseña">
+                <div class="mb-3">
+                    <label for="contrasenaActual" class="form-label">Contraseña actual</label>
+                    <input type="password" class="form-control" id="contrasenaActual" name="contrasenaActual" required />
+                </div>
+
+                <div class="mb-3">
+                    <label for="contrasenaNueva" class="form-label">Nueva contraseña</label>
+                    <input type="password" class="form-control" id="contrasenaNueva" name="contrasenaNueva" required />
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                    <a class="btn btn-outline-secondary" asp-controller="Home" asp-action="MiPerfil">Volver</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
