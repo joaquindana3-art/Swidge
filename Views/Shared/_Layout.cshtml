@@ -14,7 +14,7 @@
         <nav class="topbar">
             <div class="nav-group nav-left">
                 <a class="icon-link back-link" href="#" aria-label="Volver atrás"><img class="flecha" src="~/img/flechaAtras.png" alt="volverAtras"></a>
-                <a class="pill-link" asp-controller="Home" asp-action="Index">Compra</a>
+                <a class="pill-link" asp-controller="Home" asp-action="Index">Inicio</a>
                 <a class="pill-link" asp-controller="Home" asp-action="PublicarEntrada">Publicar entrada</a>
                 <a class="pill-link" asp-controller="Home" asp-action="Ayuda">Ayuda</a>
             </div>
@@ -33,10 +33,16 @@
                             <img class="usuario" src="@Url.Content("~/img/usuario.png")" alt="Usuario">
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" asp-controller="Home" asp-action="MiPerfil">Mi perfil</a></li>
-                            <li><a class="dropdown-item" asp-controller="Home" asp-action="IniciarSesion">Iniciar sesión</a></li>
-                            <li><a class="dropdown-item" asp-controller="Home" asp-action="Registrarse">Registrarse</a></li>
-                            <li><a class="dropdown-item" asp-controller="Session" asp-action="CerrarSesion">Cerrar sesión</a></li>
+                            @if (Context.Session.GetInt32("DNI") != null)
+                            {
+                                <li><a class="dropdown-item" asp-controller="Home" asp-action="MiPerfil">Mi perfil</a></li>
+                                <li><a class="dropdown-item" asp-controller="Session" asp-action="CerrarSesion">Cerrar sesión</a></li>
+                            }
+                            else
+                            {
+                                <li><a class="dropdown-item" asp-controller="Home" asp-action="IniciarSesion">Iniciar sesión</a></li>
+                                <li><a class="dropdown-item" asp-controller="Home" asp-action="Registrarse">Registrarse</a></li>
+                            }
                         </ul>
                     </div>
 
