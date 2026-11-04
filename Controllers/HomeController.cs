@@ -59,23 +59,33 @@ public class HomeController : Controller
             {
                 entrada.Vendedor = bd.GetUsuarios().FirstOrDefault(u => u.DNI == vendedor.DNIusuario);
             }
+
+            if (entrada.Evento != null)
+            {
+                var estadio = bd.GetEstadios().FirstOrDefault(e => e.ID == entrada.Evento.IDEstadio);
+                if (estadio != null)
+                {
+                    entrada.Evento.Lugar = estadio.NombreLugar;
+                    entrada.Evento.Provincia = bd.GetProvinciaPorId(estadio.IdProvincia ?? 0)?.Nombre ?? "";
+                }
+            }
         }
 
-        var ciudadesDisponibles = listaEntradas
-            .Where(e => e.Vendedor != null && !string.IsNullOrWhiteSpace(e.Vendedor.Ciudad))
-            .Select(e => e.Vendedor.Ciudad.Trim())
+        var provinciasDisponibles = listaEntradas
+            .Where(e => e.Evento != null && !string.IsNullOrWhiteSpace(e.Evento.Provincia))
+            .Select(e => e.Evento.Provincia.Trim())
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .OrderBy(c => c, StringComparer.OrdinalIgnoreCase)
             .ToList();
 
-        ciudadesDisponibles.Insert(0, "Todos");
+        provinciasDisponibles.Insert(0, "Todos");
 
         if (!string.IsNullOrWhiteSpace(ciudad) && ciudad != "Todos")
         {
             listaEntradas = listaEntradas
-                .Where(e => e.Vendedor != null &&
-                    !string.IsNullOrWhiteSpace(e.Vendedor.Ciudad) &&
-                    NormalizarCiudad(e.Vendedor.Ciudad).Equals(NormalizarCiudad(ciudad), StringComparison.OrdinalIgnoreCase))
+                .Where(e => e.Evento != null &&
+                    !string.IsNullOrWhiteSpace(e.Evento.Provincia) &&
+                    NormalizarCiudad(e.Evento.Provincia).Equals(NormalizarCiudad(ciudad), StringComparison.OrdinalIgnoreCase))
                 .ToList();
         }
 
@@ -98,7 +108,7 @@ public class HomeController : Controller
         ViewBag.categoriaSeleccionada = categoria;
         ViewBag.precioMaximo = precioMaximo ?? precioMaximoBD;
         ViewBag.precioMaximoBD = precioMaximoBD;
-        ViewBag.Ciudades = ciudadesDisponibles;
+        ViewBag.Ciudades = provinciasDisponibles;
 
         ViewBag.Categorias = new List<string>
         {

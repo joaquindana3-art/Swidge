@@ -544,4 +544,25 @@ public class BD
             }, commandType: CommandType.StoredProcedure);
         }
     }
+
+    public List<Estadio> GetEstadios() {
+        List<Estadio> estadios = new List<Estadio>();
+        using (SqlConnection connection = new SqlConnection(_connectionString)) {
+            string query = "SELECT * FROM dbo.Estadio";
+            estadios = connection.Query<Estadio>(query).ToList();
+        }
+        return estadios;
+    }
+
+    public Provincia? GetProvinciaPorId(int id)
+    {
+        if (id <= 0)
+            return null;
+
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = "SELECT * FROM dbo.Provincia WHERE ID = @ID";
+            return connection.QueryFirstOrDefault<Provincia>(query, new { ID = id });
+        }
+    }
 }

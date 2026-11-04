@@ -6,5 +6,6 @@ public class Estadio
     public string NombreLugar { get; set; } = "";
     public string Direccion { get; set; } = "";
     public int CapacidadMaxima { get; set; }
+    public int? IdProvincia { get; set; }
     public string Nombre { get; set; } = "";
 }
