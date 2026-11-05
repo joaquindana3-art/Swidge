@@ -40,7 +40,13 @@ public class HomeController : Controller
     {
         BD bd = new BD();
         List<Entrada> listaEntradas = bd.GetEntradas();
-        decimal precioMaximoBD = bd.GetPrecioMaximoEntrada();
+
+        listaEntradas = listaEntradas
+            .GroupBy(e => e.IDEvento)
+            .Select(g => g.OrderBy(e => e.Precio).First())
+            .ToList();
+
+        decimal precioMaximoBD = listaEntradas.Any() ? listaEntradas.Max(e => e.Precio) : 0m;
 
         if (precioMaximo.HasValue && precioMaximo.Value > precioMaximoBD)
         {
@@ -132,7 +138,7 @@ public class HomeController : Controller
     {
         int? dniSesion = HttpContext.Session.GetInt32("DNI");
         if (dniSesion == null) {
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("IniciarSesion", "Home");
         }
         return View();
     }
@@ -151,7 +157,7 @@ public class HomeController : Controller
 
         int? dniSesion = HttpContext.Session.GetInt32("DNI");
         if (dniSesion == null) {
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("IniciarSesion", "Home");
         }
 
         BD bd = new BD();
@@ -198,9 +204,11 @@ public class HomeController : Controller
     public IActionResult PagarEntrada(int id)
     {
         int? dniSesion = HttpContext.Session.GetInt32("DNI");
-        if (dniSesion == null) {
-            return RedirectToAction("Index", "Home");
+        if (dniSesion == null)
+        {
+            return RedirectToAction("IniciarSesion", "Home");
         }
+
         BD bd = new BD();
         var entrada = bd.GetEntradaPorId(id);
 
@@ -248,14 +256,16 @@ public class HomeController : Controller
     public IActionResult DetalleEntrada(int id)
     {
         int? dniSesion = HttpContext.Session.GetInt32("DNI");
-        if (dniSesion == null) {
-            return RedirectToAction("Index", "Home");
+        if (dniSesion == null)
+        {
+            return RedirectToAction("IniciarSesion", "Home");
         }
+
         BD bd = new BD();
         var entrada = bd.GetEntradaPorId(id);
 
         if (entrada == null)
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Home");
 
         return View(entrada);
     }
@@ -267,9 +277,7 @@ public class HomeController : Controller
 
         if (dniSesion == null)
         {
-            ViewBag.mensaje = "Registráte o iniciá sesión para poder comprar o vender entradas.";
-            ViewBag.EntradasCompradas = new List<Entrada>();
-            return View();
+            return RedirectToAction("IniciarSesion", "Home");
         }
 
         List<Entrada> entradasCompradas = bd.GetEntradasCompradas(dniSesion.Value);
@@ -288,9 +296,7 @@ public class HomeController : Controller
         int? dniSesion = HttpContext.Session.GetInt32("DNI");
 
         if (dniSesion == null) {
-            ViewBag.mensaje = "Registráte o iniciá sesión para poder comprar o vender entradas.";
-            ViewBag.EntradasPublicadas = new List<Entrada>();
-            return View();
+            return RedirectToAction("IniciarSesion", "Home");
         }
 
         List<Entrada> entradasPublicadas = bd.GetEntradasPublicadas(dniSesion.Value);
@@ -307,18 +313,13 @@ public class HomeController : Controller
     {
         int? dniSesion = HttpContext.Session.GetInt32("DNI");
         if (dniSesion == null) {
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("IniciarSesion", "Home");
         }
         return View();
     }
 
     public IActionResult IniciarSesion()
     {
-
-        int? dniSesion = HttpContext.Session.GetInt32("DNI");
-        if (dniSesion != null) {
-            return RedirectToAction("Index", "Home");
-        }
         return View();
     }
 
@@ -380,7 +381,7 @@ public class HomeController : Controller
     {
         int? dniSesion = HttpContext.Session.GetInt32("DNI");
         if (dniSesion == null) {
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("IniciarSesion", "Home");
         }
         BD bd = new BD();
         ViewBag.Eventos = bd.GetEventos();
@@ -389,13 +390,7 @@ public class HomeController : Controller
 
     public IActionResult Registrarse()
     {
-
-        int? dniSesion = HttpContext.Session.GetInt32("DNI");
-        if (dniSesion != null) {
-            return RedirectToAction("Index", "Home");
-        }
         return View();
-
     }
 
     public IActionResult Privacy()
