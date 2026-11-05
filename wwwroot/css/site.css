@@ -33,6 +33,27 @@ body {
   padding: 2rem 0;
 }
 
+.landing-shell > .container {
+  width: min(1280px, calc(100% - 1rem));
+  max-width: 1280px;
+  background: #e1e5f4;
+  padding: 2rem 1.5rem 2.2rem;
+  margin: 0 auto;
+}
+
+.landing-shell > .container .row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem 1.25rem;
+  margin: 0;
+}
+
+.landing-shell > .container .col {
+  display: flex;
+  justify-content: center;
+  padding: 0;
+}
+
 .landing-hero {
   width: 100%;
   display: grid;
