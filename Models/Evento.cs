@@ -5,6 +5,7 @@ public class Evento
     public int ID { get; set; }
     public string Nombre { get; set; } = "";
     public string Protagonista { get; set; } = "";
+    public int IDCategoria { get; set; }
     public string Categoria { get; set; } = "";
     public string Descripcion { get; set; } = "";
     public int IDRecinto { get; set; }

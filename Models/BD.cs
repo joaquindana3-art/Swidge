@@ -62,6 +62,12 @@ public class BD
 
                 if (entrada.Evento != null)
                 {
+                    var categoria = connection.QueryFirstOrDefault<dynamic>(
+                        "SELECT Nombre FROM dbo.Categoria WHERE ID = @ID",
+                        new { ID = entrada.Evento.IDCategoria });
+
+                    entrada.Evento.Categoria = categoria?.Nombre ?? "";
+
                     var estadio = connection.QueryFirstOrDefault<Estadio>(
                         "SELECT * FROM dbo.Estadio WHERE ID = @ID",
                         new { ID = entrada.Evento.IDEstadio });
@@ -574,6 +580,16 @@ public class BD
         {
             string query = "SELECT * FROM dbo.Provincia WHERE ID = @ID";
             return connection.QueryFirstOrDefault<Provincia>(query, new { ID = id });
+        }
+    }
+
+    public List<string> GetCategoriasDisponibles()
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            return connection.Query<string>(
+                "SELECT DISTINCT Nombre FROM dbo.Categoria ORDER BY Nombre"
+            ).ToList();
         }
     }
 }

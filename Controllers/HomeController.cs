@@ -98,7 +98,9 @@ public class HomeController : Controller
         if (!string.IsNullOrWhiteSpace(categoria) && categoria != "Todos")
         {
             listaEntradas = listaEntradas
-                .Where(e => e.Evento != null && !string.IsNullOrWhiteSpace(e.Evento.Categoria) && e.Evento.Categoria.Equals(categoria, StringComparison.OrdinalIgnoreCase))
+                .Where(e => e.Evento != null &&
+                    !string.IsNullOrWhiteSpace(e.Evento.Categoria) &&
+                    e.Evento.Categoria.Equals(categoria, StringComparison.OrdinalIgnoreCase))
                 .ToList();
         }
 
@@ -109,6 +111,7 @@ public class HomeController : Controller
                 .ToList();
         }
 
+        var categoriasDisponibles = bd.GetCategoriasDisponibles();
         ViewBag.listaEntradas = listaEntradas;
         ViewBag.provinciaSeleccionada = provincia;
         ViewBag.ciudadSeleccionada = provincia;
@@ -116,15 +119,10 @@ public class HomeController : Controller
         ViewBag.precioMaximo = precioMaximo ?? precioMaximoBD;
         ViewBag.precioMaximoBD = precioMaximoBD;
         ViewBag.Ciudades = provinciasDisponibles;
-
-        ViewBag.Categorias = new List<string>
-        {
-            "Todos",
-            "Musica",
-            "Teatro",
-            "Deportes",
-            "Festivales"
-        };
+        ViewBag.Categorias = new List<string> { "Todos" }
+            .Concat(categoriasDisponibles)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
 
         return View();
     }

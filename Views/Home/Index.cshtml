@@ -98,7 +98,7 @@
         </div>
 
         <div class="col-lg-4 col-md-5">
-            <form method="get" asp-action="Index" asp-controller="Home" class="p-4 border rounded bg-light">
+            <form id="filtrosForm" method="get" asp-action="Index" asp-controller="Home" class="p-4 border rounded bg-light">
                 <h4 class="mb-3">Filtros</h4>
 
                 <div class="mb-3">
@@ -151,30 +151,40 @@
                            min="0"
                            max="100"
                            value="@((precioMaximoBD > 0 ? (precioMaximo / precioMaximoBD) * 100 : 0m).ToString("0.##", System.Globalization.CultureInfo.InvariantCulture))"
-                           style="width: 100%;"
-                           oninput="const maxDb = Number(@precioMaximoBD); const porcentaje = Number(this.value); const valor = (porcentaje / 100) * maxDb; document.getElementById('precioSeleccionado').innerText = '$' + valor.toLocaleString('es-AR'); document.getElementById('precioMaximoReal').value = valor.toFixed(0);" />
+                           style="width: 100%;" />
 
                     <input type="hidden" id="precioMaximoReal" name="precioMaximo" value="@precioMaximo" />
                 </div>
 
                 <script>
                     document.addEventListener('DOMContentLoaded', function () {
+                        const form = document.getElementById('filtrosForm');
                         const slider = document.getElementById('precioMaximoSlider');
                         const hidden = document.getElementById('precioMaximoReal');
                         const label = document.getElementById('precioSeleccionado');
 
                         if (!slider || !hidden || !label) return;
 
-                        const maxDb = Number(@precioMaximoBD);
-                        const porcentaje = Number(slider.value || 0);
-                        const valor = (porcentaje / 100) * maxDb;
+                        const actualizarPrecio = () => {
+                            const maxDb = Number(@precioMaximoBD);
+                            const porcentaje = Number(slider.value || 0);
+                            const valor = (porcentaje / 100) * maxDb;
 
-                        hidden.value = valor.toFixed(0);
-                        label.innerText = '$' + valor.toLocaleString('es-AR');
+                            hidden.value = valor.toFixed(0);
+                            label.innerText = '$' + valor.toLocaleString('es-AR');
+                        };
+
+                        actualizarPrecio();
+
+                        slider.addEventListener('input', function () {
+                            actualizarPrecio();
+                            if (form) {
+                                form.submit();
+                            }
+                        });
                     });
                 </script>
 
-                <button type="submit" class="btn btn-primary w-100">Aplicar filtros</button>
                 <a href="@Url.Action("Index", "Home")" class="btn btn-link w-100 mt-2">Limpiar</a>
             </form>
         </div>
