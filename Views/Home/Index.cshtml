@@ -38,9 +38,18 @@
         </button>
         </div>
     </section>
+
+    <div class="search-panel-wrapper">
+        <div class="search-box">
+            <span class="search-icon">🔎</span>
+            <input id="eventSearchInput" type="text" placeholder="Evento, artista o equipo" aria-label="Buscar evento" autocomplete="off" />
+            <div id="searchSuggestions" class="search-suggestions" aria-live="polite"></div>
+        </div>
+    </div>
+
 <div class="container-fluid px-4">
     <div class="row">
-        <div class="col-lg-8 col-md-7">
+        <div class="col-lg-8 col-md-7" id="entradasContainer">
             @if (entradas.Count > 0)
             {
                 foreach (var item in entradas)
@@ -60,7 +69,7 @@
                         imagen = "/img/" + evento.Imagen;
                     }
 
-                    <div class="card mb-3">
+                    <div class="card mb-3 event-card" data-event-name="@evento.Nombre" data-event-lugar="@evento.Lugar" data-entry-id="@item.ID" id="entrada-@item.ID">
                         <div class="row g-0">
                             <div class="col-md-4">
                                 <img src="@imagen" class="img-fluid h-100 w-100" style="object-fit: cover;" />
@@ -171,3 +180,87 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const input = document.getElementById('eventSearchInput');
+        const suggestions = document.getElementById('searchSuggestions');
+        const cards = Array.from(document.querySelectorAll('.event-card'));
+
+        if (!input || !suggestions || cards.length === 0) return;
+
+        const normalize = (value) =>
+            (value ?? '')
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '');
+
+        const applySearch = (query) => {
+            const term = normalize(query.trim());
+
+            cards.forEach((card) => {
+                const name = normalize(card.dataset.eventName);
+                const lugar = normalize(card.dataset.eventLugar);
+                const match = !term || name.includes(term) || lugar.includes(term);
+                card.style.display = match ? '' : 'none';
+            });
+        };
+
+        const renderSuggestions = (query) => {
+            const term = normalize(query.trim());
+
+            if (!term) {
+                suggestions.innerHTML = '';
+                suggestions.classList.remove('show');
+                return;
+            }
+
+            const matches = cards.filter((card) => {
+                const name = normalize(card.dataset.eventName);
+                const lugar = normalize(card.dataset.eventLugar);
+                return name.includes(term) || lugar.includes(term);
+            }).slice(0, 6);
+
+            if (!matches.length) {
+                suggestions.innerHTML = '<div class="search-empty">No se encontraron coincidencias</div>';
+                suggestions.classList.add('show');
+                return;
+            }
+
+            suggestions.innerHTML = matches.map((card) => `
+                <button type="button" class="search-item" data-target="${card.id}">
+                    ${card.dataset.eventName}
+                </button>
+            `).join('');
+            suggestions.classList.add('show');
+
+            suggestions.querySelectorAll('.search-item').forEach((button) => {
+                button.addEventListener('click', function () {
+                    const targetId = this.dataset.target;
+                    const targetCard = document.getElementById(targetId);
+                    if (targetCard) {
+                        targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        targetCard.classList.add('search-highlight');
+                        setTimeout(() => targetCard.classList.remove('search-highlight'), 1400);
+                    }
+
+                    input.value = button.textContent.trim();
+                    applySearch(input.value);
+                    suggestions.classList.remove('show');
+                });
+            });
+        };
+
+        input.addEventListener('input', function () {
+            const value = this.value;
+            applySearch(value);
+            renderSuggestions(value);
+        });
+
+        document.addEventListener('click', function (event) {
+            if (!event.target.closest('.search-box')) {
+                suggestions.classList.remove('show');
+            }
+        });
+    });
+</script>
