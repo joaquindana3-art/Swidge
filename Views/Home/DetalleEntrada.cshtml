@@ -1,112 +1,110 @@
 @model Swidge.Models.Entrada
 
 @{
-    ViewData["Title"] = "Detalle de entrada";
-    var evento = Model?.Evento ?? new Swidge.Models.Evento();
-    var vendedor = Model?.Vendedor ?? new Swidge.Models.Usuario();
-    var ubicacion = Model?.Ubicacion ?? new Swidge.Models.Ubicacion();
+    var entrada = Model ?? new Swidge.Models.Entrada();
+    var evento = entrada.Evento ?? new Swidge.Models.Evento();
+    var ubicacion = entrada.Ubicacion ?? new Swidge.Models.Ubicacion();
 
-    var nombreVendedor = !string.IsNullOrWhiteSpace(vendedor.Nombre) || !string.IsNullOrWhiteSpace(vendedor.Apellido)
-        ? $"{vendedor.Nombre} {vendedor.Apellido}".Trim()
-        : "VENDEDOR";
+    var fecha = evento.Fecha != default ? evento.Fecha.ToString("dddd d 'de' MMMM", new System.Globalization.CultureInfo("es-AR")) : "Fecha por confirmar";
+    var hora = evento.Fecha != default ? evento.Fecha.ToString("HH:mm") + "hs" : "Hora por confirmar";
 
-    var fecha = evento.Fecha != default ? evento.Fecha.ToString("ddd, dd MMM, HH:mm") : "Fecha por confirmar";
-    var precio = Model?.Precio > 0 ? Model.Precio.ToString("N0") : "0";
+    var lugar = !string.IsNullOrWhiteSpace(evento.Lugar)
+        ? evento.Lugar
+        : !string.IsNullOrWhiteSpace(ubicacion.NombreLugar)
+            ? ubicacion.NombreLugar
+            : "Lugar por confirmar";
 
-    var imagenEvento = string.IsNullOrWhiteSpace(evento.Imagen)
-        ? Url.Content("~/img/default-event.jpg")
-        : Url.Content("~/img/" + evento.Imagen);
+    var sector = !string.IsNullOrWhiteSpace(ubicacion.NombreSector) ? ubicacion.NombreSector : "Sin sector";
+    var fila = ubicacion.Fila.HasValue ? $"Fila {ubicacion.Fila.Value}" : null;
+    var asiento = ubicacion.Asiento.HasValue ? $"Asiento {ubicacion.Asiento.Value}" : null;
 
-    var categoria = string.IsNullOrWhiteSpace(evento.Categoria) ? "General" : evento.Categoria;
-    var protagonista = string.IsNullOrWhiteSpace(evento.Protagonista) ? "Artista por confirmar" : evento.Protagonista;
-    var descripcion = string.IsNullOrWhiteSpace(evento.Descripcion) ? "Descripción no disponible." : evento.Descripcion;
-    var cantidadEntradas = evento.CantidadEntradas > 0 ? evento.CantidadEntradas : 0;
-    var ciudadVendedor = string.IsNullOrWhiteSpace(vendedor.Ciudad) ? "Ciudad no disponible" : vendedor.Ciudad;
-    var ubicacionTexto = !string.IsNullOrWhiteSpace(ubicacion.NombreSector)
-        ? $"{ubicacion.NombreSector}{(ubicacion.Fila.HasValue ? $", fila {ubicacion.Fila.Value}" : "")}{(ubicacion.Asiento.HasValue ? $", asiento {ubicacion.Asiento.Value}" : "")}"
-        : "Ubicación por confirmar";
-
-    if (evento.ID > 0)
+    var ubicacionTexto = string.Join(" / ", new[] { sector, fila, asiento }.Where(x => !string.IsNullOrWhiteSpace(x)));
+    if (string.IsNullOrWhiteSpace(ubicacionTexto))
     {
-        var bd = new Swidge.Models.BD();
-        cantidadEntradas = bd.GetCantidadEntradasPorEvento(evento.ID);
+        ubicacionTexto = "Ubicación por confirmar";
     }
+
+    var precioEntrada = entrada.Precio > 0 ? entrada.Precio : 0m;
+    var cargoServicio = precioEntrada * 0.10m;
+    var precioFormateado = $"${precioEntrada:N0} ARS";
+    var cargoFormateado = $"(${cargoServicio:N0} de Cargo por servicio)";
+
+    var qrTexto = entrada.ID > 0 ? $"SWIDGE-{entrada.ID}" : "SWIDGE-ENTRADA";
+    var qrUrl = $"https://api.qrserver.com/v1/create-qr-code/?size=520x520&data={Uri.EscapeDataString(qrTexto)}";
 }
 
-<div class="detalle-page">
-    <section class="detalle-evento">
-        <img src="@imagenEvento"
-             alt="@(evento.Nombre)"
-             class="detalle-media" />
+<div class="confirm-detail-shell">
+    <h1 class="confirm-detail-title">Confirme los datos de su entrada</h1>
 
-        <div class="detalle-header">
-            <h1 class="detalle-titulo">@evento.Nombre</h1>
-
-            <div class="detalle-meta">
-                <div class="detalle-meta-item">
-                    <span class="detalle-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
-                            <path d="M7 2h2v2h6V2h2v2h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h3V2zm13 8H4v10h16V10zm-2-4H5v2h14V6z"/>
-                        </svg>
+    <div class="confirm-detail-grid">
+        <div class="confirm-detail-info-box">
+            <div class="confirm-detail-cell">
+                <div class="detail-icon-wrap">
+                    <span class="detail-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M7 2h2v2h6V2h2v2h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h3V2zm13 8H4v10h16V10zm-2-4H5v2h14V6z" /></svg>
                     </span>
-                    <span>@fecha</span>
                 </div>
-
-                <div class="detalle-meta-item">
-                    <span class="detalle-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
-                            <path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8zm0 10.5A2.5 2.5 0 1 1 12 7a2.5 2.5 0 0 1 0 5.5z"/>
-                        </svg>
-                    </span>
-                    <span>@(string.IsNullOrWhiteSpace(evento.Lugar) ? "Lugar por confirmar" : evento.Lugar)</span>
+                <div class="detail-text">
+                    <div class="detail-label">Fecha y Hora</div>
+                    <div class="detail-value">@fecha</div>
+                    <div class="detail-subvalue">@hora</div>
                 </div>
             </div>
+
+            <div class="confirm-detail-cell">
+                <div class="detail-icon-wrap">
+                    <span class="detail-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8zm0 10.5A2.5 2.5 0 1 1 12 7a2.5 2.5 0 0 1 0 5.5z" /></svg>
+                    </span>
+                </div>
+                <div class="detail-text">
+                    <div class="detail-label">Lugar</div>
+                    <div class="detail-value">@lugar</div>
+                    @if (!string.IsNullOrWhiteSpace(evento.Provincia))
+                    {
+                        <div class="detail-subvalue">@evento.Provincia</div>
+                    }
+                </div>
+            </div>
+
+            <div class="confirm-detail-cell">
+                <div class="detail-icon-wrap">
+                    <span class="detail-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M19 7h-1V5a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v2H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2zm-7 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zm-5-3.5V5h12v2H7z" /></svg>
+                    </span>
+                </div>
+                <div class="detail-text">
+                    <div class="detail-label">Ubicación / Sector</div>
+                    <div class="detail-value">@ubicacionTexto</div>
+                    @if (!string.IsNullOrWhiteSpace(evento.Nombre))
+                    {
+                        <div class="detail-subvalue">@evento.Nombre</div>
+                    }
+                </div>
+            </div>
+
+            <div class="confirm-detail-cell">
+                <div class="detail-icon-wrap">
+                    <span class="detail-icon detail-icon-money" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 1 3 3v1.07A4.99 4.99 0 0 1 19.93 11H22v2h-2.07A4.99 4.99 0 0 1 15 18.93V20h-2v-1.07A4.99 4.99 0 0 1 6.07 13H4v-2h2.07A4.99 4.99 0 0 1 9 5.07V4a3 3 0 0 1 3-3zm0 4.25A2.75 2.75 0 0 0 9.25 8v1.5h5.5V8A2.75 2.75 0 0 0 12 5.25zm0 6.75a2.75 2.75 0 0 0 2.75 2.75v-1.5h-5.5v1.5A2.75 2.75 0 0 0 12 12z" /></svg>
+                    </span>
+                </div>
+                <div class="detail-text">
+                    <div class="detail-label">Precio</div>
+                    <div class="detail-value">@precioFormateado</div>
+                    <div class="detail-subvalue">@cargoFormateado</div>
+                </div>
+            </div>
         </div>
 
-        <div class="detalle-evento-info">
-            <div class="info-row">
-                <span class="label">Ciudad del vendedor:</span>
-                <span class="value">@ciudadVendedor</span>
-            </div>
-            <div class="info-row">
-                <span class="label">Ubicación:</span>
-                <span class="value">@ubicacionTexto</span>
-            </div>
-            <div class="info-row">
-                <span class="label">Protagonista:</span>
-                <span class="value">@protagonista</span>
-            </div>
-            <div class="info-row">
-                <span class="label">Categoría:</span>
-                <span class="value">@categoria</span>
-            </div>
-            <div class="info-row">
-                <span class="label">Entradas disponibles:</span>
-                <span class="value">@cantidadEntradas</span>
-            </div>
-            <div class="info-row descripcion-row">
-                <span class="label">Descripción:</span>
-                <p class="value descripcion">@descripcion</p>
+        <div class="confirm-detail-qr-box">
+            <div class="qr-shell">
+                <img src="@qrUrl" alt="Código QR de la entrada" class="qr-image" />
             </div>
         </div>
-    </section>
+    </div>
 
-    <aside class="detalle-compra">
-        <div class="precio-panel">
-            <p class="precio-etiqueta">PRECIO DE LA ENTRADA</p>
-            <div class="precio-valor">@precio<span>$</span></div>
-            <div class="precio-ahorro">Ahorras 2.000$ frente al precio original</div>
-            <button class="boton-comprar" type="button" onclick="window.location.href='@Url.Action("PagarEntrada", "Home", new { id = Model?.ID ?? 0 })'">comprar</button>
-        </div>
-
-        <div class="vendedor-panel">
-            <p class="vendedor-titulo">INFORMACIÓN DEL VENDEDOR</p>
-
-            <div class="vendedor-fila">
-                <div class="vendedor-avatar" aria-label="Avatar del vendedor">@(!string.IsNullOrWhiteSpace(vendedor.Nombre) ? vendedor.Nombre.Substring(0, 1).ToUpperInvariant() : "V")</div>
-                <div class="vendedor-nombre">@nombreVendedor.ToUpperInvariant()</div>
-                <div class="vendedor-estrellas" aria-label="Calificación 5 de 5">★★★★★</div>
-            </div>
-        </div>
-    </aside>
+    <div class="confirm-detail-actions">
+        <button class="confirm-detail-btn" type="button">Confirmar y publicar entrada</button>
+    </div>
 </div>

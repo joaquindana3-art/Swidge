@@ -2062,23 +2062,129 @@ img.usuario {
   transform: translateY(-1px);
 }
 
-@media (max-width: 768px) {
-  .mi-perfil-content {
-    padding: 18px 16px 20px;
-  }
-
-  .mi-perfil-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .mi-perfil-field,
-  .mi-perfil-field-full,
-  .mi-perfil-field-large {
-    max-width: 100%;
-    grid-column: auto;
-  }
-
-  .mi-perfil-card {
-    width: min(100%, 620px);
-  }
+.search-panel-wrapper {
+  width: min(100%, 1060px);
+  margin: 0 auto;
+  padding: 1.2rem 0 0.6rem;
 }
+
+.search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  width: min(100%, 1060px);
+  min-height: 62px;
+  margin: 0 auto;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  background: rgba(101, 160, 247, 0.9);
+  box-shadow: inset 0 0 0 1px rgba(47, 91, 172, 0.18);
+}
+
+.search-icon {
+  font-size: 1.4rem;
+  line-height: 1;
+  opacity: 0.9;
+}
+
+.search-box input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: #15345f;
+  font-size: 1.05rem;
+  font-weight: 600;
+  outline: none;
+  min-width: 0;
+}
+
+.search-box input::placeholder {
+  color: rgba(18, 46, 84, 0.75);
+}
+
+.search-suggestions {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 0.4rem);
+  display: none;
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 10px;
+  box-shadow: 0 10px 22px rgba(17, 24, 39, 0.12);
+  border: 1px solid rgba(82, 110, 181, 0.2);
+  overflow: hidden;
+  z-index: 30;
+}
+
+.search-suggestions.show {
+  display: block;
+}
+
+.search-item,
+.search-empty {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: none;
+  background: transparent;
+  text-align: left;
+  color: #1f2d3d;
+  font-weight: 600;
+}
+
+.search-item {
+  cursor: pointer;
+}
+
+.search-item:hover {
+  background: #edf4ff;
+}
+
+.search-empty {
+  color: #52607a;
+}
+
+.event-card.search-highlight {
+  box-shadow: 0 0 0 3px rgba(34, 111, 255, 0.35), 0 0 0 8px rgba(34, 111, 255, 0.1);
+  transition: box-shadow 0.25s ease;
+}
+
+.confirm-detail-shell { width: min(1320px, calc(100% - 48px)); margin: 18px auto 0; padding-bottom: 24px; }
+
+.confirm-detail-title { margin: 0 0 32px; font-size: clamp(3.1rem, 4vw, 6rem); line-height: 0.96; font-weight: 900; letter-spacing: -0.06em; color: #111; text-align: left; }
+
+.confirm-detail-grid { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.8fr); gap: 48px; align-items: center; }
+
+.confirm-detail-info-box { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); background: #77a8ea; padding: 0; min-height: 290px; border: 0; box-shadow: none; }
+
+.confirm-detail-cell { display: flex; align-items: center; gap: 18px; min-height: 150px; padding: 28px 22px 22px 24px; border: 1px solid rgba(20, 78, 164, 0.12); background: rgba(255, 255, 255, 0.05); }
+
+.detail-icon-wrap { width: 54px; height: 54px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+.detail-icon { width: 42px; height: 42px; display: inline-flex; align-items: center; justify-content: center; color: #1c1c1c; } .detail-icon svg { width: 100%; height: 100%; fill: currentColor; }
+
+.detail-text { color: #11213a; min-width: 0; }
+
+.detail-label { font-size: 1.05rem; font-weight: 700; margin-bottom: 4px; color: #0d2340; }
+
+.detail-value { font-size: clamp(1.2rem, 1vw + 0.8rem, 1.8rem); font-weight: 700; line-height: 1.2; word-break: break-word; }
+
+.detail-subvalue { margin-top: 4px; font-size: 1.05rem; color: rgba(17, 33, 58, 0.82); }
+
+.confirm-detail-qr-box { display: flex; align-items: center; justify-content: center; min-height: 380px; }
+
+.qr-shell { width: min(100%, 380px); aspect-ratio: 1; background: #fff; border: 12px solid #000; padding: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 4px rgba(0,0,0,0.04); }
+
+.qr-image { width: 100%; height: 100%; display: block; object-fit: contain; background: #fff; }
+
+.confirm-detail-actions { display: flex; justify-content: center; margin-top: 34px; }
+
+.confirm-detail-btn { background: #6f9ae9; color: #fff; border: 0; border-radius: 10px; min-width: 420px; height: 82px; font-size: clamp(1.2rem, 1vw + 0.8rem, 2rem); font-weight: 800; letter-spacing: -0.04em; box-shadow: 0 8px 0 rgba(58, 92, 167, 0.25); cursor: pointer; }
+
+@media (max-width: 980px) {
+  .confirm-detail-grid { grid-template-columns: 1fr; gap: 28px;
+}
+
+.confirm-detail-info-box { grid-template-columns: 1fr; }
+
+.confirm-detail-btn { min-width: 100%; } }
