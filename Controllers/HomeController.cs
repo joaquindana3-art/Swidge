@@ -277,9 +277,7 @@ public class HomeController : Controller
 
         if (dniSesion == null)
         {
-            ViewBag.mensaje = "Registráte o iniciá sesión para poder comprar o vender entradas.";
-            ViewBag.EntradasCompradas = new List<Entrada>();
-            return View();
+            return RedirectToAction("IniciarSesion", "Home");
         }
 
         List<Entrada> entradasCompradas = bd.GetEntradasCompradas(dniSesion.Value);
@@ -298,9 +296,7 @@ public class HomeController : Controller
         int? dniSesion = HttpContext.Session.GetInt32("DNI");
 
         if (dniSesion == null) {
-            ViewBag.mensaje = "Registráte o iniciá sesión para poder comprar o vender entradas.";
-            ViewBag.EntradasPublicadas = new List<Entrada>();
-            return View();
+            return RedirectToAction("IniciarSesion", "Home");
         }
 
         List<Entrada> entradasPublicadas = bd.GetEntradasPublicadas(dniSesion.Value);
