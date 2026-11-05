@@ -2,8 +2,10 @@
 
 @{
     var entrada = Model ?? new Swidge.Models.Entrada();
-    var evento = entrada.Evento ?? new Swidge.Models.Evento();
-    var ubicacion = entrada.Ubicacion ?? new Swidge.Models.Ubicacion();
+    var evento = entrada.Evento ?? (ViewBag.Evento as Swidge.Models.Evento ?? new Swidge.Models.Evento());
+    var ubicacion = entrada.Ubicacion ?? (ViewBag.Ubicacion as Swidge.Models.Ubicacion ?? new Swidge.Models.Ubicacion());
+    var nombreTitular = ViewBag.NombreTitular?.ToString();
+    var precioVenta = entrada.Precio > 0 ? entrada.Precio : (ViewBag.PrecioVenta != null ? Convert.ToDecimal(ViewBag.PrecioVenta) : 0m);
 
     var fecha = evento.Fecha != default ? evento.Fecha.ToString("dddd d 'de' MMMM", new System.Globalization.CultureInfo("es-AR")) : "Fecha por confirmar";
     var hora = evento.Fecha != default ? evento.Fecha.ToString("HH:mm") + "hs" : "Hora por confirmar";
@@ -24,7 +26,7 @@
         ubicacionTexto = "Ubicación por confirmar";
     }
 
-    var precioEntrada = entrada.Precio > 0 ? entrada.Precio : 0m;
+    var precioEntrada = precioVenta > 0 ? precioVenta : 0m;
     var cargoServicio = precioEntrada * 0.10m;
     var precioFormateado = $"${precioEntrada:N0} ARS";
     var cargoFormateado = $"(${cargoServicio:N0} de Cargo por servicio)";
@@ -58,8 +60,8 @@
                     </span>
                 </div>
                 <div class="detail-text">
-                    <div class="detail-label">Lugar</div>
-                    <div class="detail-value">@lugar</div>
+                    <div class="detail-label">Estadio / Recinto</div>
+                    <div class="detail-value">@(string.IsNullOrWhiteSpace(evento.Lugar) ? "Recinto por confirmar" : evento.Lugar)</div>
                     @if (!string.IsNullOrWhiteSpace(evento.Provincia))
                     {
                         <div class="detail-subvalue">@evento.Provincia</div>
@@ -103,6 +105,14 @@
             </div>
         </div>
     </div>
+
+    @if (!string.IsNullOrWhiteSpace(nombreTitular))
+    {
+        <div class="confirm-detail-titular">
+            <span class="detail-label">Titular</span>
+            <strong>@nombreTitular</strong>
+        </div>
+    }
 
     <div class="confirm-detail-actions">
         <button class="confirm-detail-btn" type="button">Confirmar y publicar entrada</button>

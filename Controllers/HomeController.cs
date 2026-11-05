@@ -174,6 +174,13 @@ public class HomeController : Controller
             return RedirectToAction("PublicarEntrada", "Home");
         }
 
+        var estadioEvento = bd.GetEstadios().FirstOrDefault(e => e.ID == eventoSeleccionado.IDEstadio);
+        if (estadioEvento != null)
+        {
+            eventoSeleccionado.Lugar = estadioEvento.NombreLugar;
+            eventoSeleccionado.Provincia = bd.GetProvinciaPorId(estadioEvento.IdProvincia ?? 0)?.Nombre ?? "";
+        }
+
         int idVendedor = 0;
         Vendedor vendedor = bd.BuscarVendedorPorDNIusuario(usuarioPublicador.DNI);
         if (vendedor == null)
@@ -194,12 +201,32 @@ public class HomeController : Controller
         int idEntrada = bd.PublicarEntrada(IDevento, idVendedor, precioVenta, qr, idUbicacion);
         bd.ActualizarUbicacionEntrada(idUbicacion, idEntrada);
 
-        ViewBag.Entrada = bd.BuscarEntradaPorId(idEntrada);
-        ViewBag.Evento = eventoSeleccionado;
-        ViewBag.Ubicacion = bd.BuscarUbicacionPorId(idUbicacion);
-        ViewBag.Vendedor = bd.BuscarVendedorPorID(idVendedor);
-        return View();
+        var entradaPublicada = bd.BuscarEntradaPorId(idEntrada);
+        if (entradaPublicada == null)
+        {
+            entradaPublicada = new Entrada
+            {
+                ID = idEntrada,
+                IDEvento = IDevento,
+                IDVendedor = idVendedor,
+                Precio = precioVenta,
+                QR = qr,
+                Evento = eventoSeleccionado,
+                Ubicacion = bd.BuscarUbicacionPorId(idUbicacion)
+            };
+        }
 
+        entradaPublicada.Evento ??= eventoSeleccionado;
+        entradaPublicada.Ubicacion ??= bd.BuscarUbicacionPorId(idUbicacion);
+
+        ViewBag.Entrada = entradaPublicada;
+        ViewBag.Evento = eventoSeleccionado;
+        ViewBag.Ubicacion = entradaPublicada.Ubicacion;
+        ViewBag.Vendedor = bd.BuscarVendedorPorID(idVendedor);
+        ViewBag.NombreTitular = nombreTitular;
+        ViewBag.PrecioVenta = precioVenta;
+
+        return View(entradaPublicada);
     }
     public IActionResult PagarEntrada(int id)
     {
