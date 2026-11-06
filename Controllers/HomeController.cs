@@ -179,6 +179,13 @@ public class HomeController : Controller
             eventoSeleccionado.Provincia = bd.GetProvinciaPorId(estadioEvento.IdProvincia ?? 0)?.Nombre ?? "";
         }
 
+        var ubicacionDuplicada = bd.ExisteUbicacionDuplicada(IDevento, NombreSector, Fila, Asiento);
+        if (ubicacionDuplicada)
+        {
+            TempData["ErrorMessage"] = "Ya existe una ubicación igual para este estadio y fecha. Cambiá la fila, el asiento o el sector.";
+            return RedirectToAction("PublicarEntrada", "Home");
+        }
+
         int idVendedor = 0;
         Vendedor vendedor = bd.BuscarVendedorPorDNIusuario(usuarioPublicador.DNI);
         if (vendedor == null)
@@ -190,7 +197,7 @@ public class HomeController : Controller
             idVendedor = vendedor.ID;
         }
 
-        int idUbicacion = bd.InsertarUbicacion(0, NombreSector, Fila, Asiento);
+        int idUbicacion = bd.InsertarUbicacion(NombreSector, Fila, Asiento);
 
         string qr = !string.IsNullOrWhiteSpace(comprobante)
             ? comprobante

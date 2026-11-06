@@ -15,6 +15,12 @@ public class BD
             string query = "SELECT * FROM Usuario";
             usuarios = connection.Query<Usuario>(query).ToList();
 
+            foreach (var usuario in usuarios)
+            {
+                usuario.NumeroTarjeta = string.IsNullOrWhiteSpace(usuario.NumeroTarjeta) ? null : EncryptionHelper.Decrypt(usuario.NumeroTarjeta);
+                usuario.CodigoSeguridad = string.IsNullOrWhiteSpace(usuario.CodigoSeguridad) ? null : EncryptionHelper.Decrypt(usuario.CodigoSeguridad);
+            }
+
         }
         return usuarios;
 
@@ -197,7 +203,9 @@ public class BD
                 Nombre = usuario.Nombre,
                 Apellido = usuario.Apellido,
                 FechaNacimiento = usuario.FechaNacimiento,
-                Ciudad = usuario.Ciudad
+                Ciudad = usuario.Ciudad,
+                NumeroTarjeta = string.IsNullOrWhiteSpace(usuario.NumeroTarjeta) ? null : EncryptionHelper.Encrypt(usuario.NumeroTarjeta),
+                CodigoSeguridad = string.IsNullOrWhiteSpace(usuario.CodigoSeguridad) ? null : EncryptionHelper.Encrypt(usuario.CodigoSeguridad)
             },
             commandType: CommandType.StoredProcedure);
     }
@@ -212,7 +220,14 @@ public class BD
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
             string query = "SELECT TOP 1 * FROM [dbo].[Usuario] WHERE [DNI] = @DNI";
-            return connection.QueryFirstOrDefault<Usuario>(query, new { DNI = dni });
+            var usuario = connection.QueryFirstOrDefault<Usuario>(query, new { DNI = dni });
+
+            if (usuario == null)
+                return null;
+
+            usuario.NumeroTarjeta = string.IsNullOrWhiteSpace(usuario.NumeroTarjeta) ? null : EncryptionHelper.Decrypt(usuario.NumeroTarjeta);
+            usuario.CodigoSeguridad = string.IsNullOrWhiteSpace(usuario.CodigoSeguridad) ? null : EncryptionHelper.Decrypt(usuario.CodigoSeguridad);
+            return usuario;
         }
     }
 
@@ -539,22 +554,21 @@ public class BD
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
-            string query = "UPDATE dbo.Ubicacion SET IDEntrada = @IDEntrada WHERE ID = @IDUbicacion";
+            string query = "UPDATE dbo.Entrada SET IDubicacion = @IDUbicacion WHERE ID = @IDEntrada";
             connection.Execute(query, new { IDEntrada = idEntrada, IDUbicacion = idUbicacion });
         }
     }
 
-    public int InsertarUbicacion(int idEstadio, string nombreSector, int? fila, int? asiento)
+    public int InsertarUbicacion(string nombreSector, int? fila, int? asiento)
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
-            string query = @"INSERT INTO dbo.Ubicacion (IDentrada, NombreSector, Fila, Asiento)
-                             VALUES (@IDentrada, @NombreSector, @Fila, @Asiento);
+            string query = @"INSERT INTO dbo.Ubicacion (NombreSector, Fila, Asiento)
+                             VALUES (@NombreSector, @Fila, @Asiento);
                              SELECT CAST(SCOPE_IDENTITY() AS int);";
 
             return connection.ExecuteScalar<int>(query, new
             {
-                IDentrada = idEstadio,
                 NombreSector = nombreSector,
                 Fila = fila,
                 Asiento = asiento
@@ -590,6 +604,29 @@ public class BD
             return connection.Query<string>(
                 "SELECT DISTINCT Nombre FROM dbo.Categoria ORDER BY Nombre"
             ).ToList();
+        }
+    }
+
+    public bool ExisteUbicacionDuplicada(int idEvento, string nombreSector, int? fila, int? asiento)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = @"SELECT COUNT(1)
+                             FROM dbo.Entrada e
+                             INNER JOIN dbo.Ubicacion u ON u.ID = e.IDubicacion
+                             INNER JOIN dbo.Evento ev ON ev.ID = e.IDevento
+                             WHERE ev.IDestadio = (SELECT IDEstadio FROM dbo.Evento WHERE ID = @IDEvento)
+                               AND CAST(ev.Fecha AS date) = (SELECT CAST(Fecha AS date) FROM dbo.Evento WHERE ID = @IDEvento)
+                               AND u.Fila = @Fila
+                               AND u.Asiento = @Asiento;";
+
+            return connection.ExecuteScalar<int>(query, new
+            {
+                IDEvento = idEvento,
+                NombreSector = nombreSector,
+                Fila = fila,
+                Asiento = asiento
+            }) > 0;
         }
     }
 }

@@ -11,5 +11,5 @@ public class Usuario
     public string Contraseña { get; set; } = "";
     public string Mail { get; set; } = "";
     public string? NumeroTarjeta { get; set; }
-    public int? CodigoSeguridad { get; set; }
+    public string? CodigoSeguridad { get; set; }
 }

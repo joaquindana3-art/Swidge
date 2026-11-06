@@ -96,6 +96,15 @@
             </div>
         </div>
     </form>
+
+    @{
+        var errorMessage = TempData["ErrorMessage"] as string;
+    }
+
+    @if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <div class="alert alert-danger mt-3">@errorMessage</div>
+    }
 </main>
 
 @section Scripts {
