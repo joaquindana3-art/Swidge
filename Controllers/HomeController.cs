@@ -14,6 +14,10 @@ public class HomeController : Controller
     {
         _logger = logger;
     }
+    public IActionResult Landing()
+    {
+        return View();
+    }
 
     private static string NormalizarCiudad(string? valor)
     {
