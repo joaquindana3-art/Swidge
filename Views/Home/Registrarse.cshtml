@@ -48,7 +48,7 @@
         <div class="campo">
             <label for="fechaNacimiento">Fecha de nacimiento</label>
             <input type="date" id="fechaNacimiento" name="fechaNacimiento">
-            <span></span>
+            <span id="fb-fechaNacimiento"></span>
         </div>
 
         <div class="campo">
@@ -83,6 +83,6 @@
     <button type="submit" class="registro-boton">Registrarse</button>
 </form>
 
-<p class="registro-login">¿Ya tenés cuenta? <a class="registro-link" href="@Url.Action("IniciarSesion", "Session")">Iniciá sesión</a></p>
+<p class="registro-login">¿Ya tenés cuenta? <a class="registro-link" href="@Url.Action("IniciarSesion", "Home")">Iniciá sesión</a></p>
 
 <script src="@Url.Content("~/js/registrarse.js")"></script>
