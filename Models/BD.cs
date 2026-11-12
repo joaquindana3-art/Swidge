@@ -203,9 +203,7 @@ public class BD
                 Nombre = usuario.Nombre,
                 Apellido = usuario.Apellido,
                 FechaNacimiento = usuario.FechaNacimiento,
-                Ciudad = usuario.Ciudad,
-                NumeroTarjeta = string.IsNullOrWhiteSpace(usuario.NumeroTarjeta) ? null : EncryptionHelper.Encrypt(usuario.NumeroTarjeta),
-                CodigoSeguridad = string.IsNullOrWhiteSpace(usuario.CodigoSeguridad) ? null : EncryptionHelper.Encrypt(usuario.CodigoSeguridad)
+                Ciudad = usuario.Ciudad
             },
             commandType: CommandType.StoredProcedure);
     }

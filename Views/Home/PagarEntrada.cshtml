@@ -20,8 +20,8 @@
 
 <div class="checkout-shell">
     <div class="checkout-panel">
-        <form id="checkoutForm" method="post" action="@Url.Action("CompraExitosa", "Home")">
-            <input type="hidden" name="id" value="@Model?.ID" />
+        <form id="checkoutForm" method="post" action="@Url.Action("CompraExitosa", "Home")" data-compra-exitosa-url="@Url.Action("CompraExitosa", "Home", new { id = Model?.ID ?? 0 })">
+            <input type="hidden" id="entradaId" name="id" value="@Model?.ID" />
             <div class="checkout-form-wrap">
                 <div class="checkout-payments" role="radiogroup" aria-label="Método de pago">
                     <label class="checkout-payment-option">
@@ -76,24 +76,24 @@
                 <div class="checkout-card-fields" data-payment-type="Tarjeta">
                     <div class="checkout-field-grid">
                         <div class="checkout-field">
-                            <input type="text" placeholder="Número de tarjeta" />
+                            <input id="numeroTarjeta" type="text" inputmode="numeric" autocomplete="cc-number" placeholder="Número de tarjeta" maxlength="19" />
                         </div>
 
                         <div class="checkout-input-row">
                             <div class="checkout-field">
-                                <input type="text" placeholder="Código de seguridad (CVV)" />
+                                <input id="cvvTarjeta" type="text" inputmode="numeric" autocomplete="cc-csc" placeholder="Código de seguridad (CVV)" maxlength="4" />
                             </div>
                             <div class="checkout-field">
-                                <input type="text" placeholder="Fecha de vencimiento (MM/AA)" />
+                                <input id="vencimientoTarjeta" type="text" inputmode="numeric" autocomplete="cc-exp" placeholder="Fecha de vencimiento (MM/AA)" maxlength="5" />
                             </div>
                         </div>
 
                         <div class="checkout-field">
-                            <input type="text" placeholder="Nombre del titular" />
+                            <input id="titularTarjeta" type="text" autocomplete="cc-name" placeholder="Nombre del titular" maxlength="50" />
                         </div>
 
                         <div class="checkout-field">
-                            <input type="text" placeholder="Dirección de facturación" />
+                            <input id="direccionFacturacion" type="text" autocomplete="address-line1" placeholder="Dirección de facturación" maxlength="80" />
                         </div>
                     </div>
                 </div>
@@ -129,47 +129,4 @@
     </div>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const form = document.getElementById('checkoutForm');
-        const aceptar = document.getElementById('aceptaDevolucion');
-        const boton = document.getElementById('confirmarCompra');
-        const cardFields = document.querySelector('.checkout-card-fields');
-        const paymentRadios = document.querySelectorAll('input[name="metodoPago"]');
-
-        function actualizarBoton() {
-            const enabled = aceptar.checked;
-            boton.disabled = !enabled;
-            boton.classList.toggle('is-disabled', !enabled);
-        }
-
-        function actualizarCamposPago() {
-            const seleccionado = document.querySelector('input[name="metodoPago"]:checked');
-            const tipoPago = seleccionado ? seleccionado.value : 'Tarjeta';
-            const mostrarTarjeta = tipoPago === 'Tarjeta';
-            cardFields.classList.toggle('visible', mostrarTarjeta);
-        }
-
-        paymentRadios.forEach(function (radio) {
-            radio.addEventListener('change', function () {
-                actualizarCamposPago();
-            });
-        });
-
-        aceptar.addEventListener('change', actualizarBoton);
-        actualizarBoton();
-        actualizarCamposPago();
-
-        form.addEventListener('submit', function (event) {
-            if (!aceptar.checked) {
-                event.preventDefault();
-                aceptar.focus();
-                alert('Debes aceptar los términos de devolución para confirmar la compra.');
-                return;
-            }
-
-            event.preventDefault();
-            window.location.href = '@Url.Action("CompraExitosa", "Home", new { id = Model?.ID ?? 0 })';
-        });
-    });
-</script>
+<script src="~/js/pagarEntrada.js" defer></script>

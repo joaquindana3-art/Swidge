@@ -62,7 +62,7 @@ public class SessionController : Controller
         {
             datos.Contraseña = "";
             ViewBag.Errores = errores;
-            return View(datos);
+            return View("~/Views/Home/Registrarse.cshtml", datos);
         }
         bd.AgregarUsuario(datos);
         GuardarSesion(datos);

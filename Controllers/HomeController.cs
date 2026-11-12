@@ -43,6 +43,8 @@ public class HomeController : Controller
     public IActionResult Index(string provincia = "Todos", string categoria = "Todos", decimal? precioMaximo = null)
     {
         BD bd = new BD();
+        int? dniSesion = HttpContext.Session.GetInt32("DNI");
+        ViewBag.UsuarioActualDni = dniSesion;
         List<Entrada> listaEntradas = bd.GetEntradas();
 
         listaEntradas = listaEntradas
