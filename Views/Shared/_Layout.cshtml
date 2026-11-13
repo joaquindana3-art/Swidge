@@ -10,50 +10,46 @@
     <link rel="stylesheet" href="~/Swidge.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="topbar">
-            <div class="nav-group nav-left">
-                <a class="icon-link back-link" href="#" aria-label="Volver atrás"><img class="flecha" src="~/img/flechaAtras.png" alt="volverAtras"></a>
-                <a class="pill-link" asp-controller="Home" asp-action="Index">Inicio</a>
-                <a class="pill-link" asp-controller="Home" asp-action="PublicarEntrada">Publicar entrada</a>
-                <a class="pill-link" asp-controller="Home" asp-action="Ayuda">Ayuda</a>
-            </div>
+    <header class="swidge-header">
+        <a class="swidge-brand" asp-controller="Home" asp-action="Index" aria-label="Swidge inicio">
+            <img src="@Url.Content("~/img/letrasSwidge.png")" alt="Swidge" />
+        </a>
 
-            <a class="nav-logo" asp-controller="Home" asp-action="Index" aria-label="Swidge inicio">
-                <img class="letras" src="~/img/letrasSwidge.png" alt="Logo Swidge">
-            </a>
-
-            <div class="nav-group nav-right">
-                <a class="pill-link wide" asp-controller="Home" asp-action="EntradasPublicadas">Mis entradas publicadas</a>
-                <a class="pill-link wide" asp-controller="Home" asp-action="EntradasCompradas">Mis entradas compradas</a>
-
-                <div class="profile-user-wrap">
-                    <div class="dropdown profile-dropdown">
-                        <button class="btn profile-dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img class="usuario" src="@Url.Content("~/img/usuario.png")" alt="Usuario">
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            @if (Context.Session.GetInt32("DNI") != null)
-                            {
-                                <li><a class="dropdown-item" asp-controller="Home" asp-action="MiPerfil">Mi perfil</a></li>
-                                <li><a class="dropdown-item" asp-controller="Session" asp-action="CerrarSesion">Cerrar sesión</a></li>
-                            }
-                            else
-                            {
-                                <li><a class="dropdown-item" asp-controller="Home" asp-action="IniciarSesion">Iniciar sesión</a></li>
-                                <li><a class="dropdown-item" asp-controller="Home" asp-action="Registrarse">Registrarse</a></li>
-                            }
-                        </ul>
-                    </div>
-
-                    @if (!string.IsNullOrWhiteSpace(Context.Session.GetString("NombreUsuario")))
-                    {
-                        <span class="profile-username">@Context.Session.GetString("NombreUsuario")</span>
-                    }
-                </div>
-            </div>
+        <nav class="swidge-nav" aria-label="Navegación principal">
+            <a class="swidge-link swidge-link--primary" asp-controller="Home" asp-action="EntradasPublicadas">Mis entradas</a>
+            <a class="swidge-link swidge-link--secondary" asp-controller="Home" asp-action="Ayuda">Ayuda</a>
+            <a class="swidge-link swidge-link--secondary" asp-controller="Home" asp-action="Landing">Sobre nosotros</a>
+            <a class="swidge-link swidge-link--danger" asp-controller="Home" asp-action="PublicarEntrada">Publicar</a>
+            <a class="swidge-link swidge-link--blue" asp-controller="Home" asp-action="Index">Explorar entradas</a>
         </nav>
+
+        @if (Context.Session.GetInt32("DNI") != null)
+        {
+            <div class="swidge-user-wrap dropdown">
+                <button class="swidge-user-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Menú del usuario">
+                    <img src="@Url.Content("~/img/usuario.png")" alt="Usuario" />
+                </button>
+                <span class="swidge-username">@Context.Session.GetString("NombreUsuario")</span>
+                <ul class="dropdown-menu dropdown-menu-end swidge-profile-menu">
+                    <li><a class="dropdown-item" asp-controller="Home" asp-action="MiPerfil">Mi perfil</a></li>
+                    <li><a class="dropdown-item" asp-controller="Session" asp-action="CerrarSesion">Cerrar sesión</a></li>
+                </ul>
+            </div>
+        }
+        else
+        {
+            <div class="swidge-user-wrap dropdown">
+                <button class="swidge-user-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Menú de sesión">
+                    <img src="@Url.Content("~/img/usuario.png")" alt="Usuario" />
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end swidge-profile-menu">
+                    <li><a class="dropdown-item" asp-controller="Home" asp-action="IniciarSesion">Iniciar sesión</a></li>
+                    <li><a class="dropdown-item" asp-controller="Home" asp-action="Registrarse">Registrarse</a></li>
+                </ul>
+            </div>
+        }
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()

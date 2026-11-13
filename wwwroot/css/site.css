@@ -2522,59 +2522,200 @@ img.usuario {
   border-radius: 1.1rem;
 }
 
-.landing-brand-block {
-  background: #f2b0b8;
-  padding: 2.5rem 1.5rem 2.2rem;
-  margin-top: 2.1rem;
+.swidge-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  width: 100%;
+  min-height: 110px;
+  padding: 0.75rem 1.5rem 0.5rem;
+  background: #020405;
+  box-sizing: border-box;
+}
+
+.swidge-brand {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.75rem;
+  text-decoration: none;
+  flex: 0 0 auto;
+}
+
+.swidge-brand img {
+  display: block;
+  width: clamp(140px, 15vw, 260px);
+  height: auto;
+  object-fit: contain;
+  filter: brightness(1.05);
+}
+
+.swidge-brand:hover {
+  text-decoration: none;
+}
+
+.swidge-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+}
+
+.swidge-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.85rem;
+  padding: 0.7rem 1.2rem;
+  border-radius: 0.45rem;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.1;
+  text-decoration: none;
+  transition: transform 0.15s ease, filter 0.15s ease;
+  white-space: nowrap;
+}
+
+.swidge-link:hover {
+  color: #ffffff;
+  text-decoration: none;
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+.swidge-link--primary {
+  background: #2a5fe8;
+}
+
+.swidge-link--secondary {
+  background: #2e6bff;
+}
+
+.swidge-link--danger {
+  background: #e63636;
+}
+
+.swidge-link--blue {
+  background: #2d7ef5;
+}
+
+.swidge-user {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #fff;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.08);
+}
+
+.swidge-user-wrap {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.swidge-user-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+}
+
+.swidge-user-button:focus,
+.swidge-user-button:active,
+.swidge-user-button:hover,
+.swidge-user-button:focus-visible {
+  background: #fff !important;
+  border: 0 !important;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.08) !important;
+  outline: none !important;
+}
+
+.swidge-user-button img {
+  width: 52px;
+  height: 52px;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+
+.swidge-profile-menu {
+  margin-top: 0.65rem;
+  border-radius: 0.65rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+}
+
+.swidge-username {
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.1;
   text-align: center;
+  max-width: 90px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.landing-brand-word {
-  display: inline-block;
-  margin: 0 auto 1.25rem;
-  font-size: clamp(2.8rem, 4.5vw, 6rem);
-  font-weight: 900;
-  letter-spacing: 0.2em;
-  line-height: 1;
-  color: #10233d;
-  text-transform: uppercase;
-  transform: scaleY(1.08);
-}
-
-.landing-brand-copy {
-  max-width: 900px;
-  margin: 0 auto;
-  color: #10233d;
-  font-size: clamp(1.08rem, 1.4vw, 1.5rem);
-  line-height: 1.5;
-  font-weight: 500;
-}
-
-@media (max-width: 980px) {
-  .landing-story {
-    margin-top: 1.8rem;
+@media (max-width: 920px) {
+  .swidge-header {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-top: 1rem;
   }
 
-  .landing-carousel .carousel-item {
-    height: 300px;
+  .swidge-brand {
+    width: 100%;
+    text-align: center;
+  }
+
+  .swidge-nav {
+    width: 100%;
   }
 }
 
-@media (max-width: 520px) {
-  .landing-story-title {
-    font-size: 2.6rem;
+@media (max-width: 560px) {
+  .swidge-header {
+    padding-inline: 0.75rem;
   }
 
-  .landing-carousel-controls-wrap {
-    right: 0.75rem;
-    top: 0.75rem;
+  .swidge-link {
+    font-size: 0.82rem;
+    min-height: 2.5rem;
+    padding-inline: 0.75rem;
   }
 
-  .landing-carousel .carousel-item {
-    height: 220px;
+  .swidge-user {
+    width: 52px;
+    height: 52px;
   }
+}
 
-  .landing-brand-word {
-    letter-spacing: 0.1em;
-  }
+.swidge-user-button.dropdown-toggle::after {
+  display: none !important;
+}
+
+.swidge-user-button.dropdown-toggle {
+  position: relative;
 }
