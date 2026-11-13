@@ -2719,3 +2719,69 @@ img.usuario {
 .swidge-user-button.dropdown-toggle {
   position: relative;
 }
+
+.landing-shell > .landing-features {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  background: #dfe4f5;
+  padding: 1.5rem 0 2rem;
+}
+
+.landing-features-row {
+  width: min(80vw, 1200px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+  align-items: stretch;
+}
+
+.landing-feature-col {
+  display: flex;
+  justify-content: center;
+  padding: 0;
+}
+
+.landing-feature-card {
+  width: 100%;
+  max-width: 100%;
+  min-height: 100%;
+  border: none;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 14px 30px rgba(16, 35, 61, 0.12);
+}
+
+.landing-feature-card .card-img-top {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+}
+
+.landing-feature-card .card-body {
+  padding: 1.5rem 1.5rem 1.75rem;
+}
+
+.landing-feature-card .card-title {
+  margin-bottom: 0.75rem;
+  font-size: clamp(1.2rem, 1.2vw + 0.8rem, 2rem);
+}
+
+.landing-feature-card .card-text {
+  margin-bottom: 1.25rem;
+  color: rgba(16, 35, 61, 0.8);
+  line-height: 1.6;
+}
+
+@media (max-width: 980px) {
+  .landing-shell > .landing-features {
+    width: 100vw;
+  }
+
+  .landing-features-row {
+    width: min(90vw, 760px);
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+}
