@@ -16,7 +16,15 @@
         </a>
 
         <nav class="swidge-nav" aria-label="Navegación principal">
-            <a class="swidge-link swidge-link--primary" asp-controller="Home" asp-action="EntradasPublicadas">Mis entradas</a>
+            <div class="dropdown swidge-dropdown">
+                <button class="swidge-link swidge-link--primary dropdown-toggle swidge-dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Mis entradas
+                </button>
+                <ul class="dropdown-menu dropdown-menu-start swidge-profile-menu">
+                    <li><a class="dropdown-item" asp-controller="Home" asp-action="EntradasCompradas">Mis entradas compradas</a></li>
+                    <li><a class="dropdown-item" asp-controller="Home" asp-action="EntradasPublicadas">Mis entradas publicadas</a></li>
+                </ul>
+            </div>
             <a class="swidge-link swidge-link--secondary" asp-controller="Home" asp-action="Ayuda">Ayuda</a>
             <a class="swidge-link swidge-link--secondary" asp-controller="Home" asp-action="Landing">Sobre nosotros</a>
             <a class="swidge-link swidge-link--danger" asp-controller="Home" asp-action="PublicarEntrada">Publicar</a>

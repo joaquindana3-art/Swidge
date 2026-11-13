@@ -2718,4 +2718,10 @@ img.usuario {
 
 .swidge-user-button.dropdown-toggle {
   position: relative;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.swidge-user-button.dropdown-toggle:after {
+  display: none !important;
 }
