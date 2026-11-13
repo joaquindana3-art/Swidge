@@ -2774,14 +2774,23 @@ img.usuario {
   line-height: 1.6;
 }
 
-@media (max-width: 980px) {
-  .landing-shell > .landing-features {
-    width: 100vw;
-  }
+.landing-feature-card .btn-solid,
+.landing-feature-card .btn-solid:visited,
+.landing-feature-card .btn-solid:hover,
+.landing-feature-card .btn-solid:focus,
+.landing-feature-card .btn-solid:active {
+  color: #ffffff !important;
+  text-decoration: none;
+}
 
-  .landing-features-row {
-    width: min(90vw, 760px);
-    grid-template-columns: 1fr;
-    gap: 1.25rem;
-  }
+.landing-feature-card .theme-primary {
+  background: #10233d;
+  color: #ffffff !important;
+}
+
+.landing-feature-card .theme-primary:hover,
+.landing-feature-card .theme-primary:focus,
+.landing-feature-card .theme-primary:active {
+  color: #ffffff !important;
+  filter: brightness(1.08);
 }
