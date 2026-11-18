@@ -311,6 +311,8 @@ public class HomeController : Controller
             return RedirectToAction("Index", "Home");
 
         ViewBag.EsEntradaPropia = EntradaPerteneceAlUsuario(entrada, dniSesion.Value);
+        ViewBag.PromedioCalificacion = bd.GetPromedioCalificacion(entrada.IDVendedor);
+        ViewBag.CantidadCalificaciones = bd.GetCantidadCalificaciones(entrada.IDVendedor);
         return View(entrada);
     }
 
