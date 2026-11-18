@@ -8,7 +8,24 @@ document.addEventListener('DOMContentLoaded', () => {
   const eventoBusqueda = document.getElementById('eventoBusqueda');
   const eventoSeleccionadoId = document.getElementById('eventoSeleccionadoId');
   const eventosLista = document.getElementById('eventosLista');
+  const estadoEvento = document.getElementById('eventoSeleccionEstado');
   const feedback = document.getElementById('fb-publicacion');
+
+  const actualizarEstadoEvento = (tipo, mensaje) => {
+    if (!estadoEvento) return;
+
+    estadoEvento.textContent = mensaje;
+    estadoEvento.classList.remove('is-valid', 'is-invalid');
+
+    if (tipo === 'valido') {
+      estadoEvento.classList.add('is-valid');
+      return;
+    }
+
+    if (tipo === 'invalido') {
+      estadoEvento.classList.add('is-invalid');
+    }
+  };
 
   const mostrarErrores = (errores) => {
     if (!feedback) return;
@@ -90,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (eventoBusqueda && eventosLista && eventoSeleccionadoId) {
-    eventoBusqueda.addEventListener('input', () => {
+    const syncEventoSeleccionado = () => {
       const valor = eventoBusqueda.value.trim();
       let idSeleccionado = '';
 
@@ -102,7 +119,23 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       eventoSeleccionadoId.value = idSeleccionado;
-    });
+
+      if (!valor) {
+        actualizarEstadoEvento('normal', 'Ningún evento seleccionado.');
+        return;
+      }
+
+      if (idSeleccionado) {
+        actualizarEstadoEvento('valido', `Evento seleccionado: ${valor}`);
+        return;
+      }
+
+      actualizarEstadoEvento('invalido', 'Elegí un evento del listado para continuar.');
+    };
+
+    eventoBusqueda.addEventListener('input', syncEventoSeleccionado);
+    eventoBusqueda.addEventListener('blur', syncEventoSeleccionado);
+    syncEventoSeleccionado();
   }
 
   form.addEventListener('submit', (event) => {

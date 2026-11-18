@@ -8,10 +8,13 @@
                         <line x1="16.65" y1="16.65" x2="21" y2="21"></line>
                     </svg>
                 </span>
-                <span>Evento, artista o equipo</span>
+                <div class="publicar-busqueda-copy">
+                    <span class="publicar-busqueda-title">1. Buscá tu evento</span>
+                    <span class="publicar-busqueda-subtitle">Escribí y elegí una opción del listado para continuar.</span>
+                </div>
             </div>
             <div class="publicar-busqueda-input-wrap">
-                <input list="eventosLista" id="eventoBusqueda" class="publicar-busqueda-input" placeholder="Buscar evento" autocomplete="off" />
+                <input list="eventosLista" id="eventoBusqueda" class="publicar-busqueda-input" placeholder="Escribí para ver opciones y seleccioná un evento" autocomplete="off" aria-describedby="eventoBusquedaAyuda eventoSeleccionEstado" />
                 <datalist id="eventosLista">
                     @if (ViewBag.Eventos != null)
                     {
@@ -22,6 +25,8 @@
                     }
                 </datalist>
                 <input type="hidden" id="eventoSeleccionadoId" name="IDevento" value="" />
+                <small id="eventoBusquedaAyuda" class="publicar-busqueda-help">Importante: tenés que seleccionar una opción sugerida para validar el evento.</small>
+                <div id="eventoSeleccionEstado" class="publicar-busqueda-estado" aria-live="polite">Ningún evento seleccionado.</div>
             </div>
             <img class="publicar-busqueda-logo" src="~/img/logoswidgeNegroTransparente.png" alt="Logo Swidge" />
         </div>
