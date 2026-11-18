@@ -104,34 +104,60 @@ public class SessionController : Controller
 
     public IActionResult CambiarContraseña()
     {
-        if (!HaySesion()) return RedirectToAction(nameof(IniciarSesion));
-        return View();
+        if (!HaySesion()) return RedirectToAction("IniciarSesion", "Home");
+        return View("~/Views/Home/CambiarContraseña.cshtml");
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult CambiarContraseña(string? contrasenaActual, string? contrasenaNueva)
+    public IActionResult CambiarContraseña(string? contrasenaActual, string? contrasenaNueva, string? confirmarContrasena)
     {
         int? dni = HttpContext.Session.GetInt32("DNI");
-        if (dni == null) return RedirectToAction(nameof(IniciarSesion));
+        if (dni == null) return RedirectToAction(nameof(IniciarSesion), "Home");
 
         Usuario? usuario = bd.ObtenerUsuarioPorDNI(dni.Value);
         if (usuario == null)
         {
             HttpContext.Session.Clear();
-            return RedirectToAction(nameof(IniciarSesion));
+            return RedirectToAction("IniciarSesion", "Home");
         }
 
-        // Lo único que se valida acá es que la contraseña actual sea la correcta.
-        if (!VerificarContrasena(contrasenaActual ?? "", usuario.Contraseña))
+        var errores = new List<string>();
+
+        if (string.IsNullOrWhiteSpace(contrasenaActual))
         {
-            ViewBag.Errores = new List<string> { "La contraseña actual es incorrecta." };
-            return View();
+            errores.Add("Ingresá tu contraseña actual.");
+        }
+        else if (!VerificarContrasena(contrasenaActual, usuario.Contraseña))
+        {
+            errores.Add("La contraseña actual es incorrecta.");
         }
 
-        bd.CambiarContraseña(dni.Value, BCrypt.Net.BCrypt.HashPassword(contrasenaNueva ?? ""));
+        if (string.IsNullOrWhiteSpace(contrasenaNueva))
+        {
+            errores.Add("Ingresá la nueva contraseña.");
+        }
+        else
+        {
+            if (contrasenaNueva.Length < 8)
+                errores.Add("La nueva contraseña debe tener al menos 8 caracteres.");
+
+            if (contrasenaNueva == contrasenaActual)
+                errores.Add("La nueva contraseña debe ser diferente de la actual.");
+
+            if (contrasenaNueva != confirmarContrasena)
+                errores.Add("Las contraseñas nuevas no coinciden.");
+        }
+
+        if (errores.Count > 0)
+        {
+            ViewBag.Errores = errores;
+            return View("~/Views/Home/CambiarContraseña.cshtml");
+        }
+
+        bd.CambiarContraseña(dni.Value, BCrypt.Net.BCrypt.HashPassword(contrasenaNueva!));
         TempData["Mensaje"] = "Tu contraseña se cambió correctamente.";
-        return RedirectToAction(nameof(MiPerfil));
+        return RedirectToAction("MiPerfil", "Home");
     }
 
     public IActionResult OlvideMiContraseña()

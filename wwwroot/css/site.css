@@ -2473,6 +2473,10 @@ img.usuario {
 }
 
 .landing-story-title {
+
+
+
+
   margin: 0;
   color: #f5f7fb;
   font-size: clamp(4rem, 6vw, 9rem);
@@ -3116,155 +3120,134 @@ img.usuario {
   }
 }
 
-.white-space {
-  white-space: nowrap;
-}
-
-.swidge-dropdown-toggle {
-  border: 0 !important;
-  outline: none !important;
-  box-shadow: none !important;
-  appearance: none;
-  -webkit-appearance: none;
-}
-
-.swidge-dropdown-toggle::after {
-  display: none !important;
-}
-
-.swidge-dropdown-toggle:hover,
-.swidge-dropdown-toggle:focus,
-.swidge-dropdown-toggle:active,
-.swidge-dropdown-toggle:focus-visible {
-  border: 0 !important;
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-.compra-exitosa-page,
-.compra-exitosa-page * {
-  box-sizing: border-box;
-}
-
-.compra-exitosa-page {
-  margin: 0;
-  font-family: "Segoe UI", Arial, sans-serif;
-  background: #f5f5f5;
-  color: #0f1116;
-}
-
-.compra-hero {
-  width: 100%;
-  height: 170px;
-  background: #78c866;
+/* Cambiar contraseña */
+.password-change-page {
+  min-height: calc(100vh - 140px);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  padding: 48px 16px 42px;
+  background: #efefef;
 }
 
-.compra-check {
-  width: 84px;
-  height: 84px;
-  border-radius: 50%;
-  border: 8px solid #fff;
-  position: relative;
+.password-change-card {
+  width: min(100%, 520px);
+  background: #5f82f7;
+  border: 0;
+  box-shadow: 0 8px 18px rgba(32, 61, 128, 0.18);
+  overflow: hidden;
 }
 
-.compra-check::after {
-  content: "";
-  position: absolute;
-  left: 23px;
-  top: 15px;
-  width: 20px;
-  height: 36px;
-  border-right: 8px solid #fff;
-  border-bottom: 8px solid #fff;
-  transform: rotate(45deg);
+.password-change-header {
+  padding: 30px 24px 18px;
+  text-align: center;
 }
 
-.compra-wrap {
-  width: min(1150px, calc(100% - 36px));
-  margin: 40px auto 24px;
-  background: #fff;
-  border: 6px solid #5f82f7;
-  padding: 24px 34px 22px;
+.password-change-header h1 {
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(2.5rem, 4vw, 3.2rem);
+  line-height: 1.05;
+  font-weight: 800;
+  letter-spacing: 0.02em;
 }
 
-.compra-grid {
-  display: grid;
-  grid-template-columns: 1.2fr 0.9fr;
-  gap: 28px;
+.password-change-body {
+  padding: 16px 48px 24px;
+}
+
+.password-change-form {
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  gap: 20px;
 }
 
-.compra-title {
-  margin: 0 0 6px;
-  font-size: clamp(2rem, 2.2vw, 3rem);
-  font-weight: 900;
-  letter-spacing: -0.02em;
-}
-
-.compra-line {
-  margin: 0 0 28px;
-  font-size: clamp(1.05rem, 1.2vw, 2.6rem);
-  font-weight: 900;
-  line-height: 1.2;
-}
-
-.compra-line strong {
-  text-decoration: underline;
-  text-underline-offset: 0.12em;
-}
-
-.compra-image {
+.password-change-form input {
   width: 100%;
-  aspect-ratio: 1.6;
-  object-fit: cover;
-  border-radius: 0;
+  height: 52px;
+  border: 0;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #202b3b;
+  padding: 0 16px;
+  font-size: 1rem;
+  outline: none;
+}
+
+.password-change-form input::placeholder {
+  color: #777777;
+}
+
+.password-change-form input:focus {
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.38);
+}
+
+.password-change-alert {
+  margin: 0 0 16px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  background: rgba(220, 53, 69, 0.62);
+  color: #ffffff;
+  text-align: center;
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+
+.password-change-submit {
+  min-width: 150px;
+  height: 48px;
+  border: 0;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #3e72d8;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  margin-top: 4px;
+}
+
+.password-change-submit:hover {
+  background: #eef3ff;
+}
+
+.password-change-brand {
+  width: 210px;
+  height: auto;
+  margin-top: 4px;
   display: block;
 }
 
-.compra-actions {
-  margin-top: 18px;
-  display: flex;
-  justify-content: center;
+/* Notificación de contraseña cambiada */
+.mi-perfil-success {
+  margin: 18px 30px 0;
+  padding: 12px 16px;
+  border: 1px solid #8fca9b;
+  border-radius: 8px;
+  background: #eaf7ed;
+  color: #1f6b32;
+  text-align: center;
+  font-weight: 700;
 }
 
-.compra-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 68px;
-  padding: 0.9rem 2.2rem;
-  border: 0;
-  border-radius: 6px;
-  background: #5f82f7;
-  color: #fff;
-  text-decoration: none;
-  font-weight: 800;
-  font-size: clamp(1.4rem, 1.6vw, 2.2rem);
-}
-
-@media (max-width: 900px) {
-  .compra-wrap {
-    width: calc(100% - 24px);
-    padding: 18px;
-    border-width: 4px;
+@media (max-width: 480px) {
+  .password-change-page {
+    padding: 24px 10px 32px;
   }
 
-  .compra-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-
-  .compra-line {
-    margin-bottom: 16px;
-    font-size: 1.55rem;
-  }
-
-  .compra-btn {
+  .password-change-card {
     width: 100%;
-    min-height: 58px;
-    font-size: 1.3rem;
+  }
+
+  .password-change-header {
+    padding: 24px 16px 14px;
+  }
+
+  .password-change-header h1 {
+    font-size: 2.25rem;
+  }
+
+  .password-change-body {
+    padding: 12px 22px 20px;
   }
 }
