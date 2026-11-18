@@ -463,6 +463,7 @@ public class HomeController : Controller
                 return RedirectToAction("IniciarSesion", "Home");
             }
 
+            bd.RegistrarComprasPendientes(dniSesion.Value);
             List<HistorialTransaccion> historial = bd.GetHistorialTransacciones(dniSesion.Value);
             ViewBag.Historial = historial;
 
