@@ -122,7 +122,7 @@ public class SessionController : Controller
             return RedirectToAction("IniciarSesion", "Home");
         }
 
-        var errores = new List<string>();
+        List<string> errores = new List<string>();
 
         if (string.IsNullOrWhiteSpace(contrasenaActual))
         {
@@ -176,7 +176,7 @@ public class SessionController : Controller
             return RedirectToAction("IniciarSesion", "Home");
         }
 
-        var errores = new List<string>();
+        List<string> errores = new List<string>();
 
         if (string.IsNullOrWhiteSpace(nombre)) errores.Add("Ingresá tu nombre.");
         if (string.IsNullOrWhiteSpace(apellido)) errores.Add("Ingresá tu apellido.");
