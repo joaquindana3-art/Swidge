@@ -693,34 +693,59 @@ public class BD
 
     public List<HistorialTransaccion> GetHistorialTransacciones(int dni)
     {
-    using (SqlConnection connection = new SqlConnection(_connectionString))
-    {
-        // Trae las transacciones donde el usuario compró (t.DNIusuario) o vendió (v.DNIusuario).
-        string query = @"SELECT t.ID,
-                                t.Fecha,
-                                t.MontoTotal,
-                                t.Comision,
-                                t.Estado,
-                                t.IDentrada AS IDEntrada,
-                                CASE WHEN t.DNIusuario = @DNI THEN 'Compra' ELSE 'Venta' END AS Tipo,
-                                CASE WHEN t.DNIusuario = @DNI THEN uv.NombreUsuario ELSE ub.NombreUsuario END AS Contraparte,
-                                ev.Nombre AS NombreEvento,
-                                ev.Protagonista,
-                                ev.Fecha AS FechaEvento,
-                                ev.Imagen,
-                                es.NombreLugar AS Lugar
-                         FROM dbo.Transaccion t
-                         INNER JOIN dbo.Vendedor v ON v.ID = t.IDvendedor
-                         INNER JOIN dbo.Usuario ub ON ub.DNI = t.DNIusuario
-                         INNER JOIN dbo.Usuario uv ON uv.DNI = v.DNIusuario
-                         INNER JOIN dbo.Entrada e ON e.ID = t.IDentrada
-                         INNER JOIN dbo.Evento ev ON ev.ID = e.IDevento
-                         LEFT JOIN dbo.Estadio es ON es.ID = ev.IDestadio
-                         WHERE t.DNIusuario = @DNI OR v.DNIusuario = @DNI
-                         ORDER BY t.Fecha DESC, t.ID DESC";
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = @"
+                SELECT t.ID,
+                       t.Fecha,
+                       t.MontoTotal,
+                       t.Comision,
+                       t.Estado,
+                       t.IDentrada AS IDEntrada,
+                       'Compra' AS Tipo,
+                       uv.NombreUsuario AS Contraparte,
+                       ev.Nombre AS NombreEvento,
+                       ev.Protagonista,
+                       ev.Fecha AS FechaEvento,
+                       ev.Imagen,
+                       es.NombreLugar AS Lugar,
+                       CAST(1 AS bit) AS Vendida
+                FROM dbo.Transaccion t
+                INNER JOIN dbo.Vendedor v ON v.ID = t.IDvendedor
+                INNER JOIN dbo.Usuario uv ON uv.DNI = v.DNIusuario
+                INNER JOIN dbo.Entrada e ON e.ID = t.IDentrada
+                INNER JOIN dbo.Evento ev ON ev.ID = e.IDevento
+                LEFT JOIN dbo.Estadio es ON es.ID = ev.IDestadio
+                WHERE t.DNIusuario = @DNI
 
-        return connection.Query<HistorialTransaccion>(query, new { DNI = dni }).ToList();
-    }
+                UNION ALL
+
+                SELECT e.ID AS ID,
+                       COALESCE(t.Fecha, '19000101') AS Fecha,
+                       e.Precio AS MontoTotal,
+                       CAST(0 AS decimal(18,2)) AS Comision,
+                       CASE WHEN e.Vendida = 1 THEN 'Vendida' ELSE 'Publicada' END AS Estado,
+                       e.ID AS IDEntrada,
+                       'Publicacion' AS Tipo,
+                       CASE WHEN e.Vendida = 1 THEN ub.NombreUsuario ELSE '' END AS Contraparte,
+                       ev.Nombre AS NombreEvento,
+                       ev.Protagonista,
+                       ev.Fecha AS FechaEvento,
+                       ev.Imagen,
+                       es.NombreLugar AS Lugar,
+                       e.Vendida AS Vendida
+                FROM dbo.Entrada e
+                INNER JOIN dbo.Vendedor v ON v.ID = e.IDvendedor
+                LEFT JOIN dbo.Transaccion t ON t.IDentrada = e.ID
+                LEFT JOIN dbo.Usuario ub ON ub.DNI = e.DNIusuario
+                INNER JOIN dbo.Evento ev ON ev.ID = e.IDevento
+                LEFT JOIN dbo.Estadio es ON es.ID = ev.IDestadio
+                WHERE v.DNIusuario = @DNI
+
+                ORDER BY Fecha DESC, ID DESC";
+
+            return connection.Query<HistorialTransaccion>(query, new { DNI = dni }).ToList();
+        }
     }
 
     public bool ExisteNombreUsuarioExceptoDNI(string nombreUsuario, int dni)

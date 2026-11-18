@@ -13,4 +13,5 @@ public class HistorialTransaccion
     public DateTime FechaEvento { get; set; }
     public string? Imagen { get; set; }
     public string? Lugar { get; set; }
+    public bool Vendida { get; set; }
 }
