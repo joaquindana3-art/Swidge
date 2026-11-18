@@ -1,1 +1,71 @@
-﻿
+﻿.swidge-footer {
+    background-color: #0d2b5e;
+    color: #c9d6ee;
+    margin: 40px 0 0 0;
+    padding: 40px 0 0 0;
+    font-size: 15px;
+}
+
+.swidge-footer ::deep h5 {
+    color: #ffffff;
+    font-size: 18px;
+    margin: 0 0 16px 0;
+}
+
+.swidge-footer ::deep .swidge-footer-logo {
+    font-size: 28px;
+}
+
+.swidge-footer ::deep p {
+    margin: 0 0 8px 0;
+}
+
+.swidge-footer ::deep a {
+    color: #c9d6ee;
+    text-decoration: none;
+}
+
+.swidge-footer ::deep a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+.swidge-footer ::deep .swidge-footer-links a {
+    display: block;
+    margin: 0 0 8px 0;
+}
+
+.swidge-footer ::deep .swidge-social {
+    margin: 16px 0 0 0;
+}
+
+.swidge-footer ::deep .swidge-social a {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    padding: 9px;
+    margin: 0 8px 8px 0;
+    border-radius: 50%;
+    background-color: #1b4a9b;
+    color: #ffffff;
+}
+
+.swidge-footer ::deep .swidge-social a:hover {
+    background-color: #e63946;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.swidge-footer ::deep .swidge-social svg {
+    display: block;
+    width: 22px;
+    height: 22px;
+}
+
+.swidge-footer ::deep .swidge-footer-bottom {
+    background-color: #081f45;
+    margin: 32px 0 0 0;
+    padding: 16px 0 16px 0;
+    text-align: center;
+    font-size: 14px;
+}
