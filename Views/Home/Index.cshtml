@@ -104,7 +104,7 @@
 
                 <div class="mb-3">
                     <label class="form-label">Provincia</label>
-                    <select name="provincia" class="form-select">
+                    <select id="provinciaFiltro" name="provincia" class="form-select">
                         @foreach (string provincia in provincias)
                         {
                             if (provincia == provinciaSeleccionada)
@@ -182,6 +182,19 @@
                             if (form) {
                                 form.submit();
                             }
+                        });
+                    });
+                </script>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const form = document.getElementById('filtrosForm');
+                        const provincia = document.getElementById('provinciaFiltro');
+
+                        if (!form || !provincia) return;
+
+                        provincia.addEventListener('change', function () {
+                            form.submit();
                         });
                     });
                 </script>
