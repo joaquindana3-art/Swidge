@@ -434,4 +434,24 @@ public class HomeController : Controller
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
+
+            public IActionResult Historial()
+        {
+            BD bd = new BD();
+            int? dniSesion = HttpContext.Session.GetInt32("DNI");
+
+            if (dniSesion == null)
+            {
+                return RedirectToAction("IniciarSesion", "Home");
+            }
+
+            List<HistorialTransaccion> historial = bd.GetHistorialTransacciones(dniSesion.Value);
+            ViewBag.Historial = historial;
+
+            ViewBag.mensaje = historial.Count == 0
+                ? "No tienes transacciones registradas."
+                : "";
+
+            return View();
+        }
 }
