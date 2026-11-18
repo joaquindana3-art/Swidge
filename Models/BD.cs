@@ -856,5 +856,38 @@ public class BD
             }
         }
     }
+
+    public decimal GetPromedioCalificacion(int idVendedor)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = @"SELECT AVG(CAST(c.Calificacion AS decimal(10, 2)))
+                             FROM dbo.VendedorXComentario vxc
+                             INNER JOIN dbo.Comentario c ON c.ID = vxc.IDcomentario
+                             WHERE vxc.IDvendedor = @IDVendedor";
+
+            decimal? promedio = connection.ExecuteScalar<decimal?>(query, new
+            {
+                IDVendedor = idVendedor
+            });
+
+            return promedio ?? 0m;
+        }
+    }
+
+    public int GetCantidadCalificaciones(int idVendedor)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = @"SELECT COUNT(*)
+                             FROM dbo.VendedorXComentario vxc
+                             WHERE vxc.IDvendedor = @IDVendedor";
+
+            return connection.ExecuteScalar<int>(query, new
+            {
+                IDVendedor = idVendedor
+            });
+        }
+    }
 }
 

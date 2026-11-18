@@ -21,6 +21,15 @@
     string protagonista = string.IsNullOrWhiteSpace(evento.Protagonista) ? "Artista por confirmar" : evento.Protagonista;
     string descripcion = string.IsNullOrWhiteSpace(evento.Descripcion) ? "Descripción no disponible." : evento.Descripcion;
     int cantidadEntradas = evento.CantidadEntradas > 0 ? evento.CantidadEntradas : 0;
+    decimal promedioCalificacion = ViewBag.PromedioCalificacion is decimal valorPromedio ? valorPromedio : 0m;
+    int cantidadCalificaciones = ViewBag.CantidadCalificaciones is int valorCantidad ? valorCantidad : 0;
+    int estrellasRedondeadas = cantidadCalificaciones > 0
+        ? (int)Math.Round(promedioCalificacion, MidpointRounding.AwayFromZero)
+        : 0;
+    string estrellasCalificacion = new string('★', estrellasRedondeadas) + new string('☆', 5 - estrellasRedondeadas);
+    string textoCalificacion = cantidadCalificaciones > 0
+        ? $"{promedioCalificacion.ToString("0.0")} / 5 ({cantidadCalificaciones})"
+        : "Sin calificaciones";
     string ciudadVendedor = string.IsNullOrWhiteSpace(vendedor.Ciudad) ? "Ciudad no disponible" : vendedor.Ciudad;
     string ubicacionTexto = !string.IsNullOrWhiteSpace(ubicacion.NombreSector)
         ? $"{ubicacion.NombreSector}{(ubicacion.Fila.HasValue ? $", fila {ubicacion.Fila.Value}" : "")}{(ubicacion.Asiento.HasValue ? $", asiento {ubicacion.Asiento.Value}" : "")}"
@@ -112,7 +121,8 @@
             <div class="vendedor-fila">
                 <div class="vendedor-avatar" aria-label="Avatar del vendedor">@(!string.IsNullOrWhiteSpace(vendedor.Nombre) ? vendedor.Nombre.Substring(0, 1).ToUpperInvariant() : "V")</div>
                 <div class="vendedor-nombre">@nombreVendedor.ToUpperInvariant()</div>
-                <div class="vendedor-estrellas" aria-label="Calificación 5 de 5">★★★★★</div>
+                <div class="vendedor-estrellas" aria-label="Calificación promedio: @textoCalificacion">@estrellasCalificacion</div>
+                <div class="vendedor-calificacion">@textoCalificacion</div>
             </div>
         </div>
     </aside>
