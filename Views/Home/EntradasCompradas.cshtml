@@ -56,6 +56,10 @@
                                 <span class="badge entrada-badge entrada-badge-primary">
                                     Ver QR / Entrada
                                 </span>
+                                <a href="@Url.Action("calificarVendedor", "Home", new { id = entrada.ID })"
+                                   class="badge entrada-badge entrada-badge-success text-decoration-none">
+                                    Calificar vendedor
+                                </a>
                                 <span class="entrada-price">
                                     $@entrada.Precio
                                 </span>

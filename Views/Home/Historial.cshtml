@@ -18,14 +18,16 @@
     else
     {
         <div class="entradas-list">
-            @foreach (HistorialTransaccion transaccion in historial)
+            @foreach (var transaccion in historial)
             {
                 bool esCompra = transaccion.Tipo == "Compra";
-                string imagenEvento = string.IsNullOrWhiteSpace(transaccion.Imagen)
+                bool esPublicacion = transaccion.Tipo == "Publicacion";
+                bool fueVendida = esPublicacion && transaccion.Vendida;
+                var imagenEvento = string.IsNullOrWhiteSpace(transaccion.Imagen)
                     ? Url.Content("~/img/null.jpg")
                     : Url.Content("~/img/" + transaccion.Imagen);
 
-                <div class="entrada-card @(esCompra ? "entrada-card-comprada" : "entrada-card-publicada")">
+                <div class="entrada-card @(esPublicacion ? "entrada-card-publicada" : (esCompra ? "entrada-card-comprada" : "entrada-card-publicada"))">
                     <div class="row g-0 align-items-center">
                         <div class="col-12 col-md-3">
                             <img src="@imagenEvento"
@@ -34,7 +36,14 @@
                         </div>
                         <div class="col-12 col-md-9 entrada-body">
                             <span class="entrada-date">
-                                @transaccion.Tipo.ToUpper() - @transaccion.Fecha.ToString("dd/MM/yyyy HH:mm")
+                                @if (esPublicacion)
+                                {
+                                    <text>PUBLICACIÓN - @(fueVendida ? "VENDIDA" : "DISPONIBLE")</text>
+                                }
+                                else
+                                {
+                                    <text>@transaccion.Tipo.ToUpper() - @transaccion.Fecha.ToString("dd/MM/yyyy HH:mm")</text>
+                                }
                             </span>
                             <h4 class="entrada-title">@transaccion.NombreEvento</h4>
                             @if (!string.IsNullOrEmpty(transaccion.Protagonista))
@@ -46,18 +55,46 @@
                                 - @transaccion.FechaEvento.ToString("dddd dd/MM").ToUpper()
                             </p>
                             <p class="entrada-location">
-                                @(esCompra ? "Comprada a" : "Vendida a"): @transaccion.Contraparte
-                                - Entrada #@transaccion.IDEntrada
+                                @if (esCompra)
+                                {
+                                    <text>Comprada a: @transaccion.Contraparte - Entrada #@transaccion.IDEntrada</text>
+                                }
+                                else if (esPublicacion)
+                                {
+                                    @if (fueVendida)
+                                    {
+                                        <text>Vendida a: @transaccion.Contraparte - Entrada #@transaccion.IDEntrada</text>
+                                    }
+                                    else
+                                    {
+                                        <text>Todavía no se vendió - Entrada #@transaccion.IDEntrada</text>
+                                    }
+                                }
+                                else
+                                {
+                                    <text>Vendida a: @transaccion.Contraparte - Entrada #@transaccion.IDEntrada</text>
+                                }
                             </p>
 
                             <div class="entrada-actions">
-                                <span class="badge entrada-badge entrada-badge-primary">
+                                <span class="badge entrada-badge @(esPublicacion ? (fueVendida ? "entrada-badge-success" : "entrada-badge-warning") : "entrada-badge-primary")">
                                     @transaccion.Estado
                                 </span>
-                                <span class="entrada-price">
+                                <span class="entrada-price @(esPublicacion ? (fueVendida ? "entrada-price-sold" : "entrada-price-pending") : "")">
                                     @if (esCompra)
                                     {
                                         <text>Total pagado: $@transaccion.MontoTotal.ToString("N2")</text>
+                                    }
+                                    else if (esPublicacion)
+                                    {
+                                        @if (fueVendida)
+                                        {
+                                            <text>Precio vendido: $@transaccion.MontoTotal.ToString("N2")</text>
+                                        }
+                                        else
+                                        {
+                                            <text>Precio publicado: $@transaccion.MontoTotal.ToString("N2")</text>
+                                        }
                                     }
                                     else
                                     {
