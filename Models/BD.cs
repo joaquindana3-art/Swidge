@@ -441,10 +441,53 @@ public class BD
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
+            connection.Open();
+
+            using (SqlTransaction transaction = connection.BeginTransaction())
+            {
+                connection.Execute(
+                    "dbo.MarcarEntradaVendida",
+                    new { IDEntrada = idEntrada, DNIusuario = dniUsuario },
+                    transaction,
+                    commandType: CommandType.StoredProcedure);
+
+                int existente = connection.ExecuteScalar<int>(
+                    "SELECT COUNT(*) FROM dbo.Transaccion WHERE IDentrada = @IDEntrada",
+                    new { IDEntrada = idEntrada },
+                    transaction);
+
+                if (existente == 0)
+                {
+                    connection.Execute(
+                        @"INSERT INTO dbo.Transaccion
+                          (DNIusuario, MontoTotal, Comision, Fecha, Estado, IDvendedor, IDentrada)
+                          SELECT @DNIusuario, Precio, 0, GETDATE(), 'COMPLETADO', IDvendedor, ID
+                          FROM dbo.Entrada
+                          WHERE ID = @IDEntrada",
+                        new { IDEntrada = idEntrada, DNIusuario = dniUsuario },
+                        transaction);
+                }
+
+                transaction.Commit();
+            }
+        }
+    }
+
+    public void RegistrarComprasPendientes(int dni)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
             connection.Execute(
-                "dbo.MarcarEntradaVendida",
-                new { IDEntrada = idEntrada, DNIusuario = dniUsuario },
-                commandType: CommandType.StoredProcedure);
+                @"INSERT INTO dbo.Transaccion
+                  (DNIusuario, MontoTotal, Comision, Fecha, Estado, IDvendedor, IDentrada)
+                  SELECT e.DNIusuario, e.Precio, 0, GETDATE(), 'COMPLETADO', e.IDvendedor, e.ID
+                  FROM dbo.Entrada e
+                  WHERE e.Vendida = 1
+                    AND e.DNIusuario = @DNI
+                    AND NOT EXISTS (
+                        SELECT 1 FROM dbo.Transaccion t WHERE t.IDentrada = e.ID
+                    )",
+                new { DNI = dni });
         }
     }
 
