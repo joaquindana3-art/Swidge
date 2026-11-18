@@ -10,6 +10,7 @@ public class SessionController : Controller
     private static readonly string _hashFalso = BCrypt.Net.BCrypt.HashPassword("contrasena-falsa"); 
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public IActionResult IniciarSesion(string nombreUsuario, string contrasena)
     {
         if (HaySesion()) {
@@ -46,6 +47,7 @@ public class SessionController : Controller
         return RedirectToAction("Index", "Home");
     }
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public IActionResult Registrarse(int dni, string nombre, string apellido, string nombreUsuario, DateTime fechaNacimiento, string ciudad, string mail, string contrasena)
     {
         if (HaySesion()) {
