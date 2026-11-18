@@ -47,11 +47,6 @@ public class HomeController : Controller
         ViewBag.UsuarioActualDni = dniSesion;
         List<Entrada> listaEntradas = bd.GetEntradas();
 
-        listaEntradas = listaEntradas
-            .GroupBy(e => e.IDEvento)
-            .Select(g => g.OrderBy(e => e.Precio).First())
-            .ToList();
-
         decimal precioMaximoBD = listaEntradas.Any() ? listaEntradas.Max(e => e.Precio) : 0m;
 
         if (precioMaximo.HasValue && precioMaximo.Value > precioMaximoBD)
