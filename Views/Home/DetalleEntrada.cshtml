@@ -2,33 +2,33 @@
 
 @{
     ViewData["Title"] = "Detalle de entrada";
-    var evento = Model?.Evento ?? new Swidge.Models.Evento();
-    var vendedor = Model?.Vendedor ?? new Swidge.Models.Usuario();
-    var ubicacion = Model?.Ubicacion ?? new Swidge.Models.Ubicacion();
+    Swidge.Models.Evento evento = Model?.Evento ?? new Swidge.Models.Evento();
+    Swidge.Models.Usuario vendedor = Model?.Vendedor ?? new Swidge.Models.Usuario();
+    Swidge.Models.Ubicacion ubicacion = Model?.Ubicacion ?? new Swidge.Models.Ubicacion();
 
-    var nombreVendedor = !string.IsNullOrWhiteSpace(vendedor.Nombre) || !string.IsNullOrWhiteSpace(vendedor.Apellido)
+    string nombreVendedor = !string.IsNullOrWhiteSpace(vendedor.Nombre) || !string.IsNullOrWhiteSpace(vendedor.Apellido)
         ? $"{vendedor.Nombre} {vendedor.Apellido}".Trim()
         : "VENDEDOR";
 
-    var fecha = evento.Fecha != default ? evento.Fecha.ToString("ddd, dd MMM, HH:mm") : "Fecha por confirmar";
-    var precio = Model?.Precio > 0 ? Model.Precio.ToString("N0") : "0";
+    string fecha = evento.Fecha != default ? evento.Fecha.ToString("ddd, dd MMM, HH:mm") : "Fecha por confirmar";
+    string precio = Model?.Precio > 0 ? Model.Precio.ToString("N0") : "0";
 
-    var imagenEvento = string.IsNullOrWhiteSpace(evento.Imagen)
+    string imagenEvento = string.IsNullOrWhiteSpace(evento.Imagen)
         ? Url.Content("~/img/default-event.jpg")
         : Url.Content("~/img/" + evento.Imagen);
 
-    var categoria = string.IsNullOrWhiteSpace(evento.Categoria) ? "General" : evento.Categoria;
-    var protagonista = string.IsNullOrWhiteSpace(evento.Protagonista) ? "Artista por confirmar" : evento.Protagonista;
-    var descripcion = string.IsNullOrWhiteSpace(evento.Descripcion) ? "Descripción no disponible." : evento.Descripcion;
-    var cantidadEntradas = evento.CantidadEntradas > 0 ? evento.CantidadEntradas : 0;
-    var ciudadVendedor = string.IsNullOrWhiteSpace(vendedor.Ciudad) ? "Ciudad no disponible" : vendedor.Ciudad;
-    var ubicacionTexto = !string.IsNullOrWhiteSpace(ubicacion.NombreSector)
+    string categoria = string.IsNullOrWhiteSpace(evento.Categoria) ? "General" : evento.Categoria;
+    string protagonista = string.IsNullOrWhiteSpace(evento.Protagonista) ? "Artista por confirmar" : evento.Protagonista;
+    string descripcion = string.IsNullOrWhiteSpace(evento.Descripcion) ? "Descripción no disponible." : evento.Descripcion;
+    int cantidadEntradas = evento.CantidadEntradas > 0 ? evento.CantidadEntradas : 0;
+    string ciudadVendedor = string.IsNullOrWhiteSpace(vendedor.Ciudad) ? "Ciudad no disponible" : vendedor.Ciudad;
+    string ubicacionTexto = !string.IsNullOrWhiteSpace(ubicacion.NombreSector)
         ? $"{ubicacion.NombreSector}{(ubicacion.Fila.HasValue ? $", fila {ubicacion.Fila.Value}" : "")}{(ubicacion.Asiento.HasValue ? $", asiento {ubicacion.Asiento.Value}" : "")}"
         : "Ubicación por confirmar";
 
     if (evento.ID > 0)
     {
-        var bd = new Swidge.Models.BD();
+        Swidge.Models.BD bd = new Swidge.Models.BD();
         cantidadEntradas = bd.GetCantidadEntradasPorEvento(evento.ID);
     }
 }

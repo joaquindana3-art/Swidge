@@ -19,7 +19,7 @@
                 <datalist id="eventosLista">
                     @if (ViewBag.Eventos != null)
                     {
-                        foreach (var evento in (List<Evento>)ViewBag.Eventos)
+                        foreach (Evento evento in (List<Evento>)ViewBag.Eventos)
                         {
                             <option value="@evento.Nombre" data-id="@evento.ID"></option>
                         }
@@ -104,7 +104,7 @@
     </form>
 
     @{
-        var errorMessage = TempData["ErrorMessage"] as string;
+        string? errorMessage = TempData["ErrorMessage"] as string;
     }
 
     @if (!string.IsNullOrWhiteSpace(errorMessage))

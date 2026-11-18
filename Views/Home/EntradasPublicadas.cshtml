@@ -18,10 +18,10 @@
     else
     {
         <div class="entradas-list">
-            @foreach (var entrada in listaPublicadas)
+            @foreach (Entrada entrada in listaPublicadas)
             {
-                var evento = entrada.Evento ?? new Swidge.Models.Evento { Nombre = "Evento", Lugar = "Lugar", Fecha = DateTime.Now };
-                var imagenEvento = string.IsNullOrWhiteSpace(evento.Imagen)
+                Evento evento = entrada.Evento ?? new Swidge.Models.Evento { Nombre = "Evento", Lugar = "Lugar", Fecha = DateTime.Now };
+                string imagenEvento = string.IsNullOrWhiteSpace(evento.Imagen)
                     ? Url.Content("~/img/null.jpg")
                     : Url.Content("~/img/" + evento.Imagen);
 

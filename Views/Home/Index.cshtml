@@ -53,9 +53,9 @@
         <div class="col-lg-8 col-md-7" id="entradasContainer">
             @if (entradas.Count > 0)
             {
-                foreach (var item in entradas)
+                foreach (Swidge.Models.Entrada item in entradas)
                 {
-                    var evento = item.Evento;
+                    Swidge.Models.Evento? evento = item.Evento;
                     if (evento == null)
                     {
                         evento = new Swidge.Models.Evento();
@@ -64,7 +64,7 @@
                         evento.Fecha = DateTime.Now;
                     }
 
-                    var imagen = "/img/default-event.jpg";
+                    string imagen = "/img/default-event.jpg";
                     if (!string.IsNullOrEmpty(evento.Imagen))
                     {
                         imagen = "/img/" + evento.Imagen;
@@ -105,7 +105,7 @@
                 <div class="mb-3">
                     <label class="form-label">Provincia</label>
                     <select name="provincia" class="form-select">
-                        @foreach (var provincia in provincias)
+                        @foreach (string provincia in provincias)
                         {
                             if (provincia == provinciaSeleccionada)
                             {
@@ -122,7 +122,7 @@
                 <div class="mb-3">
                     <label class="form-label">Categoría</label>
                     <div class="d-flex flex-column gap-2">
-                        @foreach (var categoria in categorias)
+                        @foreach (string categoria in categorias)
                         {
                             if (categoria == categoriaSeleccionada)
                             {
