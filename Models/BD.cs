@@ -248,41 +248,64 @@ public class BD
             if (entrada == null)
                 return null;
 
-            entrada.Evento = connection.QueryFirstOrDefault<Evento>(
-                "SELECT * FROM dbo.Evento WHERE ID = @ID",
-                new { ID = entrada.IDEvento });
-
-            if (entrada.Evento != null)
-            {
-                var estadio = connection.QueryFirstOrDefault<Estadio>(
-                    "SELECT * FROM dbo.Estadio WHERE ID = @ID",
-                    new { ID = entrada.Evento.IDEstadio });
-
-                entrada.Evento.Lugar = estadio?.NombreLugar ?? estadio?.Nombre ?? "";
-            }
-
-            entrada.Vendedor = connection.QueryFirstOrDefault<Usuario>(
-                @"SELECT u.*
-                  FROM dbo.Usuario u
-                  INNER JOIN dbo.Vendedor v ON v.DNIusuario = u.DNI
-                  WHERE v.ID = @IDVendedor",
-                new { IDVendedor = entrada.IDVendedor });
-
-            if (entrada.IDubicacion > 0)
-            {
-                entrada.Ubicacion = connection.QueryFirstOrDefault<Ubicacion>(
-                    "SELECT * FROM dbo.Ubicacion WHERE ID = @ID",
-                    new { ID = entrada.IDubicacion });
-            }
-
-            if (entrada.DNIusuario.HasValue)
-            {
-                entrada.Comprador = connection.QueryFirstOrDefault<Usuario>(
-                    "SELECT * FROM dbo.Usuario WHERE DNI = @DNI",
-                    new { DNI = entrada.DNIusuario.Value });
-            }
-
+            CargarDetalleEntrada(connection, entrada);
             return entrada;
+        }
+    }
+
+    public Entrada? GetEntradaDetallePorId(int id)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = @"SELECT * FROM dbo.Entrada WHERE ID = @ID";
+
+            Entrada? entrada = connection.QueryFirstOrDefault<Entrada>(
+                query,
+                new { ID = id }
+            );
+
+            if (entrada == null)
+                return null;
+
+            CargarDetalleEntrada(connection, entrada);
+            return entrada;
+        }
+    }
+
+    private static void CargarDetalleEntrada(SqlConnection connection, Entrada entrada)
+    {
+        entrada.Evento = connection.QueryFirstOrDefault<Evento>(
+            "SELECT * FROM dbo.Evento WHERE ID = @ID",
+            new { ID = entrada.IDEvento });
+
+        if (entrada.Evento != null)
+        {
+            var estadio = connection.QueryFirstOrDefault<Estadio>(
+                "SELECT * FROM dbo.Estadio WHERE ID = @ID",
+                new { ID = entrada.Evento.IDEstadio });
+
+            entrada.Evento.Lugar = estadio?.NombreLugar ?? estadio?.Nombre ?? "";
+        }
+
+        entrada.Vendedor = connection.QueryFirstOrDefault<Usuario>(
+            @"SELECT u.*
+              FROM dbo.Usuario u
+              INNER JOIN dbo.Vendedor v ON v.DNIusuario = u.DNI
+              WHERE v.ID = @IDVendedor",
+            new { IDVendedor = entrada.IDVendedor });
+
+        if (entrada.IDubicacion > 0)
+        {
+            entrada.Ubicacion = connection.QueryFirstOrDefault<Ubicacion>(
+                "SELECT * FROM dbo.Ubicacion WHERE ID = @ID",
+                new { ID = entrada.IDubicacion });
+        }
+
+        if (entrada.DNIusuario.HasValue)
+        {
+            entrada.Comprador = connection.QueryFirstOrDefault<Usuario>(
+                "SELECT * FROM dbo.Usuario WHERE DNI = @DNI",
+                new { DNI = entrada.DNIusuario.Value });
         }
     }
 

@@ -268,11 +268,7 @@ public class HomeController : Controller
             return RedirectToAction("IniciarSesion", "Home");
         }
 
-        Entrada? entrada = bd.GetEntradaPorId(id);
-        if (entrada == null)
-        {
-            entrada = bd.BuscarEntradaPorId(id);
-        }
+        Entrada? entrada = bd.GetEntradaDetallePorId(id);
 
         if (entrada == null)
             return RedirectToAction("Index", "Home");
@@ -280,7 +276,7 @@ public class HomeController : Controller
         if (entrada.DNIusuario != dniSesion.Value)
         {
             bd.MarcarEntradaVendida(id, dniSesion.Value);
-            entrada = bd.BuscarEntradaPorId(id);
+            entrada = bd.GetEntradaDetallePorId(id);
         }
 
         if (entrada == null)

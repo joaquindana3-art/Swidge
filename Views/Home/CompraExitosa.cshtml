@@ -1,9 +1,10 @@
 @{
-    Layout = null;
+    ViewData["Title"] = "Compra exitosa";
 
     var entrada = ViewBag.Entrada as Swidge.Models.Entrada ?? new Swidge.Models.Entrada();
     var evento = ViewBag.Evento as Swidge.Models.Evento ?? entrada.Evento ?? new Swidge.Models.Evento();
     var vendedor = ViewBag.Vendedor as Swidge.Models.Usuario ?? entrada.Vendedor ?? new Swidge.Models.Usuario();
+    var ubicacion = ViewBag.Ubicacion as Swidge.Models.Ubicacion ?? entrada.Ubicacion ?? new Swidge.Models.Ubicacion();
 
     var imagenEvento = string.IsNullOrWhiteSpace(evento.Imagen)
         ? Url.Content("~/img/default-event.jpg")
@@ -13,19 +14,16 @@
     var nombreVendedor = !string.IsNullOrWhiteSpace(vendedor.Nombre) || !string.IsNullOrWhiteSpace(vendedor.Apellido)
         ? $"{vendedor.Nombre} {vendedor.Apellido}".Trim()
         : (!string.IsNullOrWhiteSpace(vendedor.NombreUsuario) ? vendedor.NombreUsuario : "-");
+    var usuarioVendedor = !string.IsNullOrWhiteSpace(vendedor.NombreUsuario) ? vendedor.NombreUsuario : "-";
     var fechaEvento = evento.Fecha != default ? evento.Fecha.ToString("dd / MM / yyyy") : "-";
     var nombreEvento = !string.IsNullOrWhiteSpace(evento.Nombre) ? evento.Nombre : "-";
+    var ubicacionTexto = !string.IsNullOrWhiteSpace(ubicacion.NombreSector)
+        ? $"{ubicacion.NombreSector}{(ubicacion.Fila.HasValue ? $", fila {ubicacion.Fila.Value}" : "")}{(ubicacion.Asiento.HasValue ? $", asiento {ubicacion.Asiento.Value}" : "")}"
+        : "-";
+    var precio = entrada.Precio > 0 ? entrada.Precio.ToString("N0") : "0";
 }
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Compra exitosa</title>
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-</head>
-<body class="compra-exitosa-page">
+<div class="compra-exitosa-page">
     <section class="compra-hero" aria-label="Compra exitosa">
         <div class="compra-check" aria-hidden="true"></div>
     </section>
@@ -37,17 +35,19 @@
 
                 <p class="compra-line"><strong>Número de orden:</strong> #@numeroOrden</p>
                 <p class="compra-line"><strong>Nombre del vendedor:</strong> @nombreVendedor</p>
+                <p class="compra-line"><strong>Usuario vendedor:</strong> @usuarioVendedor</p>
                 <p class="compra-line"><strong>Fecha del evento confirmada :</strong> @fechaEvento</p>
                 <p class="compra-line"><strong>Nombre del evento&nbsp;&nbsp;:</strong> @nombreEvento</p>
+                <p class="compra-line"><strong>Ubicación:</strong> @ubicacionTexto</p>
+                <p class="compra-line"><strong>Precio:</strong> $@precio</p>
             </div>
 
             <div>
-                <img src="@imagenEvento" alt="@nombreEvento" class="compra-image" />
+                <img src="@imagenEvento" alt="@nombreEvento" class="compra-image" onerror="this.onerror=null;this.src='@Url.Content("~/img/default-event.jpg")';" />
                 <div class="compra-actions">
                     <a class="compra-btn" href="@Url.Action("EntradasCompradas", "Home")">Ver entradas</a>
                 </div>
             </div>
         </div>
     </main>
-</body>
-</html>
+</div>
