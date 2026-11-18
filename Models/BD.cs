@@ -79,6 +79,11 @@ public class BD
                         new { ID = entrada.Evento.IDEstadio });
 
                     entrada.Evento.Lugar = estadio?.NombreLugar ?? estadio?.Nombre ?? "";
+                    estadio = connection.QueryFirstOrDefault<Estadio>(
+                        "SELECT * FROM dbo.Estadio WHERE ID = @ID",
+                        new { ID = entrada.Evento.IDEstadio });
+
+                    entrada.Evento.Lugar = estadio?.NombreLugar ?? estadio?.Nombre ?? "";
                     entrada.Evento.CantidadEntradas = GetCantidadEntradasPorEvento(entrada.IDEvento);
                 }
             }
@@ -280,7 +285,7 @@ public class BD
 
         if (entrada.Evento != null)
         {
-            Estadio? estadio = connection.QueryFirstOrDefault<Estadio>(
+            var estadio = connection.QueryFirstOrDefault<Estadio>(
                 "SELECT * FROM dbo.Estadio WHERE ID = @ID",
                 new { ID = entrada.Evento.IDEstadio });
 
@@ -436,54 +441,10 @@ public class BD
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
-            connection.Open();
-
-            using (SqlTransaction transaction = connection.BeginTransaction())
-            {
-                connection.Execute(
-                    @"UPDATE dbo.Entrada
-                      SET Vendida = 1, DNIusuario = @DNIusuario
-                      WHERE ID = @IDEntrada",
-                    new { IDEntrada = idEntrada, DNIusuario = dniUsuario },
-                    transaction);
-
-                int existente = connection.ExecuteScalar<int>(
-                    "SELECT COUNT(*) FROM dbo.Transaccion WHERE IDentrada = @IDEntrada",
-                    new { IDEntrada = idEntrada },
-                    transaction);
-
-                if (existente == 0)
-                {
-                    connection.Execute(
-                        @"INSERT INTO dbo.Transaccion
-                          (DNIusuario, MontoTotal, Comision, Fecha, Estado, IDvendedor, IDentrada)
-                          SELECT @DNIusuario, Precio, 0, GETDATE(), 'COMPLETADO', IDvendedor, ID
-                          FROM dbo.Entrada
-                          WHERE ID = @IDEntrada",
-                        new { IDEntrada = idEntrada, DNIusuario = dniUsuario },
-                        transaction);
-                }
-
-                transaction.Commit();
-            }
-        }
-    }
-
-    public void RegistrarComprasPendientes(int dni)
-    {
-        using (SqlConnection connection = new SqlConnection(_connectionString))
-        {
             connection.Execute(
-                @"INSERT INTO dbo.Transaccion
-                  (DNIusuario, MontoTotal, Comision, Fecha, Estado, IDvendedor, IDentrada)
-                  SELECT e.DNIusuario, e.Precio, 0, GETDATE(), 'COMPLETADO', e.IDvendedor, e.ID
-                  FROM dbo.Entrada e
-                  WHERE e.Vendida = 1
-                    AND e.DNIusuario = @DNI
-                    AND NOT EXISTS (
-                        SELECT 1 FROM dbo.Transaccion t WHERE t.IDentrada = e.ID
-                    )",
-                new { DNI = dni });
+                "dbo.MarcarEntradaVendida",
+                new { IDEntrada = idEntrada, DNIusuario = dniUsuario },
+                commandType: CommandType.StoredProcedure);
         }
     }
 
@@ -693,31 +654,56 @@ public class BD
 
     public List<HistorialTransaccion> GetHistorialTransacciones(int dni)
     {
-    using (SqlConnection connection = new SqlConnection(_connectionString))
-    {
-        // Trae las transacciones donde el usuario compró (t.DNIusuario) o vendió (v.DNIusuario).
-        string query = @"SELECT t.ID,
-                                t.Fecha,
-                                t.MontoTotal,
-                                t.Comision,
-                                t.Estado,
-                                t.IDentrada AS IDEntrada,
-                                CASE WHEN t.DNIusuario = @DNI THEN 'Compra' ELSE 'Venta' END AS Tipo,
-                                CASE WHEN t.DNIusuario = @DNI THEN uv.NombreUsuario ELSE ub.NombreUsuario END AS Contraparte,
-                                ev.Nombre AS NombreEvento,
-                                ev.Protagonista,
-                                ev.Fecha AS FechaEvento,
-                                ev.Imagen,
-                                es.NombreLugar AS Lugar
-                         FROM dbo.Transaccion t
-                         INNER JOIN dbo.Vendedor v ON v.ID = t.IDvendedor
-                         INNER JOIN dbo.Usuario ub ON ub.DNI = t.DNIusuario
-                         INNER JOIN dbo.Usuario uv ON uv.DNI = v.DNIusuario
-                         INNER JOIN dbo.Entrada e ON e.ID = t.IDentrada
-                         INNER JOIN dbo.Evento ev ON ev.ID = e.IDevento
-                         LEFT JOIN dbo.Estadio es ON es.ID = ev.IDestadio
-                         WHERE t.DNIusuario = @DNI OR v.DNIusuario = @DNI
-                         ORDER BY t.Fecha DESC, t.ID DESC";
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = @"
+                SELECT t.ID,
+                       t.Fecha,
+                       t.MontoTotal,
+                       t.Comision,
+                       t.Estado,
+                       t.IDentrada AS IDEntrada,
+                       'Compra' AS Tipo,
+                       uv.NombreUsuario AS Contraparte,
+                       ev.Nombre AS NombreEvento,
+                       ev.Protagonista,
+                       ev.Fecha AS FechaEvento,
+                       ev.Imagen,
+                       es.NombreLugar AS Lugar,
+                       CAST(1 AS bit) AS Vendida
+                FROM dbo.Transaccion t
+                INNER JOIN dbo.Vendedor v ON v.ID = t.IDvendedor
+                INNER JOIN dbo.Usuario uv ON uv.DNI = v.DNIusuario
+                INNER JOIN dbo.Entrada e ON e.ID = t.IDentrada
+                INNER JOIN dbo.Evento ev ON ev.ID = e.IDevento
+                LEFT JOIN dbo.Estadio es ON es.ID = ev.IDestadio
+                WHERE t.DNIusuario = @DNI
+
+                UNION ALL
+
+                SELECT e.ID AS ID,
+                       COALESCE(t.Fecha, '19000101') AS Fecha,
+                       e.Precio AS MontoTotal,
+                       CAST(0 AS decimal(18,2)) AS Comision,
+                       CASE WHEN e.Vendida = 1 THEN 'Vendida' ELSE 'Publicada' END AS Estado,
+                       e.ID AS IDEntrada,
+                       'Publicacion' AS Tipo,
+                       CASE WHEN e.Vendida = 1 THEN ub.NombreUsuario ELSE '' END AS Contraparte,
+                       ev.Nombre AS NombreEvento,
+                       ev.Protagonista,
+                       ev.Fecha AS FechaEvento,
+                       ev.Imagen,
+                       es.NombreLugar AS Lugar,
+                       e.Vendida AS Vendida
+                FROM dbo.Entrada e
+                INNER JOIN dbo.Vendedor v ON v.ID = e.IDvendedor
+                LEFT JOIN dbo.Transaccion t ON t.IDentrada = e.ID
+                LEFT JOIN dbo.Usuario ub ON ub.DNI = e.DNIusuario
+                INNER JOIN dbo.Evento ev ON ev.ID = e.IDevento
+                LEFT JOIN dbo.Estadio es ON es.ID = ev.IDestadio
+                WHERE v.DNIusuario = @DNI
+
+                ORDER BY Fecha DESC, ID DESC";
 
         return connection.Query<HistorialTransaccion>(query, new { DNI = dni }).ToList();
     }

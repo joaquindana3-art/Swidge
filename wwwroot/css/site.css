@@ -1432,6 +1432,14 @@ img.usuario {
   color: #10233d;
 }
 
+.entrada-price-sold {
+  color: #198754;
+}
+
+.entrada-price-pending {
+  color: #7a8491;
+}
+
 @media (max-width: 767.98px) {
   .entradas-header {
     padding: 1rem 0.85rem;
