@@ -82,7 +82,14 @@
                                     <p class="text-muted">📍 @evento.Lugar</p>
                                     <div class="d-flex justify-content-between align-items-center mt-3">
                                         <span class="fw-bold text-danger fs-5">$@item.Precio.ToString("N0")</span>
-                                        <a href="@Url.Action("DetalleEntrada", "Home", new { id = item.ID })" class="btn btn-primary btn-sm">Comprar</a>
+                                        @if (item.Vendedor?.DNI == ViewBag.UsuarioActualDni)
+                                        {
+                                            <span class="btn btn-secondary btn-sm disabled" aria-disabled="true">Tu entrada</span>
+                                        }
+                                        else
+                                        {
+                                            <a href="@Url.Action("DetalleEntrada", "Home", new { id = item.ID })" class="btn btn-primary btn-sm">Comprar</a>
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -104,7 +111,7 @@
 
                 <div class="mb-3">
                     <label class="form-label">Provincia</label>
-                    <select name="provincia" class="form-select">
+                    <select id="provinciaFiltro" name="provincia" class="form-select">
                         @foreach (string provincia in provincias)
                         {
                             if (provincia == provinciaSeleccionada)
@@ -182,6 +189,19 @@
                             if (form) {
                                 form.submit();
                             }
+                        });
+                    });
+                </script>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const form = document.getElementById('filtrosForm');
+                        const provincia = document.getElementById('provinciaFiltro');
+
+                        if (!form || !provincia) return;
+
+                        provincia.addEventListener('change', function () {
+                            form.submit();
                         });
                     });
                 </script>

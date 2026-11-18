@@ -250,6 +250,12 @@ public class HomeController : Controller
         if (entrada == null)
             return RedirectToAction("Index", "Home");
 
+        if (EntradaPerteneceAlUsuario(entrada, dniSesion.Value))
+        {
+            TempData["ErrorMessage"] = "No podés comprar una entrada que publicaste vos.";
+            return RedirectToAction("DetalleEntrada", "Home", new { id = entrada.ID });
+        }
+
         return View(entrada);
     }
 
@@ -267,6 +273,12 @@ public class HomeController : Controller
 
         if (entrada == null)
             return RedirectToAction("Index", "Home");
+
+        if (EntradaPerteneceAlUsuario(entrada, dniSesion.Value))
+        {
+            TempData["ErrorMessage"] = "No podés comprar una entrada que publicaste vos.";
+            return RedirectToAction("DetalleEntrada", "Home", new { id = entrada.ID });
+        }
 
         if (entrada.DNIusuario != dniSesion.Value)
         {
@@ -298,6 +310,7 @@ public class HomeController : Controller
         if (entrada == null)
             return RedirectToAction("Index", "Home");
 
+        ViewBag.EsEntradaPropia = EntradaPerteneceAlUsuario(entrada, dniSesion.Value);
         return View(entrada);
     }
 
@@ -459,4 +472,13 @@ public class HomeController : Controller
         {
             return RedirectToAction("Historial", "Home");
         }
+
+        private static bool EntradaPerteneceAlUsuario(Entrada entrada, int dniUsuario)
+    {
+        if (entrada.Vendedor?.DNI == dniUsuario)
+            return true;
+
+        var vendedor = new BD().BuscarVendedorPorID(entrada.IDVendedor);
+        return vendedor?.DNIusuario == dniUsuario;
+    }
 }
