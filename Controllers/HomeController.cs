@@ -453,7 +453,7 @@ public class HomeController : Controller
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 
-            public IActionResult Historial()
+    public IActionResult Historial()
         {
             BD bd = new BD();
             int? dniSesion = HttpContext.Session.GetInt32("DNI");

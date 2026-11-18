@@ -1,4 +1,4 @@
-WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
 // Sesión: se guarda en memoria del servidor y dura 30 minutos sin actividad.
 builder.Services.AddDistributedMemoryCache();
@@ -12,7 +12,7 @@ builder.Services.AddSession(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-WebApplication app = builder.Build();
+var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
