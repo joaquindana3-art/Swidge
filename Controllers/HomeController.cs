@@ -452,6 +452,11 @@ public class HomeController : Controller
                 ? "No tienes transacciones registradas."
                 : "";
 
-            return View();
+            return View("Historial");
+        }
+
+        public IActionResult HistorialTransacciones()
+        {
+            return RedirectToAction("Historial", "Home");
         }
 }
