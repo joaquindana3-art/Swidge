@@ -2,18 +2,18 @@
 
 @{
     ViewData["Title"] = "Pagar entrada";
-    var evento = Model?.Evento ?? new Swidge.Models.Evento();
-    var vendedor = Model?.Vendedor ?? new Swidge.Models.Usuario();
-    var ubicacion = Model?.Ubicacion ?? new Swidge.Models.Ubicacion();
+    Swidge.Models.Evento evento = Model?.Evento ?? new Swidge.Models.Evento();
+    Swidge.Models.Usuario vendedor = Model?.Vendedor ?? new Swidge.Models.Usuario();
+    Swidge.Models.Ubicacion ubicacion = Model?.Ubicacion ?? new Swidge.Models.Ubicacion();
 
-    var imagenEvento = string.IsNullOrWhiteSpace(evento.Imagen)
+    string imagenEvento = string.IsNullOrWhiteSpace(evento.Imagen)
         ? Url.Content("~/img/default-event.jpg")
         : Url.Content("~/img/" + evento.Imagen);
 
-    var precio = Model?.Precio > 0 ? Model.Precio.ToString("N0") : "0";
-    var fecha = evento.Fecha != default ? evento.Fecha.ToString("ddd, dd MMM, HH:mm") : "Fecha por confirmar";
-    var lugar = string.IsNullOrWhiteSpace(evento.Lugar) ? "Lugar por confirmar" : evento.Lugar;
-    var ubicacionTexto = !string.IsNullOrWhiteSpace(ubicacion.NombreSector)
+    string precio = Model?.Precio > 0 ? Model.Precio.ToString("N0") : "0";
+    string fecha = evento.Fecha != default ? evento.Fecha.ToString("ddd, dd MMM, HH:mm") : "Fecha por confirmar";
+    string lugar = string.IsNullOrWhiteSpace(evento.Lugar) ? "Lugar por confirmar" : evento.Lugar;
+    string ubicacionTexto = !string.IsNullOrWhiteSpace(ubicacion.NombreSector)
         ? $"{ubicacion.NombreSector}{(ubicacion.Fila.HasValue ? $", fila {ubicacion.Fila.Value}" : "")}{(ubicacion.Asiento.HasValue ? $", asiento {ubicacion.Asiento.Value}" : "")}"
         : "Ubicación por confirmar";
 }
