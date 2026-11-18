@@ -145,18 +145,14 @@ public class BD
             return connection.QueryFirstOrDefault<Evento>(query, new { ID = id });
         }
     }
-    public Usuario? ObtenerUsuarioParaLogin(string nombreUsuario, string contrasena)
+    public Usuario? ObtenerUsuarioParaLogin(string nombreUsuario)
     {
-
-        Usuario usuarioParaLogin = new Usuario();
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
-
-            string query = @"SELECT TOP 1 * FROM Usuario WHERE NombreUsuario = @NombreUsuario AND Contraseña = @Contraseña";
-            usuarioParaLogin = connection.QueryFirstOrDefault<Usuario>(query, new { NombreUsuario = nombreUsuario, Contraseña = contrasena });
-
+            // Se busca solo por nombre de usuario: el hash se verifica en C# con BCrypt.Verify.
+            string query = @"SELECT TOP 1 * FROM Usuario WHERE NombreUsuario = @NombreUsuario";
+            return connection.QueryFirstOrDefault<Usuario>(query, new { NombreUsuario = nombreUsuario });
         }
-        return usuarioParaLogin;
     }
 
     public bool ExisteDNI(int dni)
