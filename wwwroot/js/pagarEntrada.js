@@ -92,9 +92,27 @@ document.addEventListener('DOMContentLoaded', function () {
         const venc = vencimientoTarjeta.value;
         const titular = titularTarjeta.value.trim();
         const direccion = direccionFacturacion.value.trim();
-        const hayDatosTarjeta = numero || cvv || venc || titular || direccion;
+        const metodoSeleccionado = document.querySelector('input[name="metodoPago"]:checked')?.value;
 
-        if (document.querySelector('input[name="metodoPago"]:checked').value === 'Tarjeta' && hayDatosTarjeta) {
+        if (metodoSeleccionado === 'Tarjeta') {
+            if (!numero || !cvv || !venc || !titular || !direccion) {
+                event.preventDefault();
+                alert('Completá todos los datos de la tarjeta para continuar.');
+
+                if (!numero) {
+                    numeroTarjeta.focus();
+                } else if (!cvv) {
+                    cvvTarjeta.focus();
+                } else if (!venc) {
+                    vencimientoTarjeta.focus();
+                } else if (!titular) {
+                    titularTarjeta.focus();
+                } else {
+                    direccionFacturacion.focus();
+                }
+                return;
+            }
+
             if (!/^\d{16}$/.test(numero)) {
                 event.preventDefault();
                 alert('El número de tarjeta debe tener 16 dígitos.');
@@ -104,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (!/^\d{3,4}$/.test(cvv)) {
                 event.preventDefault();
-                alert('El CVV debe tener 3 o 4 dígitos.');
+                alert('El CVV debe tener entre 3 y 4 dígitos (máximo 4).');
                 cvvTarjeta.focus();
                 return;
             }
