@@ -156,6 +156,8 @@ public class HomeController : Controller
         return View();
 
     }
+    [HttpPost]
+    [ValidateAntiForgeryToken]
     public IActionResult ConfirmacionEntradaPublicada(int IDevento, string nombreTitular, string NombreSector, int? Fila, int? Asiento, decimal precioVenta, string comprobante)
     {
 
