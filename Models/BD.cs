@@ -678,5 +678,49 @@ public class BD
         return connection.Query<HistorialTransaccion>(query, new { DNI = dni }).ToList();
     }
     }
+
+    public bool ExisteNombreUsuarioExceptoDNI(string nombreUsuario, int dni)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = "SELECT COUNT(1) FROM [dbo].[Usuario] WHERE [NombreUsuario] = @NombreUsuario AND [DNI] <> @DNI";
+            return connection.ExecuteScalar<int>(query, new { NombreUsuario = nombreUsuario, DNI = dni }) > 0;
+        }
+    }
+
+    public bool ExisteMailExceptoDNI(string mail, int dni)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = "SELECT COUNT(1) FROM [dbo].[Usuario] WHERE [Mail] = @Mail AND [DNI] <> @DNI";
+            return connection.ExecuteScalar<int>(query, new { Mail = mail, DNI = dni }) > 0;
+        }
+    }
+
+    public void ActualizarPerfil(int dni, string nombre, string apellido, string nombreUsuario, DateTime fechaNacimiento, string ciudad, string mail)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = @"UPDATE [dbo].[Usuario]
+                            SET [Nombre] = @Nombre,
+                                [Apellido] = @Apellido,
+                                [NombreUsuario] = @NombreUsuario,
+                                [FechaNacimiento] = @FechaNacimiento,
+                                [Ciudad] = @Ciudad,
+                                [Mail] = @Mail
+                            WHERE [DNI] = @DNI";
+
+            connection.Execute(query, new
+            {
+                DNI = dni,
+                Nombre = nombre,
+                Apellido = apellido,
+                NombreUsuario = nombreUsuario,
+                FechaNacimiento = fechaNacimiento,
+                Ciudad = ciudad,
+                Mail = mail
+            });
+        }
+    }
 }
 

@@ -397,6 +397,11 @@ public class HomeController : Controller
         usuario.Contraseña = "";
         ViewBag.Usuario = usuario;
 
+        if (TempData["ErroresPerfil"] is List<string> erroresPerfil)
+        {
+            ViewBag.ErroresPerfil = erroresPerfil;
+        }
+
         var proximosEventos = bd.GetProximosEventosComprados(dniSesion.Value);
         ViewBag.ProximosEventos = proximosEventos;
 
