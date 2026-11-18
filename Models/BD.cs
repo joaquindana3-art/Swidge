@@ -646,4 +646,37 @@ public class BD
             }) > 0;
         }
     }
+
+    public List<HistorialTransaccion> GetHistorialTransacciones(int dni)
+    {
+    using (SqlConnection connection = new SqlConnection(_connectionString))
+    {
+        // Trae las transacciones donde el usuario compró (t.DNIusuario) o vendió (v.DNIusuario).
+        string query = @"SELECT t.ID,
+                                t.Fecha,
+                                t.MontoTotal,
+                                t.Comision,
+                                t.Estado,
+                                t.IDentrada AS IDEntrada,
+                                CASE WHEN t.DNIusuario = @DNI THEN 'Compra' ELSE 'Venta' END AS Tipo,
+                                CASE WHEN t.DNIusuario = @DNI THEN uv.NombreUsuario ELSE ub.NombreUsuario END AS Contraparte,
+                                ev.Nombre AS NombreEvento,
+                                ev.Protagonista,
+                                ev.Fecha AS FechaEvento,
+                                ev.Imagen,
+                                es.NombreLugar AS Lugar
+                         FROM dbo.Transaccion t
+                         INNER JOIN dbo.Vendedor v ON v.ID = t.IDvendedor
+                         INNER JOIN dbo.Usuario ub ON ub.DNI = t.DNIusuario
+                         INNER JOIN dbo.Usuario uv ON uv.DNI = v.DNIusuario
+                         INNER JOIN dbo.Entrada e ON e.ID = t.IDentrada
+                         INNER JOIN dbo.Evento ev ON ev.ID = e.IDevento
+                         LEFT JOIN dbo.Estadio es ON es.ID = ev.IDestadio
+                         WHERE t.DNIusuario = @DNI OR v.DNIusuario = @DNI
+                         ORDER BY t.Fecha DESC, t.ID DESC";
+
+        return connection.Query<HistorialTransaccion>(query, new { DNI = dni }).ToList();
+    }
+    }
 }
+
