@@ -1,6 +1,7 @@
 @{
     ViewData["Title"] = "Mi perfil";
     var usuario = ViewBag.Usuario as Swidge.Models.Usuario;
+    var mensaje = TempData["Mensaje"] as string;
 }
 
 <div class="mi-perfil-page">
@@ -8,6 +9,11 @@
         <div class="mi-perfil-header">
             <h2>Mi perfil</h2>
         </div>
+
+        @if (!string.IsNullOrWhiteSpace(mensaje))
+        {
+            <div class="mi-perfil-success" role="status">@mensaje</div>
+        }
 
         <div class="mi-perfil-content">
             <div class="mi-perfil-grid">
@@ -48,7 +54,8 @@
                 <button type="button" class="mi-perfil-action-btn">Editar perfil</button>
                 <a class="mi-perfil-action-btn" asp-controller="Home" asp-action="EntradasCompradas">Ver entradas compradas</a>
                 <a class="mi-perfil-action-btn" asp-controller="Home" asp-action="EntradasPublicadas">Ver entradas publicadas</a>
-                <a class="mi-perfil-action-btn">Cambiar contraseña</a>
+                <a class="mi-perfil-action-btn" asp-controller="Home" asp-action="CambiarContraseña">Cambiar contraseña</a>
+                <a class="mi-perfil-action-btn" asp-controller="Home" asp-action="HistorialTransacciones">Historial de transacciones</a>
             </div>
         </div>
     </div>

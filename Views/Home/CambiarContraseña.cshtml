@@ -2,27 +2,34 @@
     ViewData["Title"] = "Cambiar contraseña";
 }
 
-<div class="container mt-5">
-    <div class="card mx-auto" style="max-width: 500px;">
-        <div class="card-body">
-            <h3 class="mb-4 text-center">Cambiar contraseña</h3>
+<div class="password-change-page">
+    <section class="password-change-card" aria-labelledby="password-change-title">
+        <div class="password-change-header">
+            <h1 id="password-change-title">Cambiar<br />contraseña</h1>
+        </div>
 
-            <form method="post" asp-controller="Session" asp-action="CambiarContraseña">
-                <div class="mb-3">
-                    <label for="contrasenaActual" class="form-label">Contraseña actual</label>
-                    <input type="password" class="form-control" id="contrasenaActual" name="contrasenaActual" required />
+        <div class="password-change-body">
+            @if (ViewBag.Errores != null)
+            {
+                <div class="password-change-alert" role="alert">
+                    @foreach (string error in ViewBag.Errores)
+                    {
+                        <div>@error</div>
+                    }
                 </div>
+            }
 
-                <div class="mb-3">
-                    <label for="contrasenaNueva" class="form-label">Nueva contraseña</label>
-                    <input type="password" class="form-control" id="contrasenaNueva" name="contrasenaNueva" required />
-                </div>
+            <form class="password-change-form" method="post" action="@Url.Action("CambiarContraseña", "Session")" novalidate>
+                @Html.AntiForgeryToken()
 
-                <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
-                    <a class="btn btn-outline-secondary" asp-controller="Home" asp-action="MiPerfil">Volver</a>
-                </div>
+                <input type="password" id="contrasenaActual" name="contrasenaActual" autocomplete="current-password" maxlength="72" placeholder="Contraseña actual" required />
+                <input type="password" id="contrasenaNueva" name="contrasenaNueva" autocomplete="new-password" maxlength="72" placeholder="Nueva contraseña" minlength="8" required />
+                <input type="password" id="confirmarContrasena" name="confirmarContrasena" autocomplete="new-password" maxlength="72" placeholder="Confirmar nueva contraseña" minlength="8" required />
+
+                <button type="submit" class="password-change-submit">Cambiar</button>
+
+                <img class="password-change-brand" src="~/img/logoswidgeNegroTransparente.png" alt="Swidge" />
             </form>
         </div>
-    </div>
+    </section>
 </div>
