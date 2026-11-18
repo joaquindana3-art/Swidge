@@ -3229,25 +3229,144 @@ img.usuario {
   text-align: center;
   font-weight: 700;
 }
+/* Recuperar contraseña */
+.forgot-password-page {
+  min-height: calc(100vh - 140px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 48px 16px 42px;
+  background: #efefef;
+}
 
-@media (max-width: 480px) {
-  .password-change-page {
+.forgot-password-card {
+  width: min(100%, 520px);
+  background: #5f82f7;
+  box-shadow: 0 8px 18px rgba(32, 61, 128, 0.18);
+  overflow: hidden;
+}
+
+.forgot-password-header {
+  padding: 24px 24px 30px;
+  text-align: center;
+}
+
+.forgot-password-header h1 {
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(1.55rem, 3vw, 2rem);
+  line-height: 1.25;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.forgot-password-body {
+  padding: 0 42px 28px;
+}
+
+.forgot-password-form {
+  display: grid;
+  grid-template-columns: auto minmax(0, 220px);
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+.forgot-password-form label {
+  margin: 0;
+  color: #ffffff;
+  font-size: 1.25rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.forgot-password-form input {
+  width: 100%;
+  height: 40px;
+  border: 0;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #202b3b;
+  padding: 0 12px;
+  font-size: 1rem;
+  outline: none;
+}
+
+.forgot-password-form input:focus {
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.38);
+}
+
+.forgot-password-submit {
+  grid-column: 1 / -1;
+  justify-self: center;
+  min-width: 92px;
+  height: 38px;
+  border: 0;
+  border-radius: 7px;
+  margin-top: 18px;
+  background: #ffffff;
+  color: #3e72d8;
+  font-size: 0.92rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.forgot-password-submit:hover {
+  background: #eef3ff;
+}
+
+.forgot-password-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  margin-top: 30px;
+}
+
+.forgot-password-link {
+  color: #111111;
+  font-size: 1rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.forgot-password-link--secondary {
+  color: #ffffff;
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.forgot-password-link:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 520px) {
+  .forgot-password-page {
     padding: 24px 10px 32px;
   }
 
-  .password-change-card {
+  .forgot-password-card {
     width: 100%;
   }
 
-  .password-change-header {
-    padding: 24px 16px 14px;
+  .forgot-password-header {
+    padding: 24px 16px 20px;
   }
 
-  .password-change-header h1 {
-    font-size: 2.25rem;
+  .forgot-password-body {
+    padding: 0 22px 24px;
   }
 
-  .password-change-body {
-    padding: 12px 22px 20px;
+  .forgot-password-form {
+    grid-template-columns: 1fr;
+  }
+
+  .forgot-password-form label {
+    text-align: center;
+  }
+
+  .forgot-password-form input {
+    max-width: 320px;
   }
 }
