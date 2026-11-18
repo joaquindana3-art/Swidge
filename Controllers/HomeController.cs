@@ -397,6 +397,11 @@ public class HomeController : Controller
         usuario.Contraseña = "";
         ViewBag.Usuario = usuario;
 
+        if (TempData["ErroresPerfil"] is List<string> erroresPerfil)
+        {
+            ViewBag.ErroresPerfil = erroresPerfil;
+        }
+
         List<Entrada> proximosEventos = bd.GetProximosEventosComprados(dniSesion.Value);
         ViewBag.ProximosEventos = proximosEventos;
 
@@ -458,6 +463,7 @@ public class HomeController : Controller
                 return RedirectToAction("IniciarSesion", "Home");
             }
 
+            bd.RegistrarComprasPendientes(dniSesion.Value);
             List<HistorialTransaccion> historial = bd.GetHistorialTransacciones(dniSesion.Value);
             ViewBag.Historial = historial;
 
@@ -465,7 +471,12 @@ public class HomeController : Controller
                 ? "No tienes transacciones registradas."
                 : "";
 
-            return View();
+            return View("Historial");
+        }
+
+        public IActionResult HistorialTransacciones()
+        {
+            return RedirectToAction("Historial", "Home");
         }
 
         private static bool EntradaPerteneceAlUsuario(Entrada entrada, int dniUsuario)

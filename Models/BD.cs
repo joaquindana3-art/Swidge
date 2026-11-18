@@ -436,10 +436,54 @@ public class BD
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
+            connection.Open();
+
+            using (SqlTransaction transaction = connection.BeginTransaction())
+            {
+                connection.Execute(
+                    @"UPDATE dbo.Entrada
+                      SET Vendida = 1, DNIusuario = @DNIusuario
+                      WHERE ID = @IDEntrada",
+                    new { IDEntrada = idEntrada, DNIusuario = dniUsuario },
+                    transaction);
+
+                int existente = connection.ExecuteScalar<int>(
+                    "SELECT COUNT(*) FROM dbo.Transaccion WHERE IDentrada = @IDEntrada",
+                    new { IDEntrada = idEntrada },
+                    transaction);
+
+                if (existente == 0)
+                {
+                    connection.Execute(
+                        @"INSERT INTO dbo.Transaccion
+                          (DNIusuario, MontoTotal, Comision, Fecha, Estado, IDvendedor, IDentrada)
+                          SELECT @DNIusuario, Precio, 0, GETDATE(), 'COMPLETADO', IDvendedor, ID
+                          FROM dbo.Entrada
+                          WHERE ID = @IDEntrada",
+                        new { IDEntrada = idEntrada, DNIusuario = dniUsuario },
+                        transaction);
+                }
+
+                transaction.Commit();
+            }
+        }
+    }
+
+    public void RegistrarComprasPendientes(int dni)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
             connection.Execute(
-                "dbo.MarcarEntradaVendida",
-                new { IDEntrada = idEntrada, DNIusuario = dniUsuario },
-                commandType: CommandType.StoredProcedure);
+                @"INSERT INTO dbo.Transaccion
+                  (DNIusuario, MontoTotal, Comision, Fecha, Estado, IDvendedor, IDentrada)
+                  SELECT e.DNIusuario, e.Precio, 0, GETDATE(), 'COMPLETADO', e.IDvendedor, e.ID
+                  FROM dbo.Entrada e
+                  WHERE e.Vendida = 1
+                    AND e.DNIusuario = @DNI
+                    AND NOT EXISTS (
+                        SELECT 1 FROM dbo.Transaccion t WHERE t.IDentrada = e.ID
+                    )",
+                new { DNI = dni });
         }
     }
 
@@ -677,6 +721,50 @@ public class BD
 
         return connection.Query<HistorialTransaccion>(query, new { DNI = dni }).ToList();
     }
+    }
+
+    public bool ExisteNombreUsuarioExceptoDNI(string nombreUsuario, int dni)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = "SELECT COUNT(1) FROM [dbo].[Usuario] WHERE [NombreUsuario] = @NombreUsuario AND [DNI] <> @DNI";
+            return connection.ExecuteScalar<int>(query, new { NombreUsuario = nombreUsuario, DNI = dni }) > 0;
+        }
+    }
+
+    public bool ExisteMailExceptoDNI(string mail, int dni)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = "SELECT COUNT(1) FROM [dbo].[Usuario] WHERE [Mail] = @Mail AND [DNI] <> @DNI";
+            return connection.ExecuteScalar<int>(query, new { Mail = mail, DNI = dni }) > 0;
+        }
+    }
+
+    public void ActualizarPerfil(int dni, string nombre, string apellido, string nombreUsuario, DateTime fechaNacimiento, string ciudad, string mail)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = @"UPDATE [dbo].[Usuario]
+                            SET [Nombre] = @Nombre,
+                                [Apellido] = @Apellido,
+                                [NombreUsuario] = @NombreUsuario,
+                                [FechaNacimiento] = @FechaNacimiento,
+                                [Ciudad] = @Ciudad,
+                                [Mail] = @Mail
+                            WHERE [DNI] = @DNI";
+
+            connection.Execute(query, new
+            {
+                DNI = dni,
+                Nombre = nombre,
+                Apellido = apellido,
+                NombreUsuario = nombreUsuario,
+                FechaNacimiento = fechaNacimiento,
+                Ciudad = ciudad,
+                Mail = mail
+            });
+        }
     }
 }
 

@@ -165,6 +165,55 @@ public class SessionController : Controller
         return View();
     }
 
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult EditarPerfil(string nombre, string apellido, string nombreUsuario,
+        DateTime fechaNacimiento, string ciudad, string mail)
+    {
+        int? dni = HttpContext.Session.GetInt32("DNI");
+        if (dni == null)
+        {
+            return RedirectToAction("IniciarSesion", "Home");
+        }
+
+        List<string> errores = new List<string>();
+
+        if (string.IsNullOrWhiteSpace(nombre)) errores.Add("Ingresá tu nombre.");
+        if (string.IsNullOrWhiteSpace(apellido)) errores.Add("Ingresá tu apellido.");
+        if (string.IsNullOrWhiteSpace(nombreUsuario)) errores.Add("Ingresá tu nombre de usuario.");
+        if (string.IsNullOrWhiteSpace(ciudad)) errores.Add("Ingresá tu ciudad.");
+        if (string.IsNullOrWhiteSpace(mail)) errores.Add("Ingresá tu mail.");
+        if (fechaNacimiento == default) errores.Add("Ingresá tu fecha de nacimiento.");
+
+        if (!string.IsNullOrWhiteSpace(mail) && !mail.Contains('@'))
+            errores.Add("Ingresá un mail válido.");
+
+        if (!string.IsNullOrWhiteSpace(nombreUsuario) && bd.ExisteNombreUsuarioExceptoDNI(nombreUsuario.Trim(), dni.Value))
+            errores.Add("El nombre de usuario ya está en uso.");
+
+        if (!string.IsNullOrWhiteSpace(mail) && bd.ExisteMailExceptoDNI(mail.Trim(), dni.Value))
+            errores.Add("Ya existe una cuenta con ese mail.");
+
+        if (errores.Count > 0)
+        {
+            TempData["ErroresPerfil"] = errores;
+            return RedirectToAction("MiPerfil", "Home");
+        }
+
+        bd.ActualizarPerfil(
+            dni.Value,
+            nombre.Trim(),
+            apellido.Trim(),
+            nombreUsuario.Trim(),
+            fechaNacimiento,
+            ciudad.Trim(),
+            mail.Trim());
+
+        HttpContext.Session.SetString("NombreUsuario", nombreUsuario.Trim());
+        TempData["Mensaje"] = "Tus datos se actualizaron correctamente.";
+        return RedirectToAction("MiPerfil", "Home");
+    }
+
     public bool HaySesion()
     {
         if (HttpContext.Session.GetInt32("DNI") == null)

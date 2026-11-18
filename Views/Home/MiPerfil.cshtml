@@ -15,43 +15,64 @@
             <div class="mi-perfil-success" role="status">@mensaje</div>
         }
 
-        <div class="mi-perfil-content">
-            <div class="mi-perfil-grid">
-                <div class="mi-perfil-field">
-                    <input type="text" value="@(usuario?.Nombre ?? "Nombre")" readonly />
-                </div>
-
-                <div class="mi-perfil-field">
-                    <input type="text" value="@(usuario?.Apellido ?? "Apellido")" readonly />
-                </div>
-
-                <div class="mi-perfil-field mi-perfil-field-full">
-                    <input type="email" value="@(usuario?.Mail ?? "email@ejemplo.com")" readonly />
-                </div>
-
-                <div class="mi-perfil-field mi-perfil-field-full">
-                    <input type="text" value="@(usuario?.NombreUsuario ?? "usuario")" readonly />
-                </div>
-
-                <div class="mi-perfil-field mi-perfil-field-full">
-                    <input type="text" value="@(usuario?.Ciudad ?? "Ciudad")" readonly />
-                </div>
-
-                <div class="mi-perfil-field mi-perfil-field-full">
-                    <input type="text" value="@(usuario?.FechaNacimiento != null && usuario.FechaNacimiento != default ? usuario.FechaNacimiento.ToString("dd/MM/yyyy") : "Fecha de nacimiento")" readonly />
-                </div>
-
-                <div class="mi-perfil-field mi-perfil-field-large">
-                    <input type="text" value="@(usuario?.DNI > 0 ? usuario.DNI.ToString() : "DNI")" readonly />
-                </div>
-
-                <div class="mi-perfil-bridge">
-                    <img class="mi-perfil-bridge-logo" src="~/img/logoSwidgeNegroTransparente.png" alt="Swidge" />
-                </div>
+        @if (ViewBag.ErroresPerfil is List<string> erroresPerfil)
+        {
+            <div class="mi-perfil-errors" role="alert">
+                @foreach (string error in erroresPerfil)
+                {
+                    <div>@error</div>
+                }
             </div>
+        }
 
-            <div class="mi-perfil-actions">
-                <button type="button" class="mi-perfil-action-btn">Editar perfil</button>
+        <div class="mi-perfil-content">
+            <form asp-controller="Session" asp-action="EditarPerfil" method="post" id="miPerfilForm">
+                @Html.AntiForgeryToken()
+                <div class="mi-perfil-grid">
+                    <div class="mi-perfil-field">
+                        <input id="perfilNombre" name="nombre" type="text" value="@(usuario?.Nombre ?? "Nombre")" placeholder="Nombre" readonly />
+                    </div>
+
+                    <div class="mi-perfil-field">
+                        <input id="perfilApellido" name="apellido" type="text" value="@(usuario?.Apellido ?? "Apellido")" placeholder="Apellido" readonly />
+                    </div>
+
+                    <div class="mi-perfil-field mi-perfil-field-full">
+                        <input id="perfilMail" name="mail" type="email" value="@(usuario?.Mail ?? "email@ejemplo.com")" placeholder="Email" readonly />
+                    </div>
+
+                    <div class="mi-perfil-field mi-perfil-field-full">
+                        <input id="perfilUsuario" name="nombreUsuario" type="text" value="@(usuario?.NombreUsuario ?? "usuario")" placeholder="Nombre de usuario" readonly />
+                    </div>
+
+                    <div class="mi-perfil-field mi-perfil-field-full">
+                        <input id="perfilCiudad" name="ciudad" type="text" value="@(usuario?.Ciudad ?? "Ciudad")" placeholder="Ciudad" readonly />
+                    </div>
+
+                    <div class="mi-perfil-field mi-perfil-field-full">
+                        <input id="perfilFecha" name="fechaNacimiento" type="text"
+                               value="@(usuario?.FechaNacimiento != null && usuario.FechaNacimiento != default ? usuario.FechaNacimiento.ToString("dd/MM/yyyy") : "Fecha de nacimiento")"
+                               data-fecha="@(usuario?.FechaNacimiento != null && usuario.FechaNacimiento != default ? usuario.FechaNacimiento.ToString("yyyy-MM-dd") : "")"
+                               placeholder="Fecha de nacimiento" readonly />
+                    </div>
+
+                    <div class="mi-perfil-field mi-perfil-field-large">
+                        <input type="text" value="@(usuario?.DNI > 0 ? usuario.DNI.ToString() : "DNI")" aria-label="DNI" readonly />
+                    </div>
+
+                    <div class="mi-perfil-bridge">
+                        <img class="mi-perfil-bridge-logo" src="~/img/logoSwidgeNegroTransparente.png" alt="Swidge" />
+                    </div>
+                </div>
+
+                <div class="mi-perfil-edit-actions" id="miPerfilEditActions">
+                    <button type="submit" class="mi-perfil-action-btn">Guardar cambios</button>
+                    <button type="button" class="mi-perfil-action-btn mi-perfil-action-btn-secondary" id="cancelarEditarPerfil">Cancelar</button>
+                </div>
+            </form>
+
+            <div class="mi-perfil-actions" id="miPerfilActions">
+                <button type="button" class="mi-perfil-action-btn" id="editarPerfil">Editar perfil</button>
                 <a class="mi-perfil-action-btn" asp-controller="Home" asp-action="EntradasCompradas">Ver entradas compradas</a>
                 <a class="mi-perfil-action-btn" asp-controller="Home" asp-action="EntradasPublicadas">Ver entradas publicadas</a>
                 <a class="mi-perfil-action-btn" asp-controller="Home" asp-action="CambiarContraseña">Cambiar contraseña</a>
@@ -60,3 +81,52 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        const editarPerfil = document.getElementById('editarPerfil');
+        const cancelarEditarPerfil = document.getElementById('cancelarEditarPerfil');
+        const accionesPerfil = document.getElementById('miPerfilActions');
+        const accionesEdicion = document.getElementById('miPerfilEditActions');
+        const camposEditables = [
+            document.getElementById('perfilNombre'),
+            document.getElementById('perfilApellido'),
+            document.getElementById('perfilMail'),
+            document.getElementById('perfilUsuario'),
+            document.getElementById('perfilCiudad'),
+            document.getElementById('perfilFecha')
+        ];
+
+        const fecha = document.getElementById('perfilFecha');
+        const fechaVisible = fecha.value;
+        const valoresOriginales = camposEditables.map(campo => campo.value);
+
+        editarPerfil.addEventListener('click', function () {
+            camposEditables.forEach(campo => {
+                campo.readOnly = false;
+                campo.classList.add('mi-perfil-field-editing');
+            });
+
+            fecha.type = 'date';
+            fecha.value = fecha.dataset.fecha;
+            accionesPerfil.style.display = 'none';
+            accionesEdicion.style.display = 'flex';
+            camposEditables[0].focus();
+        });
+
+        cancelarEditarPerfil.addEventListener('click', function () {
+            camposEditables.forEach((campo, indice) => {
+                campo.value = valoresOriginales[indice];
+                campo.readOnly = true;
+                campo.classList.remove('mi-perfil-field-editing');
+            });
+
+            fecha.type = 'text';
+            fecha.value = fechaVisible;
+            accionesEdicion.style.display = 'none';
+            accionesPerfil.style.display = 'flex';
+        });
+
+        accionesEdicion.style.display = 'none';
+    </script>
+}

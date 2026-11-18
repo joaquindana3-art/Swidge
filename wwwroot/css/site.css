@@ -3220,15 +3220,14 @@ img.usuario {
 
 /* Notificación de contraseña cambiada */
 .mi-perfil-success {
-  margin: 18px 30px 0;
-  padding: 12px 16px;
-  border: 1px solid #8fca9b;
+  margin: 16px 30px 0;
   border-radius: 8px;
   background: #eaf7ed;
-  color: #1f6b32;
+  color: #1f6d32;
+  padding: 12px 16px;
   text-align: center;
-  font-weight: 700;
 }
+
 /* Recuperar contraseña */
 .forgot-password-page {
   min-height: calc(100vh - 140px);
@@ -3369,4 +3368,45 @@ img.usuario {
   .forgot-password-form input {
     max-width: 320px;
   }
+}
+
+.mi-perfil-field input.mi-perfil-field-editing {
+  background: #fff;
+  border: 2px solid #3e7af4;
+  box-shadow: 0 0 0 3px rgba(62, 122, 244, 0.12);
+}
+
+.mi-perfil-edit-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.mi-perfil-action-btn-secondary {
+  background: #e5e7eb;
+  color: #1f1f1f;
+}
+
+.mi-perfil-action-btn-secondary:hover {
+  background: #d9dce2;
+  color: #1f1f1f;
+}
+
+.mi-perfil-errors {
+  margin: 16px 30px 0;
+  border-radius: 8px;
+  background: #fdecec;
+  color: #9b1c1c;
+  padding: 12px 16px;
+  text-align: center;
+}
+
+.mi-perfil-success {
+  margin: 16px 30px 0;
+  border-radius: 8px;
+  background: #eaf7ed;
+  color: #1f6d32;
+  padding: 12px 16px;
+  text-align: center;
 }
