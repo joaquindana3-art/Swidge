@@ -1,26 +1,26 @@
 @{
     ViewData["Title"] = "Compra exitosa";
 
-    var entrada = ViewBag.Entrada as Swidge.Models.Entrada ?? new Swidge.Models.Entrada();
-    var evento = ViewBag.Evento as Swidge.Models.Evento ?? entrada.Evento ?? new Swidge.Models.Evento();
-    var vendedor = ViewBag.Vendedor as Swidge.Models.Usuario ?? entrada.Vendedor ?? new Swidge.Models.Usuario();
-    var ubicacion = ViewBag.Ubicacion as Swidge.Models.Ubicacion ?? entrada.Ubicacion ?? new Swidge.Models.Ubicacion();
+    Swidge.Models.Entrada entrada = ViewBag.Entrada as Swidge.Models.Entrada ?? new Swidge.Models.Entrada();
+    Swidge.Models.Evento evento = ViewBag.Evento as Swidge.Models.Evento ?? entrada.Evento ?? new Swidge.Models.Evento();
+    Swidge.Models.Usuario vendedor = ViewBag.Vendedor as Swidge.Models.Usuario ?? entrada.Vendedor ?? new Swidge.Models.Usuario();
+    Swidge.Models.Ubicacion ubicacion = ViewBag.Ubicacion as Swidge.Models.Ubicacion ?? entrada.Ubicacion ?? new Swidge.Models.Ubicacion();
 
-    var imagenEvento = string.IsNullOrWhiteSpace(evento.Imagen)
+    string imagenEvento = string.IsNullOrWhiteSpace(evento.Imagen)
         ? Url.Content("~/img/default-event.jpg")
         : Url.Content("~/img/" + evento.Imagen);
 
-    var numeroOrden = entrada.ID > 0 ? entrada.ID.ToString() : "-";
-    var nombreVendedor = !string.IsNullOrWhiteSpace(vendedor.Nombre) || !string.IsNullOrWhiteSpace(vendedor.Apellido)
+    string numeroOrden = entrada.ID > 0 ? entrada.ID.ToString() : "-";
+    string nombreVendedor = !string.IsNullOrWhiteSpace(vendedor.Nombre) || !string.IsNullOrWhiteSpace(vendedor.Apellido)
         ? $"{vendedor.Nombre} {vendedor.Apellido}".Trim()
         : (!string.IsNullOrWhiteSpace(vendedor.NombreUsuario) ? vendedor.NombreUsuario : "-");
-    var usuarioVendedor = !string.IsNullOrWhiteSpace(vendedor.NombreUsuario) ? vendedor.NombreUsuario : "-";
-    var fechaEvento = evento.Fecha != default ? evento.Fecha.ToString("dd / MM / yyyy") : "-";
-    var nombreEvento = !string.IsNullOrWhiteSpace(evento.Nombre) ? evento.Nombre : "-";
-    var ubicacionTexto = !string.IsNullOrWhiteSpace(ubicacion.NombreSector)
+    string usuarioVendedor = !string.IsNullOrWhiteSpace(vendedor.NombreUsuario) ? vendedor.NombreUsuario : "-";
+    string fechaEvento = evento.Fecha != default ? evento.Fecha.ToString("dd / MM / yyyy") : "-";
+    string nombreEvento = !string.IsNullOrWhiteSpace(evento.Nombre) ? evento.Nombre : "-";
+    string ubicacionTexto = !string.IsNullOrWhiteSpace(ubicacion.NombreSector)
         ? $"{ubicacion.NombreSector}{(ubicacion.Fila.HasValue ? $", fila {ubicacion.Fila.Value}" : "")}{(ubicacion.Asiento.HasValue ? $", asiento {ubicacion.Asiento.Value}" : "")}"
         : "-";
-    var precio = entrada.Precio > 0 ? entrada.Precio.ToString("N0") : "0";
+    string precio = entrada.Precio > 0 ? entrada.Precio.ToString("N0") : "0";
 }
 
 <div class="compra-exitosa-page">

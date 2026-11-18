@@ -1,7 +1,7 @@
 @{
     ViewData["Title"] = "Mi perfil";
-    var usuario = ViewBag.Usuario as Swidge.Models.Usuario;
-    var mensaje = TempData["Mensaje"] as string;
+    Swidge.Models.Usuario? usuario = ViewBag.Usuario as Swidge.Models.Usuario;
+    string? mensaje = TempData["Mensaje"] as string;
 }
 
 <div class="mi-perfil-page">
