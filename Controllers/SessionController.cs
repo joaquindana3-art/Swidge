@@ -17,11 +17,21 @@ public class SessionController : Controller
             return RedirectToAction("Index", "Home");
 
         }
-        Usuario encontrado = bd.ObtenerUsuarioParaLogin(nombreUsuario, contrasena);
+        Usuario? encontrado = bd.ObtenerUsuarioParaLogin(nombreUsuario ?? "");
+        bool credencialesOk;
         if (encontrado == null)
         {
             // Se hace un hash falso para que el tiempo de respuesta sea similar al de un login válido.
-            BCrypt.Net.BCrypt.Verify(contrasena, _hashFalso);
+            VerificarContrasena(contrasena ?? "", _hashFalso);
+            credencialesOk = false;
+        }
+        else
+        {
+            credencialesOk = VerificarContrasena(contrasena ?? "", encontrado.Contraseña);
+        }
+
+        if (!credencialesOk || encontrado == null)
+        {
             TempData["ErrorMessage"] = "Usuario o contraseña incorrectos.";
             return RedirectToAction("IniciarSesion", "Home");
         }
@@ -64,6 +74,8 @@ public class SessionController : Controller
             ViewBag.Errores = errores;
             return View("~/Views/Home/Registrarse.cshtml", datos);
         }
+        // La contraseña se guarda hasheada (BCrypt genera la sal y la incluye en el hash).
+        datos.Contraseña = BCrypt.Net.BCrypt.HashPassword(contrasena);
         bd.AgregarUsuario(datos);
         GuardarSesion(datos);
         return RedirectToAction("Index", "Home");
