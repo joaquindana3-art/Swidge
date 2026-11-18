@@ -18,10 +18,10 @@
     else
     {
         <div class="entradas-list">
-            @foreach (var transaccion in historial)
+            @foreach (HistorialTransaccion transaccion in historial)
             {
                 bool esCompra = transaccion.Tipo == "Compra";
-                var imagenEvento = string.IsNullOrWhiteSpace(transaccion.Imagen)
+                string imagenEvento = string.IsNullOrWhiteSpace(transaccion.Imagen)
                     ? Url.Content("~/img/null.jpg")
                     : Url.Content("~/img/" + transaccion.Imagen);
 

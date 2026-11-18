@@ -24,13 +24,13 @@ public class HomeController : Controller
         if (string.IsNullOrWhiteSpace(valor))
             return string.Empty;
 
-        var texto = valor.Trim();
-        var normalizado = texto.Normalize(System.Text.NormalizationForm.FormD);
-        var builder = new StringBuilder();
+        string texto = valor.Trim();
+        string normalizado = texto.Normalize(System.Text.NormalizationForm.FormD);
+        StringBuilder builder = new StringBuilder();
 
-        foreach (var ch in normalizado)
+        foreach (char ch in normalizado)
         {
-            var categoria = CharUnicodeInfo.GetUnicodeCategory(ch);
+            UnicodeCategory categoria = CharUnicodeInfo.GetUnicodeCategory(ch);
             if (categoria != UnicodeCategory.NonSpacingMark)
             {
                 builder.Append(ch);
@@ -59,9 +59,9 @@ public class HomeController : Controller
             precioMaximo = precioMaximoBD;
         }
 
-        foreach (var entrada in listaEntradas)
+        foreach (Entrada entrada in listaEntradas)
         {
-            var vendedor = bd.GetVendedores().FirstOrDefault(v => v.ID == entrada.IDVendedor);
+            Vendedor? vendedor = bd.GetVendedores().FirstOrDefault(v => v.ID == entrada.IDVendedor);
             if (vendedor != null)
             {
                 entrada.Vendedor = bd.GetUsuarios().FirstOrDefault(u => u.DNI == vendedor.DNIusuario);
@@ -69,7 +69,7 @@ public class HomeController : Controller
 
             if (entrada.Evento != null)
             {
-                var estadio = bd.GetEstadios().FirstOrDefault(e => e.ID == entrada.Evento.IDEstadio);
+                Estadio? estadio = bd.GetEstadios().FirstOrDefault(e => e.ID == entrada.Evento.IDEstadio);
                 if (estadio != null)
                 {
                     entrada.Evento.Lugar = estadio.NombreLugar;
@@ -78,7 +78,7 @@ public class HomeController : Controller
             }
         }
 
-        var provinciasDisponibles = listaEntradas
+        List<string> provinciasDisponibles = listaEntradas
             .Where(e => e.Evento != null && !string.IsNullOrWhiteSpace(e.Evento.Provincia))
             .Select(e => e.Evento.Provincia.Trim())
             .Distinct(StringComparer.OrdinalIgnoreCase)
@@ -112,7 +112,7 @@ public class HomeController : Controller
                 .ToList();
         }
 
-        var categoriasDisponibles = bd.GetCategoriasDisponibles();
+        List<string> categoriasDisponibles = bd.GetCategoriasDisponibles();
         ViewBag.listaEntradas = listaEntradas;
         ViewBag.provinciaSeleccionada = provincia;
         ViewBag.ciudadSeleccionada = provincia;
@@ -169,20 +169,20 @@ public class HomeController : Controller
             return RedirectToAction("IniciarSesion", "Home");
         }
 
-        var eventoSeleccionado = bd.GetEventoPorId(IDevento);
+        Evento? eventoSeleccionado = bd.GetEventoPorId(IDevento);
         if (eventoSeleccionado == null)
         {
             return RedirectToAction("PublicarEntrada", "Home");
         }
 
-        var estadioEvento = bd.GetEstadios().FirstOrDefault(e => e.ID == eventoSeleccionado.IDEstadio);
+        Estadio? estadioEvento = bd.GetEstadios().FirstOrDefault(e => e.ID == eventoSeleccionado.IDEstadio);
         if (estadioEvento != null)
         {
             eventoSeleccionado.Lugar = estadioEvento.NombreLugar;
             eventoSeleccionado.Provincia = bd.GetProvinciaPorId(estadioEvento.IdProvincia ?? 0)?.Nombre ?? "";
         }
 
-        var ubicacionDuplicada = bd.ExisteUbicacionDuplicada(IDevento, NombreSector, Fila, Asiento);
+        bool ubicacionDuplicada = bd.ExisteUbicacionDuplicada(IDevento, NombreSector, Fila, Asiento);
         if (ubicacionDuplicada)
         {
             TempData["ErrorMessage"] = "Ya existe una ubicación igual para este estadio y fecha. Cambiá la fila, el asiento o el sector.";
@@ -209,7 +209,7 @@ public class HomeController : Controller
         int idEntrada = bd.PublicarEntrada(IDevento, idVendedor, precioVenta, qr, idUbicacion);
         bd.ActualizarUbicacionEntrada(idUbicacion, idEntrada);
 
-        var entradaPublicada = bd.BuscarEntradaPorId(idEntrada);
+        Entrada? entradaPublicada = bd.BuscarEntradaPorId(idEntrada);
         if (entradaPublicada == null)
         {
             entradaPublicada = new Entrada
@@ -245,7 +245,7 @@ public class HomeController : Controller
         }
 
         BD bd = new BD();
-        var entrada = bd.GetEntradaPorId(id);
+        Entrada? entrada = bd.GetEntradaPorId(id);
 
         if (entrada == null)
             return RedirectToAction("Index", "Home");
@@ -305,7 +305,7 @@ public class HomeController : Controller
         }
 
         BD bd = new BD();
-        var entrada = bd.GetEntradaPorId(id);
+        Entrada? entrada = bd.GetEntradaPorId(id);
 
         if (entrada == null)
             return RedirectToAction("Index", "Home");
@@ -397,7 +397,7 @@ public class HomeController : Controller
         usuario.Contraseña = "";
         ViewBag.Usuario = usuario;
 
-        var proximosEventos = bd.GetProximosEventosComprados(dniSesion.Value);
+        List<Entrada> proximosEventos = bd.GetProximosEventosComprados(dniSesion.Value);
         ViewBag.ProximosEventos = proximosEventos;
 
         return View();
@@ -473,7 +473,7 @@ public class HomeController : Controller
         if (entrada.Vendedor?.DNI == dniUsuario)
             return true;
 
-        var vendedor = new BD().BuscarVendedorPorID(entrada.IDVendedor);
+        Vendedor? vendedor = new BD().BuscarVendedorPorID(entrada.IDVendedor);
         return vendedor?.DNIusuario == dniUsuario;
     }
 }

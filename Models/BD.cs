@@ -15,7 +15,7 @@ public class BD
             string query = "SELECT * FROM Usuario";
             usuarios = connection.Query<Usuario>(query).ToList();
 
-            foreach (var usuario in usuarios)
+            foreach (Usuario usuario in usuarios)
             {
                 usuario.NumeroTarjeta = string.IsNullOrWhiteSpace(usuario.NumeroTarjeta) ? null : EncryptionHelper.Decrypt(usuario.NumeroTarjeta);
                 usuario.CodigoSeguridad = string.IsNullOrWhiteSpace(usuario.CodigoSeguridad) ? null : EncryptionHelper.Decrypt(usuario.CodigoSeguridad);
@@ -60,7 +60,7 @@ public class BD
                 "SELECT * FROM dbo.Entrada WHERE Vendida = 0"
             ).ToList();
 
-            foreach (var entrada in entradas)
+            foreach (Entrada entrada in entradas)
             {
                 entrada.Evento = connection.QueryFirstOrDefault<Evento>(
                     "SELECT * FROM dbo.Evento WHERE ID = @ID",
@@ -68,13 +68,13 @@ public class BD
 
                 if (entrada.Evento != null)
                 {
-                    var categoria = connection.QueryFirstOrDefault<dynamic>(
+                    dynamic categoria = connection.QueryFirstOrDefault<dynamic>(
                         "SELECT Nombre FROM dbo.Categoria WHERE ID = @ID",
                         new { ID = entrada.Evento.IDCategoria });
 
                     entrada.Evento.Categoria = categoria?.Nombre ?? "";
 
-                    var estadio = connection.QueryFirstOrDefault<Estadio>(
+                    Estadio? estadio = connection.QueryFirstOrDefault<Estadio>(
                         "SELECT * FROM dbo.Estadio WHERE ID = @ID",
                         new { ID = entrada.Evento.IDEstadio });
 
@@ -214,7 +214,7 @@ public class BD
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
             string query = "SELECT TOP 1 * FROM [dbo].[Usuario] WHERE [DNI] = @DNI";
-            var usuario = connection.QueryFirstOrDefault<Usuario>(query, new { DNI = dni });
+            Usuario? usuario = connection.QueryFirstOrDefault<Usuario>(query, new { DNI = dni });
 
             if (usuario == null)
                 return null;
@@ -280,7 +280,7 @@ public class BD
 
         if (entrada.Evento != null)
         {
-            var estadio = connection.QueryFirstOrDefault<Estadio>(
+            Estadio? estadio = connection.QueryFirstOrDefault<Estadio>(
                 "SELECT * FROM dbo.Estadio WHERE ID = @ID",
                 new { ID = entrada.Evento.IDEstadio });
 
@@ -456,7 +456,7 @@ public class BD
             commandType: CommandType.StoredProcedure
         ).ToList();
 
-        foreach (var entrada in entradasCompradas)
+        foreach (Entrada entrada in entradasCompradas)
         {
             entrada.Evento = connection.QueryFirstOrDefault<Evento>(
                 "SELECT * FROM dbo.Evento WHERE ID = @ID",
@@ -488,7 +488,7 @@ public class BD
                 commandType: CommandType.StoredProcedure
             ).ToList();
 
-            foreach (var entrada in entradasPublicadas)
+            foreach (Entrada entrada in entradasPublicadas)
             {
                 entrada.Evento = connection.QueryFirstOrDefault<Evento>(
                     "SELECT * FROM dbo.Evento WHERE ID = @ID",
@@ -547,7 +547,7 @@ public class BD
 
             entradas = connection.Query<Entrada>(query, new { DNI = dni, Hoy = DateTime.Now }).ToList();
 
-            foreach (var entrada in entradas)
+            foreach (Entrada entrada in entradas)
             {
                 entrada.Evento = connection.QueryFirstOrDefault<Evento>(
                     "SELECT * FROM dbo.Evento WHERE ID = @ID",
