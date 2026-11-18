@@ -1,5 +1,6 @@
 <main class="container my-4 publicar-page">
     <form id="formPublicarEntrada" action='@Url.Action("ConfirmacionEntradaPublicada", "Home")' method="post" enctype="multipart/form-data" novalidate>
+        @Html.AntiForgeryToken()
         <div class="publicar-busqueda">
             <div class="publicar-busqueda-label">
                 <span class="icon-search" aria-hidden="true">
