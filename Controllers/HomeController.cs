@@ -393,7 +393,7 @@ public class HomeController : Controller
     public IActionResult OlvideMiContraseña()
     {
         int? dniSesion = HttpContext.Session.GetInt32("DNI");
-        if (dniSesion != null) {
+        if (dniSesion == null) {
             return RedirectToAction("Index", "Home");
         }
         return View();
