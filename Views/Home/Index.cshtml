@@ -82,7 +82,14 @@
                                     <p class="text-muted">📍 @evento.Lugar</p>
                                     <div class="d-flex justify-content-between align-items-center mt-3">
                                         <span class="fw-bold text-danger fs-5">$@item.Precio.ToString("N0")</span>
-                                        <a href="@Url.Action("DetalleEntrada", "Home", new { id = item.ID })" class="btn btn-primary btn-sm">Comprar</a>
+                                        @if (item.Vendedor?.DNI == ViewBag.UsuarioActualDni)
+                                        {
+                                            <span class="btn btn-secondary btn-sm disabled" aria-disabled="true">Tu entrada</span>
+                                        }
+                                        else
+                                        {
+                                            <a href="@Url.Action("DetalleEntrada", "Home", new { id = item.ID })" class="btn btn-primary btn-sm">Comprar</a>
+                                        }
                                     </div>
                                 </div>
                             </div>
