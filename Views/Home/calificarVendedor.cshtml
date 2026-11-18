@@ -1,0 +1,99 @@
+@model Swidge.Models.Entrada
+
+@{
+    ViewData["Title"] = "Calificar vendedor";
+    Swidge.Models.Usuario vendedor = Model?.Vendedor ?? new Swidge.Models.Usuario();
+    Swidge.Models.Evento evento = Model?.Evento ?? new Swidge.Models.Evento();
+    Swidge.Models.Ubicacion ubicacion = Model?.Ubicacion ?? new Swidge.Models.Ubicacion();
+    bool yaCalifico = ViewBag.JaCalifico == true;
+
+    string nombreVendedor = !string.IsNullOrWhiteSpace(vendedor.Nombre) || !string.IsNullOrWhiteSpace(vendedor.Apellido)
+        ? $"{vendedor.Nombre} {vendedor.Apellido}".Trim()
+        : "Vendedor";
+
+    string ubicacionEntrada = !string.IsNullOrWhiteSpace(ubicacion.NombreSector)
+        ? $"{ubicacion.NombreSector}{(ubicacion.Fila.HasValue ? $", fila {ubicacion.Fila.Value}" : "")}{(ubicacion.Asiento.HasValue ? $", asiento {ubicacion.Asiento.Value}" : "")}"
+        : "Ubicación no disponible";
+}
+
+<div class="container my-4 entradas-page">
+    <div class="entradas-header entradas-header-compradas">
+        <small>OPINIÓN DE TU COMPRA</small>
+        <h1>CALIFICAR VENDEDOR</h1>
+    </div>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
+    <div class="row g-4">
+        <div class="col-12 col-lg-5">
+            <section class="card shadow-sm border-0 h-100">
+                <div class="card-body p-4">
+                    <h3 class="h5 mb-3">Datos del vendedor</h3>
+                    <p class="mb-2"><strong>Nombre:</strong> @nombreVendedor</p>
+                    <p class="mb-2"><strong>Usuario:</strong> @(!string.IsNullOrWhiteSpace(vendedor.NombreUsuario) ? vendedor.NombreUsuario : "-")</p>
+                    <p class="mb-2"><strong>DNI:</strong> @(vendedor.DNI > 0 ? vendedor.DNI.ToString() : "-")</p>
+                    <p class="mb-0"><strong>Ciudad:</strong> @(!string.IsNullOrWhiteSpace(vendedor.Ciudad) ? vendedor.Ciudad : "-")</p>
+                </div>
+            </section>
+        </div>
+
+        <div class="col-12 col-lg-7">
+            <section class="card shadow-sm border-0 h-100">
+                <div class="card-body p-4">
+                    <h3 class="h5 mb-3">Datos de la entrada</h3>
+                    <p class="mb-2"><strong>Entrada:</strong> #@Model.ID</p>
+                    <p class="mb-2"><strong>Evento:</strong> @(string.IsNullOrWhiteSpace(evento.Nombre) ? "-" : evento.Nombre)</p>
+                    <p class="mb-2"><strong>Fecha:</strong> @(evento.Fecha != default ? evento.Fecha.ToString("dddd dd/MM/yyyy") : "-")</p>
+                    <p class="mb-2"><strong>Lugar:</strong> @(string.IsNullOrWhiteSpace(evento.Lugar) ? "-" : evento.Lugar)</p>
+                    <p class="mb-2"><strong>Ubicación:</strong> @ubicacionEntrada</p>
+                    <p class="mb-0"><strong>Precio pagado:</strong> $@Model.Precio.ToString("N0")</p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <section class="card shadow-sm border-0 mt-4">
+        <div class="card-body p-4">
+            <h3 class="h5 mb-3">Tu opinión</h3>
+
+            @if (yaCalifico)
+            {
+                <div class="alert alert-secondary mb-0">
+                    Ya calificaste al vendedor de esta entrada.
+                </div>
+            }
+            else
+            {
+                <form method="post" action="@Url.Action("calificarVendedor", "Home")">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.ID" />
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Calificación</label>
+                        <div class="d-flex gap-3 flex-wrap">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <label class="form-check-label">
+                                    <input class="form-check-input me-1" type="radio" name="calificacion" value="@i" required />
+                                    @i ⭐
+                                </label>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold" for="descripcion">Comentario</label>
+                        <textarea id="descripcion" name="descripcion" class="form-control" rows="4" maxlength="50" required placeholder="Contanos cómo fue tu experiencia"></textarea>
+                        <div class="form-text">Máximo 50 caracteres.</div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Enviar calificación</button>
+                    <a href="@Url.Action("EntradasCompradas", "Home")" class="btn btn-outline-secondary ms-2">Volver</a>
+                </form>
+            }
+        </div>
+    </section>
+</div>
