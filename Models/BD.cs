@@ -43,7 +43,7 @@ public class BD
         List<Comentario> comentarios = new List<Comentario>();
         using (SqlConnection connection = new SqlConnection(_connectionString)) {
 
-            string query = "SELECT * FROM Comentario";
+            string query = "SELECT ID, Calificacion, Comentario AS ComentarioTexto, DNIusuario FROM dbo.Comentario";
             comentarios = connection.Query<Comentario>(query).ToList();
 
         }
@@ -764,6 +764,67 @@ public class BD
                 Ciudad = ciudad,
                 Mail = mail
             });
+        }
+    }
+
+    public bool ExisteCalificacion(int idVendedor, int dniUsuario)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            string query = @"SELECT COUNT(*)
+                             FROM dbo.VendedorXComentario vxc
+                             INNER JOIN dbo.Comentario c ON c.ID = vxc.IDcomentario
+                             WHERE vxc.IDvendedor = @IDVendedor
+                               AND c.DNIusuario = @DNIUsuario";
+
+            int cantidad = connection.ExecuteScalar<int>(query, new
+            {
+                IDVendedor = idVendedor,
+                DNIUsuario = dniUsuario
+            });
+
+            return cantidad > 0;
+        }
+    }
+
+    public void GuardarCalificacion(int idVendedor, int dniUsuario, decimal calificacion, string comentario)
+    {
+        using (SqlConnection connection = new SqlConnection(_connectionString))
+        {
+            connection.Open();
+            SqlTransaction transaction = connection.BeginTransaction();
+
+            try
+            {
+                int idComentario = connection.ExecuteScalar<int>(
+                    @"INSERT INTO dbo.Comentario (Calificacion, Comentario, DNIusuario)
+                      VALUES (@Calificacion, @Comentario, @DNIUsuario);
+                      SELECT CAST(SCOPE_IDENTITY() AS int);",
+                    new
+                    {
+                        Calificacion = calificacion,
+                        Comentario = comentario,
+                        DNIUsuario = dniUsuario
+                    },
+                    transaction);
+
+                connection.Execute(
+                    @"INSERT INTO dbo.VendedorXComentario (IDvendedor, IDcomentario)
+                      VALUES (@IDVendedor, @IDComentario)",
+                    new
+                    {
+                        IDVendedor = idVendedor,
+                        IDComentario = idComentario
+                    },
+                    transaction);
+
+                transaction.Commit();
+            }
+            catch
+            {
+                transaction.Rollback();
+                throw;
+            }
         }
     }
 }

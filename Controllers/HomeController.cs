@@ -487,4 +487,83 @@ public class HomeController : Controller
         var vendedor = new BD().BuscarVendedorPorID(entrada.IDVendedor);
         return vendedor?.DNIusuario == dniUsuario;
     }
+
+    public IActionResult calificarVendedor(int id)
+    {
+        int? dniSesion = HttpContext.Session.GetInt32("DNI");
+        if (dniSesion == null)
+        {
+            return RedirectToAction("IniciarSesion", "Home");
+        }
+
+        BD bd = new BD();
+        Entrada? entrada = bd.GetEntradaDetallePorId(id);
+
+        if (entrada == null || !entrada.Vendida || entrada.DNIusuario != dniSesion.Value)
+        {
+            TempData["ErrorMessage"] = "Solo podés calificar al vendedor de una entrada que hayas comprado.";
+            return RedirectToAction("EntradasCompradas", "Home");
+        }
+
+        if (entrada.Vendedor == null)
+        {
+            Vendedor vendedor = bd.BuscarVendedorPorID(entrada.IDVendedor);
+            if (vendedor != null)
+            {
+                entrada.Vendedor = bd.ObtenerUsuarioPorDNI(vendedor.DNIusuario);
+            }
+        }
+
+        ViewBag.JaCalifico = bd.ExisteCalificacion(entrada.IDVendedor, dniSesion.Value);
+        return View(entrada);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult calificarVendedor(int id, decimal calificacion, string descripcion)
+    {
+        int? dniSesion = HttpContext.Session.GetInt32("DNI");
+        if (dniSesion == null)
+        {
+            return RedirectToAction("IniciarSesion", "Home");
+        }
+
+        BD bd = new BD();
+        Entrada? entrada = bd.GetEntradaDetallePorId(id);
+
+        if (entrada == null || !entrada.Vendida || entrada.DNIusuario != dniSesion.Value)
+        {
+            TempData["ErrorMessage"] = "Solo podés calificar al vendedor de una entrada que hayas comprado.";
+            return RedirectToAction("EntradasCompradas", "Home");
+        }
+
+        if (calificacion < 1 || calificacion > 5)
+        {
+            TempData["ErrorMessage"] = "La calificación debe estar entre 1 y 5.";
+            return RedirectToAction("calificarVendedor", "Home", new { id = id });
+        }
+
+        if (string.IsNullOrWhiteSpace(descripcion))
+        {
+            TempData["ErrorMessage"] = "Ingresá un comentario para el vendedor.";
+            return RedirectToAction("calificarVendedor", "Home", new { id = id });
+        }
+
+        string comentario = descripcion.Trim();
+        if (comentario.Length > 50)
+        {
+            TempData["ErrorMessage"] = "El comentario no puede superar los 50 caracteres.";
+            return RedirectToAction("calificarVendedor", "Home", new { id = id });
+        }
+
+        if (bd.ExisteCalificacion(entrada.IDVendedor, dniSesion.Value))
+        {
+            TempData["ErrorMessage"] = "Ya calificaste al vendedor de esta entrada.";
+            return RedirectToAction("EntradasCompradas", "Home");
+        }
+
+        bd.GuardarCalificacion(entrada.IDVendedor, dniSesion.Value, calificacion, comentario);
+        TempData["Mensaje"] = "Tu calificación fue enviada correctamente.";
+        return RedirectToAction("EntradasCompradas", "Home");
+    }
 }

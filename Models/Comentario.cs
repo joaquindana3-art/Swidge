@@ -5,4 +5,5 @@ public class Comentario
     public int ID { get; set; }
     public decimal Calificacion { get; set; }
     public string ComentarioTexto { get; set; } = "";
+    public int DNIusuario { get; set; }
 }
