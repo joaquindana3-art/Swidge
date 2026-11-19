@@ -160,11 +160,6 @@ public class SessionController : Controller
         return RedirectToAction("MiPerfil", "Home");
     }
 
-    public IActionResult OlvideMiContraseña()
-    {
-        return View();
-    }
-
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult EditarPerfil(string nombre, string apellido, string nombreUsuario,

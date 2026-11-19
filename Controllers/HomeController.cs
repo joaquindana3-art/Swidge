@@ -419,15 +419,6 @@ public class HomeController : Controller
         return View();
     }
 
-    public IActionResult OlvideMiContraseña()
-    {
-        int? dniSesion = HttpContext.Session.GetInt32("DNI");
-        if (dniSesion == null) {
-            return RedirectToAction("Index", "Home");
-        }
-        return View();
-    }
-
     public IActionResult PagoEntrada()
     {
         int? dniSesion = HttpContext.Session.GetInt32("DNI");
