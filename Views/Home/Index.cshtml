@@ -8,6 +8,7 @@
     string categoriaSeleccionada = ViewBag.categoriaSeleccionada?.ToString() ?? "Todos";
     decimal precioMaximo = ViewBag.precioMaximo != null ? Convert.ToDecimal(ViewBag.precioMaximo) : 0m;
     decimal precioMaximoBD = ViewBag.precioMaximoBD != null ? Convert.ToDecimal(ViewBag.precioMaximoBD) : 0m;
+    bool excluirMisEntradas = ViewBag.excluirMisEntradas == true;
 }
      
     <section class="section-carrusel">
@@ -164,6 +165,13 @@
                     <input type="hidden" id="precioMaximoReal" name="precioMaximo" value="@precioMaximo" />
                 </div>
 
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="excluirMisEntradas" name="excluirMisEntradas" value="true" @(excluirMisEntradas ? "checked" : "") />
+                    <label class="form-check-label" for="excluirMisEntradas">
+                        Excluir mis entradas
+                    </label>
+                </div>
+
                 <script>
                     document.addEventListener('DOMContentLoaded', function () {
                         const form = document.getElementById('filtrosForm');
@@ -197,12 +205,21 @@
                     document.addEventListener('DOMContentLoaded', function () {
                         const form = document.getElementById('filtrosForm');
                         const provincia = document.getElementById('provinciaFiltro');
+                        const excluirMisEntradas = document.getElementById('excluirMisEntradas');
 
-                        if (!form || !provincia) return;
+                        if (!form) return;
 
-                        provincia.addEventListener('change', function () {
-                            form.submit();
-                        });
+                        if (provincia) {
+                            provincia.addEventListener('change', function () {
+                                form.submit();
+                            });
+                        }
+
+                        if (excluirMisEntradas) {
+                            excluirMisEntradas.addEventListener('change', function () {
+                                form.submit();
+                            });
+                        }
                     });
                 </script>
 

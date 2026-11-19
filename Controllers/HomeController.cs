@@ -40,7 +40,7 @@ public class HomeController : Controller
         return builder.ToString().Normalize(System.Text.NormalizationForm.FormC).Trim();
     }
 
-    public IActionResult Index(string provincia = "Todos", string categoria = "Todos", decimal? precioMaximo = null)
+    public IActionResult Index(string provincia = "Todos", string categoria = "Todos", decimal? precioMaximo = null, bool excluirMisEntradas = false)
     {
         BD bd = new BD();
         int? dniSesion = HttpContext.Session.GetInt32("DNI");
@@ -112,6 +112,13 @@ public class HomeController : Controller
                 .ToList();
         }
 
+        if (excluirMisEntradas && dniSesion.HasValue)
+        {
+            listaEntradas = listaEntradas
+                .Where(e => e.Vendedor == null || e.Vendedor.DNI != dniSesion.Value)
+                .ToList();
+        }
+
         List<string> categoriasDisponibles = bd.GetCategoriasDisponibles();
         ViewBag.listaEntradas = listaEntradas;
         ViewBag.provinciaSeleccionada = provincia;
@@ -119,6 +126,8 @@ public class HomeController : Controller
         ViewBag.categoriaSeleccionada = categoria;
         ViewBag.precioMaximo = precioMaximo ?? precioMaximoBD;
         ViewBag.precioMaximoBD = precioMaximoBD;
+        ViewBag.excluirMisEntradas = excluirMisEntradas;
+
         ViewBag.Ciudades = provinciasDisponibles;
         ViewBag.Categorias = new List<string> { "Todos" }
             .Concat(categoriasDisponibles)
