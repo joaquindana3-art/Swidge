@@ -3243,6 +3243,112 @@ img.usuario {
   text-align: center;
 }
 
+.compra-exitosa-page {
+  width: 100%;
+}
+
+.compra-hero {
+  background: rgb(67, 160, 71);
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 -12px;
+}
+
+.compra-check-image {
+  width: 90px;
+  height: auto;
+  display: block;
+}
+
+.compra-wrap {
+  max-width: 1120px;
+  margin: 34px auto 22px;
+  border: 6px solid #5e89ff;
+  padding: 26px 34px 24px;
+  background: #fff;
+}
+
+.compra-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 330px;
+  gap: 28px;
+  align-items: center;
+}
+
+.compra-title {
+  font-size: clamp(2rem, 3vw, 3rem);
+  font-weight: 800;
+  margin: 0 0 8px;
+  line-height: 1.1;
+}
+
+.compra-line {
+  font-size: clamp(1.35rem, 2.1vw, 2rem);
+  line-height: 1.15;
+  margin: 0 0 16px;
+  font-weight: 700;
+}
+
+.compra-line strong {
+  text-decoration: underline;
+  font-weight: 800;
+}
+
+.compra-subtitulo {
+  display: block;
+}
+
+.compra-image {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+}
+
+.compra-actions {
+  margin-top: 22px;
+  display: flex;
+  justify-content: center;
+}
+
+.compra-btn {
+  background: #5e89ff;
+  color: #fff;
+  text-decoration: none;
+  padding: 12px 28px;
+  border-radius: 6px;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.compra-btn:hover {
+  color: #fff;
+  filter: brightness(0.96);
+}
+
+@media (max-width: 991px) {
+  .compra-wrap {
+    margin-inline: 12px;
+    padding: 18px;
+  }
+
+  .compra-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .compra-image {
+    max-width: 420px;
+    margin: 0 auto;
+  }
+
+  .compra-btn {
+    font-size: 1.4rem;
+  }
+}
+
 /* Recuperar contraseña */
 .forgot-password-page {
   min-height: calc(100vh - 140px);
