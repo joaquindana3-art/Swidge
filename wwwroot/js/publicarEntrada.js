@@ -170,11 +170,27 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       const url = URL.createObjectURL(file);
-      preview.src = url;
-      preview.style.display = 'block';
+      previewContainer.style.display = 'block';
       previewContainer.classList.remove('d-none');
       placeholder.classList.add('d-none');
       botonCambiar.classList.remove('d-none');
+
+      if (file.type === 'application/pdf') {
+        preview.style.display = 'none';
+        let visor = previewContainer.querySelector('iframe');
+        if (!visor) {
+          visor = document.createElement('iframe');
+          visor.title = 'Vista previa del comprobante';
+          previewContainer.appendChild(visor);
+        }
+        visor.src = url;
+        visor.style.display = 'block';
+      } else {
+        const visor = previewContainer.querySelector('iframe');
+        if (visor) visor.remove();
+        preview.src = url;
+        preview.style.display = 'block';
+      }
     });
 
     botonCambiar.addEventListener('click', () => fileInput.click());

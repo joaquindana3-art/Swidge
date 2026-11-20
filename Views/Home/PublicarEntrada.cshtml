@@ -1,4 +1,4 @@
-<main class="container my-4 publicar-page">
+<main class="container-fluid publicar-page">
     <form id="formPublicarEntrada" action='@Url.Action("ConfirmacionEntradaPublicada", "Home")' method="post" enctype="multipart/form-data" novalidate>
         @Html.AntiForgeryToken()
         <div class="publicar-busqueda">
@@ -81,7 +81,7 @@
             <div class="publicar-panel">
                 <div class="publicar-panel-box">
                     <label for="comprobante" class="publicar-archivo-label">
-                        <input type="file" id="comprobante" name="comprobante" accept="image/*,application/pdf" class="publicar-archivo-input" />
+                        <input type="file" id="comprobante" name="comprobante" accept="image/jpeg,image/png,application/pdf" class="publicar-archivo-input" required />
 
                         <div id="previewComprobante" class="publicar-preview">
                             <img id="imgPreview" src="" alt="Vista previa" />
@@ -94,10 +94,6 @@
                             <h2>Adjuntar entrada</h2>
                         </div>
                     </label>
-
-                    <button type="button" id="btnCambiarArchivo" class="btn btn-light publicar-cambiar">
-                        Cambiar archivo
-                    </button>
                 </div>
             </div>
         </div>

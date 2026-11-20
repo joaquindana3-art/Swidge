@@ -9,10 +9,12 @@ namespace Swidge.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly IWebHostEnvironment _environment;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, IWebHostEnvironment environment)
     {
         _logger = logger;
+        _environment = environment;
     }
     public IActionResult Landing()
     {
@@ -162,7 +164,7 @@ public class HomeController : Controller
     }
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult ConfirmacionEntradaPublicada(int IDevento, string nombreTitular, string NombreSector, int? Fila, int? Asiento, decimal precioVenta, string comprobante)
+    public async Task<IActionResult> ConfirmacionEntradaPublicada(int IDevento, string nombreTitular, string NombreSector, int? Fila, int? Asiento, decimal precioVenta, IFormFile? comprobante)
     {
 
         int? dniSesion = HttpContext.Session.GetInt32("DNI");
@@ -198,6 +200,25 @@ public class HomeController : Controller
             return RedirectToAction("PublicarEntrada", "Home");
         }
 
+        if (comprobante == null || comprobante.Length == 0)
+        {
+            TempData["ErrorMessage"] = "Debés adjuntar el comprobante de la entrada.";
+            return RedirectToAction("PublicarEntrada", "Home");
+        }
+
+        string extension = Path.GetExtension(comprobante.FileName).ToLowerInvariant();
+        if (comprobante.Length > 10 * 1024 * 1024 || extension is not (".jpg" or ".jpeg" or ".png" or ".pdf"))
+        {
+            TempData["ErrorMessage"] = "El comprobante debe ser JPG, PNG o PDF y pesar menos de 10 MB.";
+            return RedirectToAction("PublicarEntrada", "Home");
+        }
+
+        string carpeta = Path.Combine(_environment.WebRootPath, "uploads", "entradas");
+        Directory.CreateDirectory(carpeta);
+        string nombreArchivo = $"entrada_{dniSesion.Value}_{DateTime.Now:yyyyMMddHHmmssfff}{extension}";
+        await comprobante.CopyToAsync(new FileStream(Path.Combine(carpeta, nombreArchivo), FileMode.Create));
+        string qr = $"/uploads/entradas/{nombreArchivo}";
+
         int idVendedor = 0;
         Vendedor vendedor = bd.BuscarVendedorPorDNIusuario(usuarioPublicador.DNI);
         if (vendedor == null)
@@ -210,10 +231,6 @@ public class HomeController : Controller
         }
 
         int idUbicacion = bd.InsertarUbicacion(NombreSector, Fila, Asiento);
-
-        string qr = !string.IsNullOrWhiteSpace(comprobante)
-            ? comprobante
-            : $"QR_{DateTime.Now:yyyyMMddHHmmss}_{IDevento}_{idVendedor}";
 
         int idEntrada = bd.PublicarEntrada(IDevento, idVendedor, precioVenta, qr, idUbicacion);
         bd.ActualizarUbicacionEntrada(idUbicacion, idEntrada);
