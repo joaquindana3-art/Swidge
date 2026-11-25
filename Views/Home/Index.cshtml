@@ -43,8 +43,13 @@
 
     <div class="search-panel-wrapper">
         <div class="search-box">
-            <span class="search-icon">🔎</span>
-            <input id="eventSearchInput" type="text" placeholder="Evento, artista o equipo" aria-label="Buscar evento" autocomplete="off" />
+            <span class="search-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="6.5"></circle>
+                    <path d="M16 16l4.5 4.5"></path>
+                </svg>
+            </span>
+            <input id="eventSearchInput" type="text" placeholder="Buscar evento, artista o lugar" aria-label="Buscar evento" autocomplete="off" />
             <div id="searchSuggestions" class="search-suggestions" aria-live="polite"></div>
         </div>
     </div>

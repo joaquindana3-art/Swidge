@@ -6,21 +6,31 @@
     Swidge.Models.Usuario vendedor = Model?.Vendedor ?? new Swidge.Models.Usuario();
     Swidge.Models.Ubicacion ubicacion = Model?.Ubicacion ?? new Swidge.Models.Ubicacion();
 
+    string nombreVendedor = $"{vendedor.Nombre} {vendedor.Apellido}".Trim();
+    if (string.IsNullOrWhiteSpace(nombreVendedor)) nombreVendedor = "Vendedor Swidge";
+
     string imagenEvento = string.IsNullOrWhiteSpace(evento.Imagen)
         ? Url.Content("~/img/default-event.jpg")
-        : Url.Content("~/img/" + evento.Imagen);
+        : evento.Imagen.StartsWith("/", StringComparison.Ordinal) || evento.Imagen.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+            ? evento.Imagen
+            : Url.Content("~/img/" + evento.Imagen);
 
     string precio = Model?.Precio > 0 ? Model.Precio.ToString("N0") : "0";
-    string fecha = evento.Fecha != default ? evento.Fecha.ToString("ddd, dd MMM, HH:mm") : "Fecha por confirmar";
+    string fecha = evento.Fecha != default
+        ? evento.Fecha.ToString("dddd dd 'de' MMMM 'de' yyyy, HH:mm", new System.Globalization.CultureInfo("es-AR"))
+        : "Fecha por confirmar";
     string lugar = string.IsNullOrWhiteSpace(evento.Lugar) ? "Lugar por confirmar" : evento.Lugar;
-    string ubicacionTexto = !string.IsNullOrWhiteSpace(ubicacion.NombreSector)
-        ? $"{ubicacion.NombreSector}{(ubicacion.Fila.HasValue ? $", fila {ubicacion.Fila.Value}" : "")}{(ubicacion.Asiento.HasValue ? $", asiento {ubicacion.Asiento.Value}" : "")}"
-        : "Ubicación por confirmar";
+    string protagonista = string.IsNullOrWhiteSpace(evento.Protagonista) ? "Artista por confirmar" : evento.Protagonista;
+    string categoria = string.IsNullOrWhiteSpace(evento.Categoria) ? "General" : evento.Categoria;
+    string sector = string.IsNullOrWhiteSpace(ubicacion.NombreSector) ? "Sector por confirmar" : ubicacion.NombreSector;
+    string fila = ubicacion.Fila.HasValue ? ubicacion.Fila.Value.ToString() : "—";
+    string asiento = ubicacion.Asiento.HasValue ? ubicacion.Asiento.Value.ToString() : "—";
 }
 
 <div class="checkout-shell">
     <div class="checkout-panel">
         <form id="checkoutForm" method="post" action="@Url.Action("CompraExitosa", "Home")" data-compra-exitosa-url="@Url.Action("CompraExitosa", "Home", new { id = Model?.ID ?? 0 })">
+            @Html.AntiForgeryToken()
             <input type="hidden" id="entradaId" name="id" value="@Model?.ID" />
             <div class="checkout-form-wrap">
                 <div class="checkout-payments" role="radiogroup" aria-label="Método de pago">
@@ -108,25 +118,55 @@
         </form>
     </div>
 
-    <div class="checkout-right-panel">
-        <div class="checkout-event-card">
-            <div class="checkout-event-poster" style="background: url('@imagenEvento') center/cover no-repeat;">
-                <div class="checkout-poster-glow"></div>
+    <aside class="checkout-right-panel">
+        <article class="checkout-event-card">
+            <img src="@imagenEvento" alt="Entrada de @evento.Nombre" class="checkout-event-poster" />
+        </article>
+
+        <section class="checkout-event-copy" aria-label="Información de la entrada">
+            <p class="checkout-event-category">@categoria</p>
+            <h1>@evento.Nombre</h1>
+
+            @if (!string.IsNullOrWhiteSpace(protagonista))
+            {
+                <p class="checkout-event-protagonist">@protagonista</p>
+            }
+
+            <dl class="checkout-ticket-info">
+                <div>
+                    <dt>Fecha</dt>
+                    <dd>@fecha</dd>
+                </div>
+                <div>
+                    <dt>Lugar</dt>
+                    <dd>@lugar</dd>
+                </div>
+                <div>
+                    <dt>Sector</dt>
+                    <dd>@sector</dd>
+                </div>
+                <div>
+                    <dt>Fila</dt>
+                    <dd>@fila</dd>
+                </div>
+                <div>
+                    <dt>Asiento</dt>
+                    <dd>@asiento</dd>
+                </div>
+                <div>
+                    <dt>Vendedor</dt>
+                    <dd>@nombreVendedor</dd>
+                </div>
+            </dl>
+
+            <div class="checkout-price-row">
+                <span>Precio final</span>
+                <strong>$@precio</strong>
             </div>
-        </div>
+        </section>
 
-        <div class="checkout-event-copy">
-            <strong>@evento.Nombre</strong><br />
-            Fecha: @fecha<br />
-            Lugar: @lugar<br />
-            Ubicación: @ubicacionTexto<br />
-            <span class="checkout-price">Precio: $@precio</span>
-        </div>
-
-        <div class="checkout-policy-box">
-            Lea la política de devolución
-        </div>
-    </div>
+        <a class="checkout-policy-box" href="@Url.Action("Ayuda", "Home")">Leé la política de devolución</a>
+    </aside>
 </div>
 
 <script src="~/js/pagarEntrada.js" defer></script>

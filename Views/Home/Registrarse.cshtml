@@ -47,7 +47,7 @@
 
         <div class="campo">
             <label for="fechaNacimiento">Fecha de nacimiento</label>
-            <input type="date" id="fechaNacimiento" name="fechaNacimiento">
+            <input type="date" id="fechaNacimiento" name="fechaNacimiento" value="@(Model != null && Model.FechaNacimiento != default ? Model.FechaNacimiento.ToString("yyyy-MM-dd") : "")">
             <span id="fb-fechaNacimiento"></span>
         </div>
 

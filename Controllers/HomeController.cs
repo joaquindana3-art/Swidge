@@ -186,6 +186,18 @@ public class HomeController : Controller
             return RedirectToAction("PublicarEntrada", "Home");
         }
 
+        if (string.IsNullOrWhiteSpace(nombreTitular))
+        {
+            TempData["ErrorMessage"] = "Debés ingresar el nombre del titular.";
+            return RedirectToAction("PublicarEntrada", "Home");
+        }
+
+        if (string.IsNullOrWhiteSpace(NombreSector) || precioVenta <= 0)
+        {
+            TempData["ErrorMessage"] = "Debés ingresar un sector y un precio de venta válido.";
+            return RedirectToAction("PublicarEntrada", "Home");
+        }
+
         Estadio? estadioEvento = bd.GetEstadios().FirstOrDefault(e => e.ID == eventoSeleccionado.IDEstadio);
         if (estadioEvento != null)
         {
@@ -285,6 +297,8 @@ public class HomeController : Controller
         return View(entrada);
     }
 
+    [HttpPost]
+    [ValidateAntiForgeryToken]
     public IActionResult CompraExitosa(int id)
     {
         BD bd = new BD();

@@ -425,3 +425,18 @@
     min-width: 210px;
 }
 
+.swidge-header ::deep .swidge-dropdown-toggle {
+    border: 0 !important;
+    border-radius: 0.45rem !important;
+    outline: 0 !important;
+    box-shadow: none !important;
+}
+
+.swidge-header ::deep .swidge-dropdown-toggle:focus,
+.swidge-header ::deep .swidge-dropdown-toggle:active,
+.swidge-header ::deep .swidge-dropdown-toggle.show {
+    border: 0 !important;
+    outline: 0 !important;
+    box-shadow: 0 0 0 2px rgba(90, 126, 255, 0.35) !important;
+}
+

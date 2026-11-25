@@ -67,9 +67,29 @@ public class SessionController : Controller
         };
 
         List<string> errores = new List<string>();
+        if (dni < 1000000 || dni > 99999999)
+            errores.Add("El DNI debe tener 7 u 8 dígitos.");
+        if (string.IsNullOrWhiteSpace(nombre)) errores.Add("Ingresá tu nombre.");
+        if (string.IsNullOrWhiteSpace(apellido)) errores.Add("Ingresá tu apellido.");
+        if (string.IsNullOrWhiteSpace(nombreUsuario) || nombreUsuario.Length < 6)
+            errores.Add("El nombre de usuario debe tener al menos 6 caracteres.");
+        if (fechaNacimiento == default || fechaNacimiento > DateTime.Today)
+            errores.Add("Ingresá una fecha de nacimiento válida.");
+        else
+        {
+            int edad = DateTime.Today.Year - fechaNacimiento.Year;
+            if (fechaNacimiento > DateTime.Today.AddYears(-edad)) edad--;
+            if (edad < 18) errores.Add("Tenés que ser mayor de 18 años.");
+        }
+        if (string.IsNullOrWhiteSpace(ciudad)) errores.Add("Ingresá tu ciudad.");
+        if (string.IsNullOrWhiteSpace(mail) || !mail.Contains('@')) errores.Add("Ingresá un mail válido.");
+        if (string.IsNullOrWhiteSpace(contrasena) || contrasena.Length <= 8)
+            errores.Add("La contraseña debe tener más de 8 caracteres.");
+
         if (bd.ExisteDNI(datos.DNI)) errores.Add("Ya existe una cuenta con ese DNI.");
         if (bd.ExisteNombreUsuario(datos.NombreUsuario)) errores.Add("El nombre de usuario ya está en uso. Elegí otro.");
         if (bd.ExisteMail(datos.Mail)) errores.Add("Ya existe una cuenta con ese mail.");
+
         if (errores.Count > 0)
         {
             datos.Contraseña = "";
@@ -179,15 +199,9 @@ public class SessionController : Controller
         if (string.IsNullOrWhiteSpace(ciudad)) errores.Add("Ingresá tu ciudad.");
         if (string.IsNullOrWhiteSpace(mail)) errores.Add("Ingresá tu mail.");
         if (fechaNacimiento == default) errores.Add("Ingresá tu fecha de nacimiento.");
-
-        if (!string.IsNullOrWhiteSpace(mail) && !mail.Contains('@'))
-            errores.Add("Ingresá un mail válido.");
-
+        if (!string.IsNullOrWhiteSpace(mail) && !mail.Contains('@')) errores.Add("Ingresá un mail válido.");
         if (!string.IsNullOrWhiteSpace(nombreUsuario) && bd.ExisteNombreUsuarioExceptoDNI(nombreUsuario.Trim(), dni.Value))
             errores.Add("El nombre de usuario ya está en uso.");
-
-        if (!string.IsNullOrWhiteSpace(mail) && bd.ExisteMailExceptoDNI(mail.Trim(), dni.Value))
-            errores.Add("Ya existe una cuenta con ese mail.");
 
         if (errores.Count > 0)
         {

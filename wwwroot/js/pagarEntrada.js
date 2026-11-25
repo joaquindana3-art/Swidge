@@ -161,7 +161,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         event.preventDefault();
-        const compraExitosaUrl = document.body.dataset.compraExitosaUrl || '/Home/CompraExitosa?id=' + (document.getElementById('entradaId')?.value || '0');
-        window.location.href = compraExitosaUrl;
+        form.submit();
     });
 });

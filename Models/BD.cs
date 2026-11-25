@@ -680,8 +680,10 @@ public class BD
                              FROM dbo.Entrada e
                              INNER JOIN dbo.Ubicacion u ON u.ID = e.IDubicacion
                              INNER JOIN dbo.Evento ev ON ev.ID = e.IDevento
-                             WHERE ev.IDestadio = (SELECT IDEstadio FROM dbo.Evento WHERE ID = @IDEvento)
+                             WHERE e.Vendida = 0
+                               AND ev.IDestadio = (SELECT IDEstadio FROM dbo.Evento WHERE ID = @IDEvento)
                                AND CAST(ev.Fecha AS date) = (SELECT CAST(Fecha AS date) FROM dbo.Evento WHERE ID = @IDEvento)
+                               AND u.NombreSector = @NombreSector
                                AND u.Fila = @Fila
                                AND u.Asiento = @Asiento;";
 
